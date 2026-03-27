@@ -1,0 +1,97 @@
+/* Core Banner Animations Elite V7+ */
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes fadeOut {
+    from { opacity: 1; }
+    to { opacity: 0; }
+}
+
+@keyframes zoomIn {
+    from { transform: scale(0.5); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+}
+
+@keyframes zoomOut {
+    from { transform: scale(1.5); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+}
+
+@keyframes slideLeft {
+    from { transform: translateX(50px); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
+}
+
+@keyframes slideRight {
+    from { transform: translateX(-50px); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
+}
+
+@keyframes slideUp {
+    from { transform: translateY(50px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes slideDown {
+    from { transform: translateY(-50px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-15px); }
+}
+
+@keyframes pulse {
+    0%, 100% { transform: scale(1); filter: brightness(1); }
+    50% { transform: scale(1.03); filter: brightness(1.1); }
+}
+
+@keyframes bounce {
+    0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+    40% { transform: translateY(-30px); }
+    60% { transform: translateY(-15px); }
+}
+
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+@keyframes tilt {
+    0%, 100% { transform: rotate(0deg); }
+    25% { transform: rotate(3deg); }
+    75% { transform: rotate(-3deg); }
+}
+
+@keyframes glowPulse {
+    0%, 100% { filter: drop-shadow(0 0 5px rgba(168, 85, 247, 0.4)); }
+    50% { filter: drop-shadow(0 0 20px rgba(168, 85, 247, 0.8)); }
+}
+
+@keyframes vko-particle-fall {
+    0% { transform: translateY(-50px); }
+    100% { transform: translateY(150vh); }
+}
+
+/* Animation Classes */
+.animate-fadeIn { animation: fadeIn 1s ease-out forwards; }
+.animate-fadeOut { animation: fadeOut 1s ease-out forwards; }
+.animate-zoomIn { animation: zoomIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+.animate-zoomOut { animation: zoomOut 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+.animate-slideLeft { animation: slideLeft 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+.animate-slideRight { animation: slideRight 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+.animate-slideUp { animation: slideUp 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+.animate-slideDown { animation: slideDown 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+.animate-float { animation: float 4s ease-in-out infinite; }
+.animate-pulse { animation: pulse 2.5s ease-in-out infinite; }
+.animate-bounce { animation: bounce 2s infinite; }
+.animate-spin { animation: spin 8s linear infinite; }
+.animate-tilt { animation: tilt 5s ease-in-out infinite; }
+.animate-glow { animation: glowPulse 2s ease-in-out infinite; }
+
+/* Entry Animations without infinite loop */
+.animate-bounce-in { animation: bounce 1s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }

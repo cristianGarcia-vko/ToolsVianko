@@ -1,0 +1,78 @@
+{
+  "name": "viankobannerstudio",
+  "version": "1.0.0",
+  "main": "index.ts",
+  "scripts": {
+    "start": "expo start",
+    "android": "expo start --android",
+    "ios": "expo start --ios",
+    "web": "expo start --web",
+    "build:k6": "cd k6-frontend && npm run build -- --outDir ../dist/k6-dashboard",
+    "build:exe": "npm run build:k6 && npx expo export -p web && npx electron-builder --win",
+    "start:desktop": "electron main.js"
+  },
+  "build": {
+    "appId": "com.vianko.bannerstudio",
+    "productName": "Vianko Banner Studio",
+    "executableName": "ViankoBannerStudio",
+    "copyright": "Copyright (c) 2026 Vianko Banner Studio",
+    "directories": {
+      "output": "Windows_Build",
+      "buildResources": "assets"
+    },
+    "win": {
+      "icon": "assets/icon.png",
+      "target": [
+        "portable",
+        "nsis"
+      ]
+    },
+    "files": [
+      "dist/**/*",
+      "k6-backend/**/*",
+      "main.js",
+      "package.json",
+      "!node_modules",
+      "!Windows_Build/**/*",
+      "!k6-backend/unzipped/**/*",
+      "!k6-backend/uploads/**/*",
+      "!.expo/**/*",
+      "!**/*.vprj",
+      "!**/temp/**/*"
+    ],
+    "asar": true,
+    "extraMetadata": {
+      "main": "main.js"
+    }
+  },
+  "dependencies": {
+    "@reduxjs/toolkit": "^2.11.2",
+    "axios": "^1.13.6",
+    "expo": "~55.0.8",
+    "expo-linear-gradient": "^55.0.9",
+    "expo-status-bar": "~55.0.4",
+    "framer-motion": "^12.38.0",
+    "html2canvas": "^1.4.1",
+    "jszip": "^3.10.1",
+    "lucide-react": "^1.7.0",
+    "lucide-react-native": "^1.6.0",
+    "react": "19.2.0",
+    "react-dom": "19.2.0",
+    "react-native": "0.83.2",
+    "react-native-reanimated": "^4.2.3",
+    "react-native-webview": "13.16.0",
+    "react-redux": "^9.2.0",
+    "recharts": "^3.8.1",
+    "redux-persist": "^6.0.0"
+  },
+  "devDependencies": {
+    "@types/react": "~19.2.2",
+    "@vitejs/plugin-react": "^6.0.1",
+    "electron": "^41.0.3",
+    "electron-builder": "^26.8.1",
+    "react-native-web": "^0.21.0",
+    "typescript": "~5.9.2",
+    "vite": "^8.0.2"
+  },
+  "private": true
+}

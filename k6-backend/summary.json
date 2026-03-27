@@ -1,0 +1,568 @@
+{
+    "root_group": {
+        "name": "",
+        "path": "",
+        "id": "d41d8cd98f00b204e9800998ecf8427e",
+        "groups": {},
+        "checks": {
+                "/ responds with ok target": {
+                    "path": "::/ responds with ok target",
+                    "id": "ed161689a71299405c5b39620456cb13",
+                    "passes": 2120,
+                    "fails": 0,
+                    "name": "/ responds with ok target"
+                },
+                "/health responds with ok target": {
+                    "name": "/health responds with ok target",
+                    "path": "::/health responds with ok target",
+                    "id": "16e36dc8a6247cbe117aa0d45b722017",
+                    "passes": 106,
+                    "fails": 0
+                },
+                "/usuario/1 responds with ok target": {
+                    "name": "/usuario/1 responds with ok target",
+                    "path": "::/usuario/1 responds with ok target",
+                    "id": "3b7461168ff0e148686f1eac92b4f996",
+                    "passes": 212,
+                    "fails": 0
+                },
+                "/1 responds with ok target": {
+                    "fails": 0,
+                    "name": "/1 responds with ok target",
+                    "path": "::/1 responds with ok target",
+                    "id": "b30797aa72e3fa1e6c7b4b21ca5b3982",
+                    "passes": 1378
+                },
+                "/movimientos/excel responds with ok target": {
+                    "name": "/movimientos/excel responds with ok target",
+                    "path": "::/movimientos/excel responds with ok target",
+                    "id": "4894df8380974fd7720f75ce45d0edae",
+                    "passes": 106,
+                    "fails": 0
+                },
+                "/locomotoras/excel responds with ok target": {
+                    "name": "/locomotoras/excel responds with ok target",
+                    "path": "::/locomotoras/excel responds with ok target",
+                    "id": "666242424826a37b6bd420a4539cda9f",
+                    "passes": 106,
+                    "fails": 0
+                },
+                "/empresas/excel responds with ok target": {
+                    "name": "/empresas/excel responds with ok target",
+                    "path": "::/empresas/excel responds with ok target",
+                    "id": "c9664069629667d3edef055e3d132f7e",
+                    "passes": 106,
+                    "fails": 0
+                },
+                "/bonos/excel responds with ok target": {
+                    "name": "/bonos/excel responds with ok target",
+                    "path": "::/bonos/excel responds with ok target",
+                    "id": "a0e5e3ca64a3c4c76f0369c11d8dbec1",
+                    "passes": 106,
+                    "fails": 0
+                },
+                "/movimientos/pdf responds with ok target": {
+                    "name": "/movimientos/pdf responds with ok target",
+                    "path": "::/movimientos/pdf responds with ok target",
+                    "id": "54ded8884c86eb6b3bd19516d2a0b80d",
+                    "passes": 106,
+                    "fails": 0
+                },
+                "/admin/pdf responds with ok target": {
+                    "id": "d3baaad2c963c039b971cfaaed76ec53",
+                    "passes": 106,
+                    "fails": 0,
+                    "name": "/admin/pdf responds with ok target",
+                    "path": "::/admin/pdf responds with ok target"
+                },
+                "/locomotoras/pdf responds with ok target": {
+                    "name": "/locomotoras/pdf responds with ok target",
+                    "path": "::/locomotoras/pdf responds with ok target",
+                    "id": "f800004933b0482c86b1dbc83b471798",
+                    "passes": 106,
+                    "fails": 0
+                },
+                "/empresas/pdf responds with ok target": {
+                    "path": "::/empresas/pdf responds with ok target",
+                    "id": "9de5041d907b74554e213edabed4e3cd",
+                    "passes": 106,
+                    "fails": 0,
+                    "name": "/empresas/pdf responds with ok target"
+                },
+                "/bonos/pdf responds with ok target": {
+                    "passes": 106,
+                    "fails": 0,
+                    "name": "/bonos/pdf responds with ok target",
+                    "path": "::/bonos/pdf responds with ok target",
+                    "id": "6af37d38d6d21a26b6761e41de68c5c4"
+                },
+                "/ultima responds with ok target": {
+                    "fails": 0,
+                    "name": "/ultima responds with ok target",
+                    "path": "::/ultima responds with ok target",
+                    "id": "fd51cb24a95ce3d6d00a91bf81f62159",
+                    "passes": 106
+                },
+                "/meta responds with ok target": {
+                    "name": "/meta responds with ok target",
+                    "path": "::/meta responds with ok target",
+                    "id": "4e2224a98f8e4c3b05da57cf5e0725b5",
+                    "passes": 106,
+                    "fails": 0
+                },
+                "/assets/banner-asset.svg responds with ok target": {
+                    "fails": 0,
+                    "name": "/assets/banner-asset.svg responds with ok target",
+                    "path": "::/assets/banner-asset.svg responds with ok target",
+                    "id": "7ec35e74540e0c2dc33f6f7849b57e36",
+                    "passes": 106
+                },
+                "/assets/1 responds with ok target": {
+                    "name": "/assets/1 responds with ok target",
+                    "path": "::/assets/1 responds with ok target",
+                    "id": "c9ff4b10aa0d1b5810ca074d8e1a9b93",
+                    "passes": 106,
+                    "fails": 0
+                },
+                "/lite responds with ok target": {
+                    "name": "/lite responds with ok target",
+                    "path": "::/lite responds with ok target",
+                    "id": "ca2c08908f88405d8755e539d1848438",
+                    "passes": 318,
+                    "fails": 0
+                },
+                "/imagen responds with ok target": {
+                    "path": "::/imagen responds with ok target",
+                    "id": "96eeb2203abeb128ee14fd0cc4f54e29",
+                    "passes": 106,
+                    "fails": 0,
+                    "name": "/imagen responds with ok target"
+                },
+                "/imagen/1(*) responds with ok target": {
+                    "path": "::/imagen/1(*) responds with ok target",
+                    "id": "dfc042966c7c3f8309632f69218520fe",
+                    "passes": 106,
+                    "fails": 0,
+                    "name": "/imagen/1(*) responds with ok target"
+                },
+                "/1/verificacion responds with ok target": {
+                    "name": "/1/verificacion responds with ok target",
+                    "path": "::/1/verificacion responds with ok target",
+                    "id": "b5b6762a034cb859da75d90f2620aff0",
+                    "passes": 106,
+                    "fails": 0
+                },
+                "/1/cerrar responds with ok target": {
+                    "passes": 106,
+                    "fails": 0,
+                    "name": "/1/cerrar responds with ok target",
+                    "path": "::/1/cerrar responds with ok target",
+                    "id": "1eec8feade59ff4300c84ea7eee1f709"
+                },
+                "/1/continuar responds with ok target": {
+                    "name": "/1/continuar responds with ok target",
+                    "path": "::/1/continuar responds with ok target",
+                    "id": "09017a95adab254b62d265f4e25950ff",
+                    "passes": 106,
+                    "fails": 0
+                },
+                "/cerrar-vencidos responds with ok target": {
+                    "fails": 0,
+                    "name": "/cerrar-vencidos responds with ok target",
+                    "path": "::/cerrar-vencidos responds with ok target",
+                    "id": "f7b8bd6dc3c2cbe0ae58c65d92a1b8e9",
+                    "passes": 106
+                },
+                "/1/resuelto responds with ok target": {
+                    "fails": 0,
+                    "name": "/1/resuelto responds with ok target",
+                    "path": "::/1/resuelto responds with ok target",
+                    "id": "aef9fe799e9a84127209b23bee1e22ca",
+                    "passes": 106
+                },
+                "/buscar responds with ok target": {
+                    "name": "/buscar responds with ok target",
+                    "path": "::/buscar responds with ok target",
+                    "id": "9faa26a3708859779ab5bdfe11f6ee2c",
+                    "passes": 212,
+                    "fails": 0
+                },
+                "/servicios/pendientes responds with ok target": {
+                    "fails": 0,
+                    "name": "/servicios/pendientes responds with ok target",
+                    "path": "::/servicios/pendientes responds with ok target",
+                    "id": "c1d54f202471aeecf4e6f4ab3a286d6d",
+                    "passes": 106
+                },
+                "/servicios/1/estado responds with ok target": {
+                    "passes": 106,
+                    "fails": 0,
+                    "name": "/servicios/1/estado responds with ok target",
+                    "path": "::/servicios/1/estado responds with ok target",
+                    "id": "ee9dc14e4b7aef42bdcdf49c92d89c89"
+                },
+                "/all responds with ok target": {
+                    "name": "/all responds with ok target",
+                    "path": "::/all responds with ok target",
+                    "id": "fb2f08f9b31ef983af646af3a7104535",
+                    "passes": 106,
+                    "fails": 0
+                },
+                "/pendientes responds with ok target": {
+                    "passes": 106,
+                    "fails": 0,
+                    "name": "/pendientes responds with ok target",
+                    "path": "::/pendientes responds with ok target",
+                    "id": "1bebf567d4eef5cfd99c39a661b539de"
+                },
+                "/empresa/1/pendientes responds with ok target": {
+                    "name": "/empresa/1/pendientes responds with ok target",
+                    "path": "::/empresa/1/pendientes responds with ok target",
+                    "id": "e399278256b264a448d75293ccddce95",
+                    "passes": 106,
+                    "fails": 0
+                },
+                "/servicios/espera responds with ok target": {
+                    "id": "566800cf7e9e9c6272771a8c7be9a756",
+                    "passes": 106,
+                    "fails": 0,
+                    "name": "/servicios/espera responds with ok target",
+                    "path": "::/servicios/espera responds with ok target"
+                },
+                "/servicios/1/solicitar responds with ok target": {
+                    "fails": 0,
+                    "name": "/servicios/1/solicitar responds with ok target",
+                    "path": "::/servicios/1/solicitar responds with ok target",
+                    "id": "4f48a74c69308ef1b4669ee24e46a5c2",
+                    "passes": 106
+                },
+                "/empresa/1 responds with ok target": {
+                    "name": "/empresa/1 responds with ok target",
+                    "path": "::/empresa/1 responds with ok target",
+                    "id": "36925b2c8acd97f846cadeb72046d648",
+                    "passes": 106,
+                    "fails": 0
+                },
+                "/empresa/1/localidad/1 responds with ok target": {
+                    "path": "::/empresa/1/localidad/1 responds with ok target",
+                    "id": "cf951d3f7653bc0453f4eaf6f552bab7",
+                    "passes": 106,
+                    "fails": 0,
+                    "name": "/empresa/1/localidad/1 responds with ok target"
+                },
+                "/empresa/1/localidad/1/pendientes responds with ok target": {
+                    "name": "/empresa/1/localidad/1/pendientes responds with ok target",
+                    "path": "::/empresa/1/localidad/1/pendientes responds with ok target",
+                    "id": "7f23631c2fc734144f9e722208561ce1",
+                    "passes": 106,
+                    "fails": 0
+                },
+                "/localidad/1/pendientes responds with ok target": {
+                    "name": "/localidad/1/pendientes responds with ok target",
+                    "path": "::/localidad/1/pendientes responds with ok target",
+                    "id": "94faf41d9cb9e621d0d37434cdd1b394",
+                    "passes": 106,
+                    "fails": 0
+                },
+                "/localidad/1/all responds with ok target": {
+                    "id": "d4126ab1d21733e42693eb45e63962a4",
+                    "passes": 106,
+                    "fails": 0,
+                    "name": "/localidad/1/all responds with ok target",
+                    "path": "::/localidad/1/all responds with ok target"
+                },
+                "/localidad/1/empresa/1 responds with ok target": {
+                    "name": "/localidad/1/empresa/1 responds with ok target",
+                    "path": "::/localidad/1/empresa/1 responds with ok target",
+                    "id": "13d4fccaec37abb66ddc906b1c92c14e",
+                    "passes": 106,
+                    "fails": 0
+                },
+                "/ronda/1/info responds with ok target": {
+                    "path": "::/ronda/1/info responds with ok target",
+                    "id": "615b2b88fafcf2ab9bdbc2967251bf42",
+                    "passes": 106,
+                    "fails": 0,
+                    "name": "/ronda/1/info responds with ok target"
+                },
+                "/1/cancelar responds with ok target": {
+                    "path": "::/1/cancelar responds with ok target",
+                    "id": "8b1c5d8baa3b4b6f4dd7eb9928a99eba",
+                    "passes": 106,
+                    "fails": 0,
+                    "name": "/1/cancelar responds with ok target"
+                },
+                "/1/prioridad responds with ok target": {
+                    "name": "/1/prioridad responds with ok target",
+                    "path": "::/1/prioridad responds with ok target",
+                    "id": "275ab712eb722eda3668e446d3dc2616",
+                    "passes": 106,
+                    "fails": 0
+                },
+                "/1/edicion responds with ok target": {
+                    "name": "/1/edicion responds with ok target",
+                    "path": "::/1/edicion responds with ok target",
+                    "id": "98cc1323e1ba4dcfdb63c0c2c8768662",
+                    "passes": 212,
+                    "fails": 0
+                },
+                "/1/iniciar responds with ok target": {
+                    "name": "/1/iniciar responds with ok target",
+                    "path": "::/1/iniciar responds with ok target",
+                    "id": "e32fb4dc170ad166caef11dc8beac4c9",
+                    "passes": 106,
+                    "fails": 0
+                },
+                "/1/pausar responds with ok target": {
+                    "name": "/1/pausar responds with ok target",
+                    "path": "::/1/pausar responds with ok target",
+                    "id": "178a120a208e97f746be5448e098f679",
+                    "passes": 106,
+                    "fails": 0
+                },
+                "/1/reanudar responds with ok target": {
+                    "passes": 106,
+                    "fails": 0,
+                    "name": "/1/reanudar responds with ok target",
+                    "path": "::/1/reanudar responds with ok target",
+                    "id": "1321468f99f54581ed936dc2e52ae462"
+                },
+                "/1/finalizar responds with ok target": {
+                    "fails": 0,
+                    "name": "/1/finalizar responds with ok target",
+                    "path": "::/1/finalizar responds with ok target",
+                    "id": "c660d21587dd9116f4dd14941d9b54c9",
+                    "passes": 106
+                },
+                "/movimiento/1 responds with ok target": {
+                    "path": "::/movimiento/1 responds with ok target",
+                    "id": "0f4c7dbe8bb1004fba5bfe2041dbb5e7",
+                    "passes": 106,
+                    "fails": 0,
+                    "name": "/movimiento/1 responds with ok target"
+                },
+                "/localidad/1 responds with ok target": {
+                    "name": "/localidad/1 responds with ok target",
+                    "path": "::/localidad/1 responds with ok target",
+                    "id": "e5f7635a42dfd69f9ea2b60877cccf00",
+                    "passes": 212,
+                    "fails": 0
+                },
+                "/localidad/1/estado/1 responds with ok target": {
+                    "passes": 106,
+                    "fails": 0,
+                    "name": "/localidad/1/estado/1 responds with ok target",
+                    "path": "::/localidad/1/estado/1 responds with ok target",
+                    "id": "76bbeacbb63faf642fa795b66a94f0d5"
+                },
+                "/localidad/1/siguiente responds with ok target": {
+                    "path": "::/localidad/1/siguiente responds with ok target",
+                    "id": "d7160d0a3c488a9050405ed508188ae0",
+                    "passes": 106,
+                    "fails": 0,
+                    "name": "/localidad/1/siguiente responds with ok target"
+                },
+                "/localidad/1/siguiente-inteligente responds with ok target": {
+                    "passes": 106,
+                    "fails": 0,
+                    "name": "/localidad/1/siguiente-inteligente responds with ok target",
+                    "path": "::/localidad/1/siguiente-inteligente responds with ok target",
+                    "id": "06212350a500cac54d761c99a13fb9d6"
+                },
+                "/intercambiar-movimientos responds with ok target": {
+                    "name": "/intercambiar-movimientos responds with ok target",
+                    "path": "::/intercambiar-movimientos responds with ok target",
+                    "id": "87e1cbc78b3d00c6965013e91bb64cb0",
+                    "passes": 106,
+                    "fails": 0
+                },
+                "/1/intercambiar-movimiento responds with ok target": {
+                    "fails": 0,
+                    "name": "/1/intercambiar-movimiento responds with ok target",
+                    "path": "::/1/intercambiar-movimiento responds with ok target",
+                    "id": "266bcb462e6b657f26cfc911c0e9d6af",
+                    "passes": 106
+                },
+                "/1/info responds with ok target": {
+                    "name": "/1/info responds with ok target",
+                    "path": "::/1/info responds with ok target",
+                    "id": "04ce0a14d7cc56c7825aa0a4da93aa58",
+                    "passes": 106,
+                    "fails": 0
+                },
+                "/1/concluir responds with ok target": {
+                    "id": "4e1e66d2bf0c864ed8e579f07a79e54e",
+                    "passes": 106,
+                    "fails": 0,
+                    "name": "/1/concluir responds with ok target",
+                    "path": "::/1/concluir responds with ok target"
+                },
+                "/login responds with ok target": {
+                    "name": "/login responds with ok target",
+                    "path": "::/login responds with ok target",
+                    "id": "65aeca716675ddebe148363f528bab04",
+                    "passes": 106,
+                    "fails": 0
+                },
+                "/secciones responds with ok target": {
+                    "fails": 0,
+                    "name": "/secciones responds with ok target",
+                    "path": "::/secciones responds with ok target",
+                    "id": "82ab9084733e0073498389da304b37dd",
+                    "passes": 106
+                },
+                "/secciones/via/1 responds with ok target": {
+                    "name": "/secciones/via/1 responds with ok target",
+                    "path": "::/secciones/via/1 responds with ok target",
+                    "id": "ec88b3fd7d1be285b37b7c5571ed8eab",
+                    "passes": 212,
+                    "fails": 0
+                },
+                "/secciones/1 responds with ok target": {
+                    "passes": 212,
+                    "fails": 0,
+                    "name": "/secciones/1 responds with ok target",
+                    "path": "::/secciones/1 responds with ok target",
+                    "id": "da81cf9984f299924882bd9518f87644"
+                },
+                "/secciones/via/1/asignar responds with ok target": {
+                    "name": "/secciones/via/1/asignar responds with ok target",
+                    "path": "::/secciones/via/1/asignar responds with ok target",
+                    "id": "28ec0a8429ede6657edc0d41d1f47aa5",
+                    "passes": 106,
+                    "fails": 0
+                },
+                "/secciones/via/1/liberar responds with ok target": {
+                    "fails": 0,
+                    "name": "/secciones/via/1/liberar responds with ok target",
+                    "path": "::/secciones/via/1/liberar responds with ok target",
+                    "id": "556b109e1669fd8830c42d84658147bb",
+                    "passes": 106
+                },
+                "/secciones/via/1/liberar-todas responds with ok target": {
+                    "name": "/secciones/via/1/liberar-todas responds with ok target",
+                    "path": "::/secciones/via/1/liberar-todas responds with ok target",
+                    "id": "73d1a131e29f5ef8a0ccd63dc3a75155",
+                    "passes": 106,
+                    "fails": 0
+                },
+                "/localidad/1/lite responds with ok target": {
+                    "name": "/localidad/1/lite responds with ok target",
+                    "path": "::/localidad/1/lite responds with ok target",
+                    "id": "a634af2b56dc01d795b3418efe8bff75",
+                    "passes": 106,
+                    "fails": 0
+                }
+            }
+    },
+    "metrics": {
+        "http_req_duration{expected_response:true}": {
+            "p(95)": 18.594715,
+            "avg": 12.326305110062888,
+            "min": 0.5061,
+            "med": 13.34915,
+            "max": 52.7083,
+            "p(90)": 17.148490000000002
+        },
+        "checks": {
+            "passes": 10918,
+            "fails": 0,
+            "value": 1
+        },
+        "http_req_failed": {
+            "passes": 9646,
+            "fails": 1272,
+            "value": 0.883495145631068
+        },
+        "iterations": {
+            "count": 106,
+            "rate": 8.222270369906912
+        },
+        "http_req_tls_handshaking": {
+            "avg": 0,
+            "min": 0,
+            "med": 0,
+            "max": 0,
+            "p(90)": 0,
+            "p(95)": 0
+        },
+        "http_req_blocked": {
+            "max": 21.5629,
+            "p(90)": 0,
+            "p(95)": 0,
+            "avg": 0.03757694632716614,
+            "min": 0,
+            "med": 0
+        },
+        "http_req_sending": {
+            "avg": 0.019851602857666233,
+            "min": 0,
+            "med": 0,
+            "max": 35.3913,
+            "p(90)": 0,
+            "p(95)": 0
+        },
+        "http_req_receiving": {
+            "avg": 0.18095739146363754,
+            "min": 0,
+            "med": 0,
+            "max": 48.7461,
+            "p(90)": 0.5323200000000005,
+            "p(95)": 0.6105449999999999
+        },
+        "vus_max": {
+            "value": 20,
+            "min": 20,
+            "max": 20
+        },
+        "vus": {
+            "value": 20,
+            "min": 20,
+            "max": 20
+        },
+        "iteration_duration": {
+            "min": 1093.0261,
+            "med": 2400.9073,
+            "max": 2715.4889,
+            "p(90)": 2703.2981,
+            "p(95)": 2708.9903,
+            "avg": 2342.3026594339617
+        },
+        "data_sent": {
+            "count": 1453366,
+            "rate": 112735.54904179368
+        },
+        "http_req_duration": {
+            "p(95)": 19.033035,
+            "avg": 12.890407922696442,
+            "min": 0,
+            "med": 13.47385,
+            "max": 85.0676,
+            "p(90)": 17.59765
+        },
+        "http_req_connecting": {
+            "min": 0,
+            "med": 0,
+            "max": 6.866,
+            "p(90)": 0,
+            "p(95)": 0,
+            "avg": 0.008391894119802162
+        },
+        "http_reqs": {
+            "count": 10918,
+            "rate": 846.893848100412
+        },
+        "http_req_waiting": {
+            "p(90)": 17.437020000000004,
+            "p(95)": 18.839915,
+            "avg": 12.689598928375139,
+            "min": 0,
+            "med": 13.34515,
+            "max": 79.689
+        },
+        "data_received": {
+            "count": 4697072,
+            "rate": 364345.2446313151
+        }
+    }
+}

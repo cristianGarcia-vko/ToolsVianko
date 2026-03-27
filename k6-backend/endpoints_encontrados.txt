@@ -1,0 +1,589 @@
+[
+  {
+    "method": "GET",
+    "route": "/",
+    "payload": null
+  },
+  {
+    "method": "GET",
+    "route": "/health",
+    "payload": null
+  },
+  {
+    "method": "GET",
+    "route": "/",
+    "payload": null
+  },
+  {
+    "method": "GET",
+    "route": "/usuario/:usuarioId",
+    "payload": null
+  },
+  {
+    "method": "POST",
+    "route": "/",
+    "payload": {
+      "ejemplo": "reemplazar_con_datos_reales"
+    }
+  },
+  {
+    "method": "DELETE",
+    "route": "/:token",
+    "payload": null
+  },
+  {
+    "method": "DELETE",
+    "route": "/usuario/:usuarioId",
+    "payload": null
+  },
+  {
+    "method": "GET",
+    "route": "/movimientos/excel",
+    "payload": null
+  },
+  {
+    "method": "GET",
+    "route": "/locomotoras/excel",
+    "payload": null
+  },
+  {
+    "method": "GET",
+    "route": "/empresas/excel",
+    "payload": null
+  },
+  {
+    "method": "GET",
+    "route": "/bonos/excel",
+    "payload": null
+  },
+  {
+    "method": "GET",
+    "route": "/movimientos/pdf",
+    "payload": null
+  },
+  {
+    "method": "GET",
+    "route": "/admin/pdf",
+    "payload": null
+  },
+  {
+    "method": "GET",
+    "route": "/locomotoras/pdf",
+    "payload": null
+  },
+  {
+    "method": "GET",
+    "route": "/empresas/pdf",
+    "payload": null
+  },
+  {
+    "method": "GET",
+    "route": "/bonos/pdf",
+    "payload": null
+  },
+  {
+    "method": "GET",
+    "route": "/ultima",
+    "payload": null
+  },
+  {
+    "method": "GET",
+    "route": "/",
+    "payload": null
+  },
+  {
+    "method": "POST",
+    "route": "/",
+    "payload": {
+      "ejemplo": "reemplazar_con_datos_reales"
+    }
+  },
+  {
+    "method": "PUT",
+    "route": "/:id",
+    "payload": {
+      "ejemplo": "reemplazar_con_datos_reales"
+    }
+  },
+  {
+    "method": "GET",
+    "route": "/meta",
+    "payload": null
+  },
+  {
+    "method": "GET",
+    "route": "/",
+    "payload": null
+  },
+  {
+    "method": "GET",
+    "route": "/assets/banner-asset.svg",
+    "payload": null
+  },
+  {
+    "method": "GET",
+    "route": "/assets/:assetName",
+    "payload": null
+  },
+  {
+    "method": "POST",
+    "route": "/",
+    "payload": {
+      "ejemplo": "reemplazar_con_datos_reales"
+    }
+  },
+  {
+    "method": "GET",
+    "route": "/",
+    "payload": null
+  },
+  {
+    "method": "GET",
+    "route": "/lite",
+    "payload": null
+  },
+  {
+    "method": "PUT",
+    "route": "/:id",
+    "payload": {
+      "ejemplo": "reemplazar_con_datos_reales"
+    }
+  },
+  {
+    "method": "DELETE",
+    "route": "/:id",
+    "payload": null
+  },
+  {
+    "method": "GET",
+    "route": "/",
+    "payload": null
+  },
+  {
+    "method": "GET",
+    "route": "/imagen",
+    "payload": null
+  },
+  {
+    "method": "GET",
+    "route": "/imagen/:ruta(*)",
+    "payload": null
+  },
+  {
+    "method": "GET",
+    "route": "/:id/verificacion",
+    "payload": null
+  },
+  {
+    "method": "GET",
+    "route": "/:id",
+    "payload": null
+  },
+  {
+    "method": "POST",
+    "route": "/",
+    "payload": {
+      "ejemplo": "reemplazar_con_datos_reales"
+    }
+  },
+  {
+    "method": "PUT",
+    "route": "/:id",
+    "payload": {
+      "ejemplo": "reemplazar_con_datos_reales"
+    }
+  },
+  {
+    "method": "DELETE",
+    "route": "/:id",
+    "payload": null
+  },
+  {
+    "method": "POST",
+    "route": "/:id/cerrar",
+    "payload": {
+      "ejemplo": "reemplazar_con_datos_reales"
+    }
+  },
+  {
+    "method": "POST",
+    "route": "/:id/continuar",
+    "payload": {
+      "ejemplo": "reemplazar_con_datos_reales"
+    }
+  },
+  {
+    "method": "POST",
+    "route": "/cerrar-vencidos",
+    "payload": {
+      "ejemplo": "reemplazar_con_datos_reales"
+    }
+  },
+  {
+    "method": "POST",
+    "route": "/:id/resuelto",
+    "payload": {
+      "ejemplo": "reemplazar_con_datos_reales"
+    }
+  },
+  {
+    "method": "POST",
+    "route": "/",
+    "payload": {
+      "ejemplo": "reemplazar_con_datos_reales"
+    }
+  },
+  {
+    "method": "GET",
+    "route": "/",
+    "payload": null
+  },
+  {
+    "method": "GET",
+    "route": "/lite",
+    "payload": null
+  },
+  {
+    "method": "GET",
+    "route": "/buscar",
+    "payload": null
+  },
+  {
+    "method": "GET",
+    "route": "/:id",
+    "payload": null
+  },
+  {
+    "method": "GET",
+    "route": "/servicios/pendientes",
+    "payload": null
+  },
+  {
+    "method": "PATCH",
+    "route": "/servicios/:id/estado",
+    "payload": {
+      "ejemplo": "reemplazar_con_datos_reales"
+    }
+  },
+  {
+    "method": "GET",
+    "route": "/",
+    "payload": null
+  },
+  {
+    "method": "GET",
+    "route": "/buscar",
+    "payload": null
+  },
+  {
+    "method": "GET",
+    "route": "/all",
+    "payload": null
+  },
+  {
+    "method": "GET",
+    "route": "/pendientes",
+    "payload": null
+  },
+  {
+    "method": "GET",
+    "route": "/empresa/:empresaId/pendientes",
+    "payload": null
+  },
+  {
+    "method": "GET",
+    "route": "/servicios/espera",
+    "payload": null
+  },
+  {
+    "method": "PATCH",
+    "route": "/servicios/:id/solicitar",
+    "payload": {
+      "ejemplo": "reemplazar_con_datos_reales"
+    }
+  },
+  {
+    "method": "GET",
+    "route": "/empresa/:empresaId",
+    "payload": null
+  },
+  {
+    "method": "GET",
+    "route": "/empresa/:empresaId/localidad/:localidadId",
+    "payload": null
+  },
+  {
+    "method": "GET",
+    "route": "/empresa/:empresaId/localidad/:localidadId/pendientes",
+    "payload": null
+  },
+  {
+    "method": "GET",
+    "route": "/localidad/:localidadId/pendientes",
+    "payload": null
+  },
+  {
+    "method": "GET",
+    "route": "/localidad/:localidadId/all",
+    "payload": null
+  },
+  {
+    "method": "GET",
+    "route": "/localidad/:localidadId/empresa/:empresaId",
+    "payload": null
+  },
+  {
+    "method": "GET",
+    "route": "/ronda/:rondaId/info",
+    "payload": null
+  },
+  {
+    "method": "PATCH",
+    "route": "/:id/cancelar",
+    "payload": {
+      "ejemplo": "reemplazar_con_datos_reales"
+    }
+  },
+  {
+    "method": "POST",
+    "route": "/",
+    "payload": {
+      "ejemplo": "reemplazar_con_datos_reales"
+    }
+  },
+  {
+    "method": "PATCH",
+    "route": "/:id/prioridad",
+    "payload": {
+      "ejemplo": "reemplazar_con_datos_reales"
+    }
+  },
+  {
+    "method": "GET",
+    "route": "/:id/edicion",
+    "payload": null
+  },
+  {
+    "method": "DELETE",
+    "route": "/:id",
+    "payload": null
+  },
+  {
+    "method": "PATCH",
+    "route": "/:id/iniciar",
+    "payload": {
+      "ejemplo": "reemplazar_con_datos_reales"
+    }
+  },
+  {
+    "method": "PATCH",
+    "route": "/:id/pausar",
+    "payload": {
+      "ejemplo": "reemplazar_con_datos_reales"
+    }
+  },
+  {
+    "method": "PATCH",
+    "route": "/:id/reanudar",
+    "payload": {
+      "ejemplo": "reemplazar_con_datos_reales"
+    }
+  },
+  {
+    "method": "PATCH",
+    "route": "/:id/edicion",
+    "payload": {
+      "ejemplo": "reemplazar_con_datos_reales"
+    }
+  },
+  {
+    "method": "PATCH",
+    "route": "/:id/finalizar",
+    "payload": {
+      "ejemplo": "reemplazar_con_datos_reales"
+    }
+  },
+  {
+    "method": "POST",
+    "route": "/movimiento/:movimientoId",
+    "payload": {
+      "ejemplo": "reemplazar_con_datos_reales"
+    }
+  },
+  {
+    "method": "GET",
+    "route": "/",
+    "payload": null
+  },
+  {
+    "method": "DELETE",
+    "route": "/:id",
+    "payload": null
+  },
+  {
+    "method": "GET",
+    "route": "/localidad/:localidadId",
+    "payload": null
+  },
+  {
+    "method": "GET",
+    "route": "/localidad/:localidadId/estado/:concluido",
+    "payload": null
+  },
+  {
+    "method": "GET",
+    "route": "/localidad/:localidadId/siguiente",
+    "payload": null
+  },
+  {
+    "method": "GET",
+    "route": "/localidad/:localidadId/siguiente-inteligente",
+    "payload": null
+  },
+  {
+    "method": "PATCH",
+    "route": "/intercambiar-movimientos",
+    "payload": {
+      "ejemplo": "reemplazar_con_datos_reales"
+    }
+  },
+  {
+    "method": "PATCH",
+    "route": "/:id/intercambiar-movimiento",
+    "payload": {
+      "ejemplo": "reemplazar_con_datos_reales"
+    }
+  },
+  {
+    "method": "GET",
+    "route": "/:id/info",
+    "payload": null
+  },
+  {
+    "method": "PATCH",
+    "route": "/:id/concluir",
+    "payload": {
+      "ejemplo": "reemplazar_con_datos_reales"
+    }
+  },
+  {
+    "method": "POST",
+    "route": "/login",
+    "payload": {
+      "ejemplo": "reemplazar_con_datos_reales"
+    }
+  },
+  {
+    "method": "POST",
+    "route": "/",
+    "payload": {
+      "ejemplo": "reemplazar_con_datos_reales"
+    }
+  },
+  {
+    "method": "GET",
+    "route": "/",
+    "payload": null
+  },
+  {
+    "method": "PUT",
+    "route": "/:id",
+    "payload": {
+      "ejemplo": "reemplazar_con_datos_reales"
+    }
+  },
+  {
+    "method": "GET",
+    "route": "/secciones",
+    "payload": null
+  },
+  {
+    "method": "GET",
+    "route": "/secciones/via/:viaId",
+    "payload": null
+  },
+  {
+    "method": "POST",
+    "route": "/secciones/via/:viaId",
+    "payload": {
+      "ejemplo": "reemplazar_con_datos_reales"
+    }
+  },
+  {
+    "method": "PUT",
+    "route": "/secciones/:id",
+    "payload": {
+      "ejemplo": "reemplazar_con_datos_reales"
+    }
+  },
+  {
+    "method": "DELETE",
+    "route": "/secciones/:id",
+    "payload": null
+  },
+  {
+    "method": "POST",
+    "route": "/secciones/via/:viaId/asignar",
+    "payload": {
+      "ejemplo": "reemplazar_con_datos_reales"
+    }
+  },
+  {
+    "method": "POST",
+    "route": "/secciones/via/:viaId/liberar",
+    "payload": {
+      "ejemplo": "reemplazar_con_datos_reales"
+    }
+  },
+  {
+    "method": "POST",
+    "route": "/secciones/via/:viaId/liberar-todas",
+    "payload": {
+      "ejemplo": "reemplazar_con_datos_reales"
+    }
+  },
+  {
+    "method": "GET",
+    "route": "/",
+    "payload": null
+  },
+  {
+    "method": "GET",
+    "route": "/lite",
+    "payload": null
+  },
+  {
+    "method": "POST",
+    "route": "/",
+    "payload": {
+      "ejemplo": "reemplazar_con_datos_reales"
+    }
+  },
+  {
+    "method": "GET",
+    "route": "/localidad/:localidadId",
+    "payload": null
+  },
+  {
+    "method": "GET",
+    "route": "/localidad/:localidadId/lite",
+    "payload": null
+  },
+  {
+    "method": "PUT",
+    "route": "/:id",
+    "payload": {
+      "ejemplo": "reemplazar_con_datos_reales"
+    }
+  },
+  {
+    "method": "DELETE",
+    "route": "/:id",
+    "payload": null
+  },
+  {
+    "method": "GET",
+    "route": "/",
+    "payload": null
+  }
+]
