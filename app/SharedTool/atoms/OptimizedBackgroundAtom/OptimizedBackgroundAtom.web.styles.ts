@@ -10,12 +10,13 @@ export const optimizedStyles = {
         zIndex: 0,
         backgroundColor: tokens.colors.bg,
         backgroundImage: `
-            radial-gradient(circle at 10% 40%, ${tokens.colors.glowMint} 0%, transparent 60%),
-            radial-gradient(circle at 90% 40%, ${tokens.colors.glowTeal} 0%, transparent 60%),
-            radial-gradient(circle at 50% -10%, ${tokens.colors.glowPurple} 0%, transparent 70%),
-            radial-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px)
+            radial-gradient(circle at 12% 30%, ${tokens.colors.glowBlue} 0%, transparent 60%),
+            radial-gradient(circle at 88% 28%, ${tokens.colors.glowPurple} 0%, transparent 65%),
+            radial-gradient(circle at 45% 120%, ${tokens.colors.glowMint} 0%, transparent 60%),
+            linear-gradient(180deg, rgba(255,255,255,0.05), transparent 45%),
+            radial-gradient(rgba(255, 255, 255, 0.045) 1px, transparent 1px)
         `,
-        backgroundSize: '100% 100%, 100% 100%, 100% 100%, 40px 40px',
+        backgroundSize: '100% 100%, 100% 100%, 100% 100%, 100% 100%, 46px 46px',
     } as CSSProperties,
 
     ribbonLeft: {
@@ -25,7 +26,7 @@ export const optimizedStyles = {
         left: '-600px',
         top: '0%',
         borderRadius: '50%',
-        background: `radial-gradient(circle, ${tokens.colors.glowMint} 0%, transparent 70%)`,
+        background: `radial-gradient(circle, ${tokens.colors.glowBlue} 0%, transparent 70%)`,
         filter: 'blur(100px)',
         opacity: 0.4,
     } as CSSProperties,
@@ -37,7 +38,7 @@ export const optimizedStyles = {
         right: '-600px',
         top: '10%',
         borderRadius: '50%',
-        background: `radial-gradient(circle, ${tokens.colors.glowTeal} 0%, transparent 70%)`,
+        background: `radial-gradient(circle, ${tokens.colors.glowPurple} 0%, transparent 70%)`,
         filter: 'blur(100px)',
         opacity: 0.4,
     } as CSSProperties,

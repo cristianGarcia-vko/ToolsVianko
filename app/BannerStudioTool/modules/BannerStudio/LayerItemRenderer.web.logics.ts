@@ -102,7 +102,13 @@ export const useLayerItemLogic = ({
             startLeft: currentLeft,
             startTop: currentTop,
         };
-        const initialPreview = { left: currentLeft, top: currentTop };
+        const initialPreview = { 
+            left: currentLeft, 
+            top: currentTop,
+            width: currentWidth,
+            height: currentHeight,
+            transform: currentTransform
+        };
         previewRef.current = initialPreview;
         setDragPreview(initialPreview);
 

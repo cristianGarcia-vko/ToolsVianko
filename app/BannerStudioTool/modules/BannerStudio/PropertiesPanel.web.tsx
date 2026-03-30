@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
     Layers, Palette, Layout,
@@ -40,7 +40,7 @@ interface Props {
     setTab: (t: 'props' | 'layers') => void;
 }
 
-export const PropertiesPanel: React.FC<Props> = ({
+export const PropertiesPanel: React.FC<Props> = memo(({
     project, activeBanner, selectedLayer,
     onUpdateProject, onUpdateBanner, onUpdateLayer, onDeleteLayer,
     onAddBanner, onDuplicateBanner, onDeleteBanner, onMoveLayer, onRenameLayer, onDuplicateLayer,
@@ -729,19 +729,19 @@ export const PropertiesPanel: React.FC<Props> = ({
             </div>
         </div>
     );
-};
+});
 
 /* --- SUBCOMPONENTS --- */
 
-const TabBtn: React.FC<{ active: boolean; label: string; icon: React.ReactNode; onClick: () => void }> = ({ active, label, icon, onClick }) => (
+const TabBtn: React.FC<{ active: boolean; label: string; icon: React.ReactNode; onClick: () => void }> = memo(({ active, label, icon, onClick }) => (
     <button onClick={onClick} style={getTabBtnStyle(active)}>
         {icon}
         <span style={{ fontSize: '10px', fontWeight: 900, letterSpacing: '2px' }}>{label}</span>
         {active && <motion.div layoutId="tab-underline" style={tabUnderline} />}
     </button>
-);
+));
 
-const PropSection: React.FC<{ label: string; icon: React.ReactNode; children: React.ReactNode }> = ({ label, icon, children }) => (
+const PropSection: React.FC<{ label: string; icon: React.ReactNode; children: React.ReactNode }> = memo(({ label, icon, children }) => (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
         <div style={sectionLabelBar}>
             <div style={sectionLabelLine} />
@@ -751,9 +751,9 @@ const PropSection: React.FC<{ label: string; icon: React.ReactNode; children: Re
             {children}
         </div>
     </div>
-);
+));
 
-const PropInput: React.FC<{ label: string; value: any; onChange: (v: string) => void; unit?: string; icon?: React.ReactNode }> = ({ label, value, onChange, unit, icon }) => {
+const PropInput: React.FC<{ label: string; value: any; onChange: (v: string) => void; unit?: string; icon?: React.ReactNode }> = memo(({ label, value, onChange, unit, icon }) => {
     // Guard: ensure value is never NaN for the input
     const safeValue = (value != null && !Number.isNaN(value)) ? value : 0;
     return (
@@ -773,9 +773,9 @@ const PropInput: React.FC<{ label: string; value: any; onChange: (v: string) => 
             </div>
         </div>
     );
-};
+});
 
-const SlideControl: React.FC<{ label: string; value: number; min: number; max: number; step?: number; onChange: (v: number) => void }> = ({ label, value, min, max, step = 1, onChange }) => {
+const SlideControl: React.FC<{ label: string; value: number; min: number; max: number; step?: number; onChange: (v: number) => void }> = memo(({ label, value, min, max, step = 1, onChange }) => {
     const safeValue = (value != null && !Number.isNaN(value)) ? value : min;
     return (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
@@ -786,19 +786,29 @@ const SlideControl: React.FC<{ label: string; value: number; min: number; max: n
             <input type="range" min={min} max={max} step={step} value={safeValue} onChange={e => onChange(parseFloat(e.target.value))} style={rangeStyle} />
         </div>
     );
-};
+});
 
-const Chip: React.FC<{ label: string; active?: boolean; onClick: () => void }> = ({ label, active, onClick }) => (
+const Chip: React.FC<{ label: string; active?: boolean; onClick: () => void }> = memo(({ label, active, onClick }) => (
     <button onClick={onClick} style={getChipStyle(active)}>
         {label}
     </button>
-);
+));
 
-const GlassMiniBtn: React.FC<{ children: React.ReactNode; onClick: () => void; active?: boolean }> = ({ children, onClick, active }) => (
+const GlassMiniBtn: React.FC<{ children: React.ReactNode; onClick: () => void; active?: boolean }> = memo(({ children, onClick, active }) => (
     <button onClick={onClick} style={getGlassMiniBtnStyle(active)}>
         {children}
     </button>
-);
+));
+
+const TabBtnWrapper = TabBtn;
+const PropSectionWrapper = PropSection;
+const PropInputWrapper = PropInput;
+const SlideControlWrapper = SlideControl;
+const ChipWrapper = Chip;
+const GlassMiniBtnWrapper = GlassMiniBtn;
+
+// Re-map internal usage to wrappers if needed, but here they are named the same anyway.
+
 
 const IconAction: React.FC<{ children: React.ReactNode; onClick: () => void; active?: boolean; color?: string }> = ({ children, onClick, active, color }) => (
     <button onClick={onClick} style={getIconActionStyle(active, color)}>

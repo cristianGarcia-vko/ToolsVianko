@@ -1,0 +1,640 @@
+{
+    "root_group": {
+        "id": "d41d8cd98f00b204e9800998ecf8427e",
+        "groups": {},
+        "checks": {
+                "GET / status 2xx": {
+                    "name": "GET / status 2xx",
+                    "path": "::GET / status 2xx",
+                    "id": "d70c7b2da83d1748d27b1ee7f096b112",
+                    "passes": 1908,
+                    "fails": 0
+                },
+                "GET /health status 2xx": {
+                    "name": "GET /health status 2xx",
+                    "path": "::GET /health status 2xx",
+                    "id": "9415849823efbe92569733fb1ae87223",
+                    "passes": 0,
+                    "fails": 159
+                },
+                "GET /usuario/:usuarioId status 2xx": {
+                    "id": "db6164cacc4b72996f2a7aee8e6ceac9",
+                    "passes": 0,
+                    "fails": 159,
+                    "name": "GET /usuario/:usuarioId status 2xx",
+                    "path": "::GET /usuario/:usuarioId status 2xx"
+                },
+                "POST / status 2xx": {
+                    "name": "POST / status 2xx",
+                    "path": "::POST / status 2xx",
+                    "id": "13a3bfd9142dfafce397c5339f3ceef5",
+                    "passes": 0,
+                    "fails": 1272
+                },
+                "DELETE /:token status 2xx": {
+                    "fails": 159,
+                    "name": "DELETE /:token status 2xx",
+                    "path": "::DELETE /:token status 2xx",
+                    "id": "f1d894c8cf3b8db2c7697f3b2d7a69a5",
+                    "passes": 0
+                },
+                "DELETE /usuario/:usuarioId status 2xx": {
+                    "name": "DELETE /usuario/:usuarioId status 2xx",
+                    "path": "::DELETE /usuario/:usuarioId status 2xx",
+                    "id": "819e350ae11047975fe7bf4207ab7446",
+                    "passes": 0,
+                    "fails": 159
+                },
+                "GET /movimientos/excel status 2xx": {
+                    "fails": 159,
+                    "name": "GET /movimientos/excel status 2xx",
+                    "path": "::GET /movimientos/excel status 2xx",
+                    "id": "7d9ace9dfa7d191d830e9436a8e2f8f0",
+                    "passes": 0
+                },
+                "GET /locomotoras/excel status 2xx": {
+                    "name": "GET /locomotoras/excel status 2xx",
+                    "path": "::GET /locomotoras/excel status 2xx",
+                    "id": "027b77989d7829bd52ebca763124619a",
+                    "passes": 0,
+                    "fails": 159
+                },
+                "GET /empresas/excel status 2xx": {
+                    "name": "GET /empresas/excel status 2xx",
+                    "path": "::GET /empresas/excel status 2xx",
+                    "id": "8c93ad92e17a512b9832c69768165dba",
+                    "passes": 0,
+                    "fails": 159
+                },
+                "GET /bonos/excel status 2xx": {
+                    "name": "GET /bonos/excel status 2xx",
+                    "path": "::GET /bonos/excel status 2xx",
+                    "id": "85b89bc27bdbfcc67706e1260dc99380",
+                    "passes": 0,
+                    "fails": 159
+                },
+                "GET /movimientos/pdf status 2xx": {
+                    "name": "GET /movimientos/pdf status 2xx",
+                    "path": "::GET /movimientos/pdf status 2xx",
+                    "id": "ae443dd2cfb911b1e408e4f35cc17b4d",
+                    "passes": 0,
+                    "fails": 159
+                },
+                "GET /admin/pdf status 2xx": {
+                    "passes": 0,
+                    "fails": 159,
+                    "name": "GET /admin/pdf status 2xx",
+                    "path": "::GET /admin/pdf status 2xx",
+                    "id": "79dbf56a78518391e0704dc6d9be282e"
+                },
+                "GET /locomotoras/pdf status 2xx": {
+                    "name": "GET /locomotoras/pdf status 2xx",
+                    "path": "::GET /locomotoras/pdf status 2xx",
+                    "id": "c48d8301e6ac894393adf503c45dd7e5",
+                    "passes": 0,
+                    "fails": 159
+                },
+                "GET /empresas/pdf status 2xx": {
+                    "name": "GET /empresas/pdf status 2xx",
+                    "path": "::GET /empresas/pdf status 2xx",
+                    "id": "06607405039eaf16fbcb2c6368bb927c",
+                    "passes": 0,
+                    "fails": 159
+                },
+                "GET /bonos/pdf status 2xx": {
+                    "id": "f40c8a1957f7fd0c7d19c28f51754935",
+                    "passes": 0,
+                    "fails": 159,
+                    "name": "GET /bonos/pdf status 2xx",
+                    "path": "::GET /bonos/pdf status 2xx"
+                },
+                "GET /ultima status 2xx": {
+                    "name": "GET /ultima status 2xx",
+                    "path": "::GET /ultima status 2xx",
+                    "id": "8a243852ee0fbf89cbbf011bc7754664",
+                    "passes": 0,
+                    "fails": 159
+                },
+                "PUT /:id status 2xx": {
+                    "path": "::PUT /:id status 2xx",
+                    "id": "acc71ce9d4eeffa129baef1df9858e1e",
+                    "passes": 0,
+                    "fails": 795,
+                    "name": "PUT /:id status 2xx"
+                },
+                "GET /meta status 2xx": {
+                    "name": "GET /meta status 2xx",
+                    "path": "::GET /meta status 2xx",
+                    "id": "ea247cd8d4026db05198791bf7a7b036",
+                    "passes": 0,
+                    "fails": 159
+                },
+                "GET /assets/banner-asset.svg status 2xx": {
+                    "name": "GET /assets/banner-asset.svg status 2xx",
+                    "path": "::GET /assets/banner-asset.svg status 2xx",
+                    "id": "1316700f92f51e137302d0c51d3b1447",
+                    "passes": 0,
+                    "fails": 159
+                },
+                "GET /assets/:assetName status 2xx": {
+                    "name": "GET /assets/:assetName status 2xx",
+                    "path": "::GET /assets/:assetName status 2xx",
+                    "id": "3a5574e7b8ecc676b2df1ea2bd1f682f",
+                    "passes": 0,
+                    "fails": 159
+                },
+                "GET /lite status 2xx": {
+                    "id": "f37e4c4e049dbc146c6c1e75062e83bb",
+                    "passes": 0,
+                    "fails": 477,
+                    "name": "GET /lite status 2xx",
+                    "path": "::GET /lite status 2xx"
+                },
+                "DELETE /:id status 2xx": {
+                    "name": "DELETE /:id status 2xx",
+                    "path": "::DELETE /:id status 2xx",
+                    "id": "f881b59570b992cff35186d7372daa5b",
+                    "passes": 0,
+                    "fails": 795
+                },
+                "GET /imagen status 2xx": {
+                    "id": "78f07496abe33f29102ad34208db5dbf",
+                    "passes": 0,
+                    "fails": 159,
+                    "name": "GET /imagen status 2xx",
+                    "path": "::GET /imagen status 2xx"
+                },
+                "GET /imagen/:ruta(*) status 2xx": {
+                    "name": "GET /imagen/:ruta(*) status 2xx",
+                    "path": "::GET /imagen/:ruta(*) status 2xx",
+                    "id": "4f700935b2f737569bedad671d21a622",
+                    "passes": 0,
+                    "fails": 159
+                },
+                "GET /:id/verificacion status 2xx": {
+                    "id": "70d1b9a749181a253f64286e26c390fe",
+                    "passes": 0,
+                    "fails": 159,
+                    "name": "GET /:id/verificacion status 2xx",
+                    "path": "::GET /:id/verificacion status 2xx"
+                },
+                "GET /:id status 2xx": {
+                    "name": "GET /:id status 2xx",
+                    "path": "::GET /:id status 2xx",
+                    "id": "15570f9712bff1fd834c78ff5d800b24",
+                    "passes": 0,
+                    "fails": 318
+                },
+                "POST /:id/cerrar status 2xx": {
+                    "name": "POST /:id/cerrar status 2xx",
+                    "path": "::POST /:id/cerrar status 2xx",
+                    "id": "effd26f5525951f7daa0ad7e331317c3",
+                    "passes": 0,
+                    "fails": 159
+                },
+                "POST /:id/continuar status 2xx": {
+                    "name": "POST /:id/continuar status 2xx",
+                    "path": "::POST /:id/continuar status 2xx",
+                    "id": "b563b4460f0f5cd91b4fa9eef0df8d52",
+                    "passes": 0,
+                    "fails": 159
+                },
+                "POST /cerrar-vencidos status 2xx": {
+                    "name": "POST /cerrar-vencidos status 2xx",
+                    "path": "::POST /cerrar-vencidos status 2xx",
+                    "id": "bc21d18d621b70a3b4727e14cab0d705",
+                    "passes": 0,
+                    "fails": 159
+                },
+                "POST /:id/resuelto status 2xx": {
+                    "fails": 159,
+                    "name": "POST /:id/resuelto status 2xx",
+                    "path": "::POST /:id/resuelto status 2xx",
+                    "id": "106c4e78493f86c9d1c0be328262cea7",
+                    "passes": 0
+                },
+                "GET /buscar status 2xx": {
+                    "id": "d997155eb302d20aa1b8a76af5f22094",
+                    "passes": 0,
+                    "fails": 318,
+                    "name": "GET /buscar status 2xx",
+                    "path": "::GET /buscar status 2xx"
+                },
+                "GET /servicios/pendientes status 2xx": {
+                    "id": "ac414f97d07c6382f664f3292e07356e",
+                    "passes": 0,
+                    "fails": 159,
+                    "name": "GET /servicios/pendientes status 2xx",
+                    "path": "::GET /servicios/pendientes status 2xx"
+                },
+                "PATCH /servicios/:id/estado status 2xx": {
+                    "passes": 0,
+                    "fails": 159,
+                    "name": "PATCH /servicios/:id/estado status 2xx",
+                    "path": "::PATCH /servicios/:id/estado status 2xx",
+                    "id": "2fbdab55318a430ad06d7cfaa05dd15b"
+                },
+                "GET /all status 2xx": {
+                    "name": "GET /all status 2xx",
+                    "path": "::GET /all status 2xx",
+                    "id": "e2f48250caa59280860cda4fc9cd62f1",
+                    "passes": 0,
+                    "fails": 159
+                },
+                "GET /pendientes status 2xx": {
+                    "name": "GET /pendientes status 2xx",
+                    "path": "::GET /pendientes status 2xx",
+                    "id": "c53a4050470db6f00122064a98daa05e",
+                    "passes": 0,
+                    "fails": 159
+                },
+                "GET /empresa/:empresaId/pendientes status 2xx": {
+                    "name": "GET /empresa/:empresaId/pendientes status 2xx",
+                    "path": "::GET /empresa/:empresaId/pendientes status 2xx",
+                    "id": "6be0f628967f17fc7b88f4dfbf4ea020",
+                    "passes": 0,
+                    "fails": 159
+                },
+                "GET /servicios/espera status 2xx": {
+                    "passes": 0,
+                    "fails": 159,
+                    "name": "GET /servicios/espera status 2xx",
+                    "path": "::GET /servicios/espera status 2xx",
+                    "id": "5ec4c95a2553fb4885ec63a83fe946f8"
+                },
+                "PATCH /servicios/:id/solicitar status 2xx": {
+                    "name": "PATCH /servicios/:id/solicitar status 2xx",
+                    "path": "::PATCH /servicios/:id/solicitar status 2xx",
+                    "id": "a569e31bcf6725f5472228f42de2f09d",
+                    "passes": 0,
+                    "fails": 159
+                },
+                "GET /empresa/:empresaId status 2xx": {
+                    "name": "GET /empresa/:empresaId status 2xx",
+                    "path": "::GET /empresa/:empresaId status 2xx",
+                    "id": "6a77eb5e77d4d08ae6ff41e5456c9e90",
+                    "passes": 0,
+                    "fails": 159
+                },
+                "GET /empresa/:empresaId/localidad/:localidadId status 2xx": {
+                    "name": "GET /empresa/:empresaId/localidad/:localidadId status 2xx",
+                    "path": "::GET /empresa/:empresaId/localidad/:localidadId status 2xx",
+                    "id": "70e073f60dec910e31538763487c10f5",
+                    "passes": 0,
+                    "fails": 159
+                },
+                "GET /empresa/:empresaId/localidad/:localidadId/pendientes status 2xx": {
+                    "fails": 159,
+                    "name": "GET /empresa/:empresaId/localidad/:localidadId/pendientes status 2xx",
+                    "path": "::GET /empresa/:empresaId/localidad/:localidadId/pendientes status 2xx",
+                    "id": "9105d3481010a6e6c47192ce9fdf3d95",
+                    "passes": 0
+                },
+                "GET /localidad/:localidadId/pendientes status 2xx": {
+                    "name": "GET /localidad/:localidadId/pendientes status 2xx",
+                    "path": "::GET /localidad/:localidadId/pendientes status 2xx",
+                    "id": "ac8e3964099d19215b923f210ed1433a",
+                    "passes": 0,
+                    "fails": 159
+                },
+                "GET /localidad/:localidadId/all status 2xx": {
+                    "id": "c8df60b8c2841e7c3594bcef26920a90",
+                    "passes": 0,
+                    "fails": 159,
+                    "name": "GET /localidad/:localidadId/all status 2xx",
+                    "path": "::GET /localidad/:localidadId/all status 2xx"
+                },
+                "GET /localidad/:localidadId/empresa/:empresaId status 2xx": {
+                    "id": "833b3b59c670ee192e1d802eb6d050fd",
+                    "passes": 0,
+                    "fails": 159,
+                    "name": "GET /localidad/:localidadId/empresa/:empresaId status 2xx",
+                    "path": "::GET /localidad/:localidadId/empresa/:empresaId status 2xx"
+                },
+                "GET /ronda/:rondaId/info status 2xx": {
+                    "name": "GET /ronda/:rondaId/info status 2xx",
+                    "path": "::GET /ronda/:rondaId/info status 2xx",
+                    "id": "f4aa182df89ee8b6b66b81e044d91512",
+                    "passes": 0,
+                    "fails": 159
+                },
+                "PATCH /:id/cancelar status 2xx": {
+                    "fails": 159,
+                    "name": "PATCH /:id/cancelar status 2xx",
+                    "path": "::PATCH /:id/cancelar status 2xx",
+                    "id": "7afb082b367c8b2b8113d1bf7403bf6f",
+                    "passes": 0
+                },
+                "PATCH /:id/prioridad status 2xx": {
+                    "id": "e383225194e51aea9c0a23c607683155",
+                    "passes": 0,
+                    "fails": 159,
+                    "name": "PATCH /:id/prioridad status 2xx",
+                    "path": "::PATCH /:id/prioridad status 2xx"
+                },
+                "GET /:id/edicion status 2xx": {
+                    "passes": 0,
+                    "fails": 159,
+                    "name": "GET /:id/edicion status 2xx",
+                    "path": "::GET /:id/edicion status 2xx",
+                    "id": "afd6a3e99ce4f70c44f7f227103101bd"
+                },
+                "PATCH /:id/iniciar status 2xx": {
+                    "name": "PATCH /:id/iniciar status 2xx",
+                    "path": "::PATCH /:id/iniciar status 2xx",
+                    "id": "41bfe952d49d26db8d7f14a89b937f46",
+                    "passes": 0,
+                    "fails": 159
+                },
+                "PATCH /:id/pausar status 2xx": {
+                    "name": "PATCH /:id/pausar status 2xx",
+                    "path": "::PATCH /:id/pausar status 2xx",
+                    "id": "db4e39cfa6c6c6bdd34cc0a4d77f439e",
+                    "passes": 0,
+                    "fails": 159
+                },
+                "PATCH /:id/reanudar status 2xx": {
+                    "name": "PATCH /:id/reanudar status 2xx",
+                    "path": "::PATCH /:id/reanudar status 2xx",
+                    "id": "6a68135194689dfe78f829175738651e",
+                    "passes": 0,
+                    "fails": 159
+                },
+                "PATCH /:id/edicion status 2xx": {
+                    "fails": 159,
+                    "name": "PATCH /:id/edicion status 2xx",
+                    "path": "::PATCH /:id/edicion status 2xx",
+                    "id": "2f233c12cc6b0812f328a4464339af51",
+                    "passes": 0
+                },
+                "PATCH /:id/finalizar status 2xx": {
+                    "name": "PATCH /:id/finalizar status 2xx",
+                    "path": "::PATCH /:id/finalizar status 2xx",
+                    "id": "3b5c0157d3ef8bac823783a7a7c3ed90",
+                    "passes": 0,
+                    "fails": 159
+                },
+                "POST /movimiento/:movimientoId status 2xx": {
+                    "name": "POST /movimiento/:movimientoId status 2xx",
+                    "path": "::POST /movimiento/:movimientoId status 2xx",
+                    "id": "9984e86bcfb2c29981d13a839afa572f",
+                    "passes": 0,
+                    "fails": 159
+                },
+                "GET /localidad/:localidadId status 2xx": {
+                    "fails": 318,
+                    "name": "GET /localidad/:localidadId status 2xx",
+                    "path": "::GET /localidad/:localidadId status 2xx",
+                    "id": "bf5e4faabf01ad9a16874bfddcabd28b",
+                    "passes": 0
+                },
+                "GET /localidad/:localidadId/estado/:concluido status 2xx": {
+                    "name": "GET /localidad/:localidadId/estado/:concluido status 2xx",
+                    "path": "::GET /localidad/:localidadId/estado/:concluido status 2xx",
+                    "id": "48cd9129782f31336babfc1ab99b06c0",
+                    "passes": 0,
+                    "fails": 159
+                },
+                "GET /localidad/:localidadId/siguiente status 2xx": {
+                    "name": "GET /localidad/:localidadId/siguiente status 2xx",
+                    "path": "::GET /localidad/:localidadId/siguiente status 2xx",
+                    "id": "cb5f588e0b9bbca71d1d1017fb042a71",
+                    "passes": 0,
+                    "fails": 159
+                },
+                "GET /localidad/:localidadId/siguiente-inteligente status 2xx": {
+                    "name": "GET /localidad/:localidadId/siguiente-inteligente status 2xx",
+                    "path": "::GET /localidad/:localidadId/siguiente-inteligente status 2xx",
+                    "id": "685fb3d5b682a4668dd3c3d17c63ff94",
+                    "passes": 0,
+                    "fails": 159
+                },
+                "PATCH /intercambiar-movimientos status 2xx": {
+                    "name": "PATCH /intercambiar-movimientos status 2xx",
+                    "path": "::PATCH /intercambiar-movimientos status 2xx",
+                    "id": "4aec7e9a51b63968d8803deffdc37155",
+                    "passes": 0,
+                    "fails": 159
+                },
+                "PATCH /:id/intercambiar-movimiento status 2xx": {
+                    "name": "PATCH /:id/intercambiar-movimiento status 2xx",
+                    "path": "::PATCH /:id/intercambiar-movimiento status 2xx",
+                    "id": "affd878f131c684e90e6c62499512e13",
+                    "passes": 0,
+                    "fails": 159
+                },
+                "GET /:id/info status 2xx": {
+                    "fails": 159,
+                    "name": "GET /:id/info status 2xx",
+                    "path": "::GET /:id/info status 2xx",
+                    "id": "aabd36498e88c9b98fa2337247ab5467",
+                    "passes": 0
+                },
+                "PATCH /:id/concluir status 2xx": {
+                    "fails": 159,
+                    "name": "PATCH /:id/concluir status 2xx",
+                    "path": "::PATCH /:id/concluir status 2xx",
+                    "id": "0d0b5e19d7b70671d4461fc0d312b3c1",
+                    "passes": 0
+                },
+                "POST /login status 2xx": {
+                    "name": "POST /login status 2xx",
+                    "path": "::POST /login status 2xx",
+                    "id": "f47b86efdc291bd7b56570c8eb5d80d8",
+                    "passes": 0,
+                    "fails": 159
+                },
+                "GET /secciones status 2xx": {
+                    "name": "GET /secciones status 2xx",
+                    "path": "::GET /secciones status 2xx",
+                    "id": "685d72d4502a19614084fced4482396a",
+                    "passes": 0,
+                    "fails": 159
+                },
+                "GET /secciones/via/:viaId status 2xx": {
+                    "passes": 0,
+                    "fails": 159,
+                    "name": "GET /secciones/via/:viaId status 2xx",
+                    "path": "::GET /secciones/via/:viaId status 2xx",
+                    "id": "eed4a284141047b9168c69a04c4ce7d6"
+                },
+                "POST /secciones/via/:viaId status 2xx": {
+                    "path": "::POST /secciones/via/:viaId status 2xx",
+                    "id": "9e3d09898b284ba28131aaeec6ebbf7a",
+                    "passes": 0,
+                    "fails": 159,
+                    "name": "POST /secciones/via/:viaId status 2xx"
+                },
+                "PUT /secciones/:id status 2xx": {
+                    "passes": 0,
+                    "fails": 159,
+                    "name": "PUT /secciones/:id status 2xx",
+                    "path": "::PUT /secciones/:id status 2xx",
+                    "id": "76d908472d605718ee7f3997239bb941"
+                },
+                "DELETE /secciones/:id status 2xx": {
+                    "id": "66b643d3ad61e8572a9fa53f22db6be0",
+                    "passes": 0,
+                    "fails": 159,
+                    "name": "DELETE /secciones/:id status 2xx",
+                    "path": "::DELETE /secciones/:id status 2xx"
+                },
+                "POST /secciones/via/:viaId/asignar status 2xx": {
+                    "path": "::POST /secciones/via/:viaId/asignar status 2xx",
+                    "id": "eec3acf5722e82403f187992a64e14b3",
+                    "passes": 0,
+                    "fails": 159,
+                    "name": "POST /secciones/via/:viaId/asignar status 2xx"
+                },
+                "POST /secciones/via/:viaId/liberar status 2xx": {
+                    "name": "POST /secciones/via/:viaId/liberar status 2xx",
+                    "path": "::POST /secciones/via/:viaId/liberar status 2xx",
+                    "id": "afcaf749451db6f0cddfc047edda9ca9",
+                    "passes": 0,
+                    "fails": 159
+                },
+                "POST /secciones/via/:viaId/liberar-todas status 2xx": {
+                    "path": "::POST /secciones/via/:viaId/liberar-todas status 2xx",
+                    "id": "2790f3a32dd162e7166f431adb52e0f2",
+                    "passes": 0,
+                    "fails": 159,
+                    "name": "POST /secciones/via/:viaId/liberar-todas status 2xx"
+                },
+                "GET /localidad/:localidadId/lite status 2xx": {
+                    "fails": 159,
+                    "name": "GET /localidad/:localidadId/lite status 2xx",
+                    "path": "::GET /localidad/:localidadId/lite status 2xx",
+                    "id": "1b0f61b9f4841a489e7d6058707f5b9c",
+                    "passes": 0
+                }
+            },
+        "name": "",
+        "path": ""
+    },
+    "metrics": {
+        "http_req_connecting": {
+            "p(90)": 0,
+            "p(95)": 0,
+            "p(99)": 0,
+            "avg": 0.00020058618794651037,
+            "min": 0,
+            "med": 0,
+            "max": 1.095
+        },
+        "data_sent": {
+            "count": 2180049,
+            "rate": 36043.937610688874
+        },
+        "http_reqs": {
+            "count": 16377,
+            "rate": 270.76986170964585
+        },
+        "vus_max": {
+            "value": 3,
+            "min": 3,
+            "max": 3
+        },
+        "http_req_duration": {
+            "max": 43.0706,
+            "p(90)": 2.01034,
+            "p(95)": 2.9641999999999986,
+            "p(99)": 4.568035999999999,
+            "avg": 1.246813940282103,
+            "min": 0,
+            "med": 1.1092,
+            "thresholds": {
+                "p(95)<500": false
+            }
+        },
+        "http_req_duration{expected_response:true}": {
+            "p(99)": 5.164894000000003,
+            "avg": 1.30008642557652,
+            "min": 0,
+            "med": 1.1014,
+            "max": 42.333,
+            "p(90)": 2.1879199999999996,
+            "p(95)": 3.1853949999999998
+        },
+        "http_req_waiting": {
+            "p(95)": 2.7217399999999983,
+            "p(99)": 4.284059999999998,
+            "avg": 1.1729532881480136,
+            "min": 0,
+            "med": 1.0851,
+            "max": 43.0706,
+            "p(90)": 1.88716
+        },
+        "iterations": {
+            "count": 159,
+            "rate": 2.6288336088315134
+        },
+        "iteration_duration": {
+            "max": 1504.9838,
+            "p(90)": 1177.62894,
+            "p(95)": 1324.66919,
+            "p(99)": 1503.710464,
+            "avg": 1141.1467213836474,
+            "min": 1104.4587,
+            "med": 1119.3953
+        },
+        "checks": {
+            "passes": 1908,
+            "fails": 14469,
+            "value": 0.11650485436893204
+        },
+        "http_req_sending": {
+            "min": 0,
+            "med": 0,
+            "max": 5.9998,
+            "p(90)": 0,
+            "p(95)": 0,
+            "p(99)": 0.587524,
+            "avg": 0.016732826525004588
+        },
+        "http_req_blocked": {
+            "min": 0,
+            "med": 0,
+            "max": 18.0406,
+            "p(90)": 0,
+            "p(95)": 0,
+            "p(99)": 0,
+            "avg": 0.006258411186419984
+        },
+        "http_req_receiving": {
+            "min": 0,
+            "med": 0,
+            "max": 7.0002,
+            "p(90)": 0,
+            "p(95)": 0.5495399999999998,
+            "p(99)": 0.717224,
+            "avg": 0.05712782560908586
+        },
+        "http_req_tls_handshaking": {
+            "med": 0,
+            "max": 0,
+            "p(90)": 0,
+            "p(95)": 0,
+            "p(99)": 0,
+            "avg": 0,
+            "min": 0
+        },
+        "http_req_failed": {
+            "passes": 14469,
+            "fails": 1908,
+            "thresholds": {
+                "rate<0.01": true
+            },
+            "value": 0.883495145631068
+        },
+        "vus": {
+            "min": 3,
+            "max": 3,
+            "value": 3
+        },
+        "data_received": {
+            "count": 7045608,
+            "rate": 116488.87487454202
+        }
+    },
+    "setup_data": {}
+}

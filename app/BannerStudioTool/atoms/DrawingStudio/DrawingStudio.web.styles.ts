@@ -9,15 +9,23 @@ export const drawingStyles = {
     } as CSSProperties,
 
     sidebar: {
-        width: '300px', background: tokens.colors.bgDeep,
-        borderRight: `1px solid ${tokens.colors.border}`,
-        display: 'flex', flexDirection: 'column',
+        width: '200px',
+        display: 'flex',
+        flexDirection: 'column' as const,
+        padding: '16px',
+        gap: '12px',
+        background: 'rgba(15, 20, 30, 0.8)',
+        backdropFilter: 'blur(20px)',
+        borderRadius: '24px',
+        border: '1px solid rgba(255,255,255,0.08)',
+        boxShadow: '20px 0 60px rgba(0,0,0,0.5)',
     } as CSSProperties,
 
     header: {
-        padding: '24px', borderBottom: `1px solid ${tokens.colors.border}`,
-        display: 'flex', alignItems: 'center', gap: '12px',
-        fontSize: '11px', fontWeight: 900, letterSpacing: '3px',
+        padding: '0 8px',
+        display: 'flex', alignItems: 'center', gap: '8px',
+        fontSize: '10px', fontWeight: 900, letterSpacing: '2px',
+        color: tokens.colors.accentGreen,
     } as CSSProperties,
 
     tabNav: {

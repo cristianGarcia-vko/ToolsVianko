@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef } from 'react';
+import React, { useEffect, useMemo, useRef, useCallback, memo } from 'react';
 import { motion } from 'framer-motion';
 import { BannerLayer } from './types';
 import { ImageIcon, Type, Star, Activity, Maximize2, Zap, CloudRain, Sun, Moon, RotateCw, Move, Copy, ChevronRight, Trash2 } from 'lucide-react';
@@ -38,6 +38,7 @@ const resolveAnimationStyle = (animation?: BannerLayer['animation']): React.CSSP
         animationTimingFunction: (animation as any).easing || animation.timingFunction || 'ease',
         animationIterationCount: (animation as any).iterationCount ?? 1,
         animationFillMode: (animation as any).fillMode || 'forwards',
+        willChange: 'transform, opacity'
     };
 };
 
@@ -145,6 +146,7 @@ const ParticleEffect: React.FC<{ effect?: string; density?: number; color?: stri
                 pointerEvents: 'none',
                 background: 'transparent',
                 color: color || 'white',
+                contain: 'strict',
             }}
         >
             {particles.map((particle) => (
@@ -159,6 +161,7 @@ const ParticleEffect: React.FC<{ effect?: string; density?: number; color?: stri
                         left: particle.left,
                         top: '-20px',
                         opacity: particle.opacity,
+                        willChange: 'transform',
                         animation:
                             normalizedEffect === 'stars'
                                 ? `fadeIn 1.2s alternate infinite ${particle.delay}`
@@ -173,7 +176,7 @@ const ParticleEffect: React.FC<{ effect?: string; density?: number; color?: stri
 interface LayerProps {
     layer: BannerLayer;
     isSelected: boolean;
-    onSelect: (e: React.MouseEvent) => void;
+    onSelect: (id: string, multi: boolean) => void;
     onUpdate: (id: string, updates: Partial<BannerLayer>) => void;
     onDelete: (id: string) => void;
     onDuplicate: () => void;
@@ -184,6 +187,10 @@ interface LayerProps {
 export const LayerItemRenderer: React.FC<LayerProps> = React.memo(({ 
     layer, isSelected, onSelect, onUpdate, onDelete, onDuplicate, onReorder, zoom 
 }) => {
+    const onSelectInternal = useCallback((e: React.MouseEvent | React.PointerEvent) => {
+        onSelect(layer.id, e.ctrlKey || e.shiftKey);
+    }, [layer.id, onSelect]);
+
     const {
         menu, setMenu,
         resolvedLeft, resolvedTop,
@@ -194,7 +201,7 @@ export const LayerItemRenderer: React.FC<LayerProps> = React.memo(({
         handleResizeDetailed,
         handleRotate,
         handleWheelResize,
-    } = useLayerItemLogic({ layer, zoom, onSelect, onUpdate, onDelete, onDuplicate, onReorder });
+    } = useLayerItemLogic({ layer, zoom, onSelect: onSelectInternal, onUpdate, onDelete, onDuplicate, onReorder });
 
     const wrapperRef = useRef<HTMLDivElement>(null);
 
@@ -208,11 +215,11 @@ export const LayerItemRenderer: React.FC<LayerProps> = React.memo(({
     if (!layer.visible) return null;
 
     const renderContent = () => {
-        const contentStyle = getContentBase(
+        const contentStyle = useMemo(() => getContentBase(
             layer.styles.opacity,
             layer.styles.filter,
             layer.styles.borderRadius?.toString()
-        );
+        ), [layer.styles.opacity, layer.styles.filter, layer.styles.borderRadius]);
 
         switch (layer.type) {
             case 'text': {
@@ -344,7 +351,7 @@ export const LayerItemRenderer: React.FC<LayerProps> = React.memo(({
     };
 
     const wrapperZIndex = isSelected ? 1000 : (layer.styles.zIndex as number) || 1;
-    const animationStyle = resolveAnimationStyle(layer.animation);
+    const animationStyle = useMemo(() => resolveAnimationStyle(layer.animation), [layer.animation]);
 
     return (
         <motion.div

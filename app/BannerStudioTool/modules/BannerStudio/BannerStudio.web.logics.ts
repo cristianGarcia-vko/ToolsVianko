@@ -18,11 +18,11 @@ import {
 
 export const useBannerStudioLogic = () => {
     const dispatch = useDispatch();
-    const project = useSelector((state: RootState) => state.banner.project);
-    const selectedLayerId = useSelector((state: RootState) => state.banner.selectedLayerId);
-    const activeBannerId = useSelector((state: RootState) => state.banner.activeBannerId);
-    const canUndo = useSelector((state: RootState) => state.banner.undoStack.length > 0);
-    const canRedo = useSelector((state: RootState) => state.banner.redoStack.length > 0);
+    const project = useSelector((state: RootState) => state.banner?.project || { id: 'default', name: 'Nuevo Proyecto', banners: [], settings: {} as any, version: '1.0', activeBannerId: '', updatedAt: '' } as StudioProject);
+    const selectedLayerId = useSelector((state: RootState) => state.banner?.selectedLayerId);
+    const activeBannerId = useSelector((state: RootState) => state.banner?.activeBannerId);
+    const canUndo = useSelector((state: RootState) => (state.banner?.undoStack?.length || 0) > 0);
+    const canRedo = useSelector((state: RootState) => (state.banner?.redoStack?.length || 0) > 0);
 
     const [layerSearch, setLayerSearch] = useState('');
     const [zoom, setZoom] = useState(1);
@@ -195,23 +195,44 @@ export const useBannerStudioLogic = () => {
     const undo = () => dispatch(reduxUndo());
     const redo = () => dispatch(reduxRedo());
 
-    // --- EVENT LISTENERS (Optimized for performance) ---
+    const undoRef = useRef(undo);
+    const redoRef = useRef(redo);
+    const handleSaveRef = useRef(handleSave);
+    const deleteLayerRef = useRef(deleteLayer);
+    const updateLayerRef = useRef(updateLayer);
+    const duplicateLayerRef = useRef(duplicateLayer);
+    const activeBannerRef = useRef(activeBanner);
+
+    useEffect(() => {
+        undoRef.current = undo;
+        redoRef.current = redo;
+        handleSaveRef.current = handleSave;
+        deleteLayerRef.current = deleteLayer;
+        updateLayerRef.current = updateLayer;
+        duplicateLayerRef.current = duplicateLayer;
+        activeBannerRef.current = activeBanner;
+    }, [undo, redo, handleSave, deleteLayer, updateLayer, duplicateLayer, activeBanner]);
+
+    // --- EVENT LISTENERS (Optimized with refs to avoid re-registration) ---
     useEffect(() => {
         const handleKeyDown = (e: KeyboardEvent) => {
+            const currentSelectedLayerId = (window as any)._vko_selectedLayerId;
+            const currentBanner = activeBannerRef.current;
+
             if (e.code === 'Space' && e.target === document.body) {
                 setIsSpacePressed(true); 
             }
-            if (e.ctrlKey && e.key === 'z') { e.preventDefault(); undo(); }
-            if (e.ctrlKey && e.key === 'y') { e.preventDefault(); redo(); }
-            if (e.ctrlKey && (e.key === 's' || e.key === 'g')) { e.preventDefault(); handleSave(); }
-            if (e.ctrlKey && e.key === 'd') { e.preventDefault(); duplicateLayer(); }
+            if (e.ctrlKey && e.key === 'z') { e.preventDefault(); undoRef.current(); }
+            if (e.ctrlKey && e.key === 'y') { e.preventDefault(); redoRef.current(); }
+            if (e.ctrlKey && (e.key === 's' || e.key === 'g')) { e.preventDefault(); handleSaveRef.current(); }
+            if (e.ctrlKey && e.key === 'd') { e.preventDefault(); duplicateLayerRef.current(); }
             
-            if (selectedLayerId) {
-                const layer = activeBanner.layers.find(l => l.id === selectedLayerId);
+            if (currentSelectedLayerId) {
+                const layer = currentBanner.layers.find(l => l.id === currentSelectedLayerId);
                 if (e.key === 'Delete' || e.key === 'Backspace') { 
                     if (e.target instanceof HTMLBodyElement) {
                         e.preventDefault();
-                        deleteLayer(selectedLayerId); 
+                        deleteLayerRef.current(currentSelectedLayerId); 
                     }
                 }
 
@@ -220,10 +241,10 @@ export const useBannerStudioLogic = () => {
                     const l = parseFloat(String(layer.styles.left)) || 0;
                     const t = parseFloat(String(layer.styles.top)) || 0;
 
-                    if (e.key === 'ArrowLeft') { e.preventDefault(); updateLayer(selectedLayerId, { styles: { ...layer.styles, left: `${l - step}px` } }); }
-                    if (e.key === 'ArrowRight') { e.preventDefault(); updateLayer(selectedLayerId, { styles: { ...layer.styles, left: `${l + step}px` } }); }
-                    if (e.key === 'ArrowUp') { e.preventDefault(); updateLayer(selectedLayerId, { styles: { ...layer.styles, top: `${t - step}px` } }); }
-                    if (e.key === 'ArrowDown') { e.preventDefault(); updateLayer(selectedLayerId, { styles: { ...layer.styles, top: `${t + step}px` } }); }
+                    if (e.key === 'ArrowLeft') { e.preventDefault(); updateLayerRef.current(currentSelectedLayerId, { styles: { ...layer.styles, left: `${l - step}px` } }); }
+                    if (e.key === 'ArrowRight') { e.preventDefault(); updateLayerRef.current(currentSelectedLayerId, { styles: { ...layer.styles, left: `${l + step}px` } }); }
+                    if (e.key === 'ArrowUp') { e.preventDefault(); updateLayerRef.current(currentSelectedLayerId, { styles: { ...layer.styles, top: `${t - step}px` } }); }
+                    if (e.key === 'ArrowDown') { e.preventDefault(); updateLayerRef.current(currentSelectedLayerId, { styles: { ...layer.styles, top: `${t + step}px` } }); }
                 }
             }
         };
@@ -240,7 +261,11 @@ export const useBannerStudioLogic = () => {
             window.removeEventListener('keydown', handleKeyDown);
             window.removeEventListener('keyup', handleKeyUp);
         };
-    }, [project, selectedLayerId, activeBannerId]);
+    }, []);
+
+    useEffect(() => {
+        (window as any)._vko_selectedLayerId = selectedLayerId;
+    }, [selectedLayerId]);
 
     return {
         project, activeBanner, selectedLayer,

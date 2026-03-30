@@ -17,7 +17,7 @@ export const createHubStyles = (theme: ThemeTokens) => ({
         flexDirection: 'column',
         alignItems: 'center',
         justifyContent: 'center',
-        padding: '40px 20px',
+        padding: '12px 10px',
         height: 'auto',
         minHeight: '100vh',
         zIndex: 10,
@@ -38,7 +38,7 @@ export const createHubStyles = (theme: ThemeTokens) => ({
 
     cardList: {
         display: 'flex',
-        gap: '48px',
+        gap: '24px',
         flexWrap: 'wrap',
         justifyContent: 'center',
         width: 'auto',

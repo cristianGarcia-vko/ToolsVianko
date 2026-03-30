@@ -8,14 +8,23 @@ import { tokens } from '../../../SharedTool/style/tokens.shared.style';
 export const exportStyles = {
     overlay: {
         position: 'fixed', inset: 0, zIndex: 4000,
-        background: 'rgba(0,0,0,0.8)', backdropFilter: 'blur(20px)',
+        background: 'rgba(4,6,8,0.78)', backdropFilter: 'blur(28px)',
         display: 'flex', alignItems: 'center', justifyContent: 'center'
     } as CSSProperties,
 
     modal: {
-        width: '800px', background: tokens.colors.bgDeep,
-        borderRadius: '32px', border: `1px solid ${tokens.colors.border}`,
-        overflow: 'hidden', boxShadow: '0 50px 100px rgba(0,0,0,0.5)'
+        width: '820px',
+        borderRadius: '32px',
+        border: '1px solid transparent',
+        background: `
+            radial-gradient(circle at 12% 18%, ${tokens.colors.glowDeep} 0%, transparent 60%) padding-box,
+            linear-gradient(180deg, rgba(15,15,25,0.86), rgba(15,15,25,0.62)) padding-box,
+            linear-gradient(135deg, rgba(255,255,255,0.18), rgba(255,255,255,0.06), ${tokens.colors.glowDeep}) border-box
+        `,
+        backdropFilter: 'blur(40px)',
+        WebkitBackdropFilter: 'blur(40px)',
+        overflow: 'hidden',
+        boxShadow: '0 70px 180px rgba(0,0,0,0.85)'
     } as CSSProperties,
 
     header: {
@@ -40,8 +49,11 @@ export const exportStyles = {
 
     optionBtn: {
         aspectRatio: '1', borderRadius: '24px',
-        background: 'rgba(255,255,255,0.02)',
-        border: `1px solid ${tokens.colors.border}`,
+        border: '1px solid transparent',
+        background: `
+            linear-gradient(180deg, rgba(255,255,255,0.08), rgba(255,255,255,0.02)) padding-box,
+            linear-gradient(135deg, rgba(255,255,255,0.18), rgba(255,255,255,0.05)) border-box
+        `,
         display: 'flex', flexDirection: 'column',
         alignItems: 'center', justifyContent: 'center',
         gap: '20px', cursor: 'pointer', transition: 'all 0.3s'
@@ -82,9 +94,16 @@ export const exportStyles = {
     } as CSSProperties,
 
     finalBtn: {
-        padding: '12px 32px', background: tokens.colors.accentPurple,
-        borderRadius: '12px', color: 'white', border: 'none',
-        fontWeight: 900, cursor: 'pointer', marginTop: '10px'
+        padding: '12px 32px',
+        borderRadius: '14px',
+        color: '#080a0b',
+        border: '1px solid transparent',
+        background: `
+            linear-gradient(135deg, ${tokens.colors.accentPurple}, ${tokens.colors.accentPurple}cc) padding-box,
+            linear-gradient(135deg, rgba(255,255,255,0.35), rgba(255,255,255,0.10)) border-box
+        `,
+        fontWeight: 900, cursor: 'pointer', marginTop: '10px',
+        boxShadow: `0 22px 60px ${tokens.colors.accentPurple}33`
     } as CSSProperties,
 
     playerView: {
@@ -109,8 +128,12 @@ export const exportStyles = {
     } as CSSProperties,
 
     roleCard: {
-        padding: '20px', background: 'rgba(255,255,255,0.02)',
-        border: `1px solid ${tokens.colors.border}`,
+        padding: '20px',
+        border: '1px solid transparent',
+        background: `
+            linear-gradient(180deg, rgba(255,255,255,0.08), rgba(255,255,255,0.02)) padding-box,
+            linear-gradient(135deg, rgba(255,255,255,0.18), rgba(255,255,255,0.05)) border-box
+        `,
         borderRadius: '20px', display: 'flex',
         alignItems: 'center', justifyContent: 'space-between',
         cursor: 'pointer', transition: 'all 0.2s'

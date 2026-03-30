@@ -1,12 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback, useMemo, memo } from 'react';
 import { motion } from 'framer-motion';
 import {
     Plus, MousePointer2, Type, Image as ImageIcon, Star,
-    Layers, Palette, Layout, Search, Filter, Settings2,
-    Download, Play, Zap, Monitor, Save, Undo2, Redo2,
+    Layers, Layout, Search, Filter,
+    Download, Play, Zap, Monitor, Save, Undo, Redo,
     Maximize2, Move, Paintbrush, MonitorPlay, Film,
-    ChevronRight, HardDrive, Package, Undo, Redo, Activity, PlayCircle,
-    Trash2, Square, Circle, CloudRain, PenTool
+    ChevronRight, Activity, PlayCircle,
+    Trash2, Square, Circle, PenTool
 } from 'lucide-react';
 import html2canvas from 'html2canvas';
 import { tokens } from '../../../SharedTool/style/tokens.shared.style';
@@ -16,6 +16,8 @@ import { PropertiesPanel } from './PropertiesPanel.web';
 import { DrawingStudioAtom } from '../../atoms/DrawingStudio/DrawingStudio.web';
 import { ExportModal } from './ExportModal.web';
 import { LayerItemRenderer } from './LayerItemRenderer.web';
+import { DrawingToolsSidebar, DrawingCanvasLayer } from '../../atoms/DrawingStudio/DrawingStudio.web';
+import { useDrawingStudioLogic } from '../../atoms/DrawingStudio/DrawingStudio.web.logics';
 import { GlassCardAtom, GlassIconButtonAtom, GlassButtonAtom } from '../../../SharedTool/components/atoms/GlassAtoms';
 
 const buildPatternBackgroundCss = (bg: any) => {
@@ -58,7 +60,24 @@ export const BannerStudio: React.FC = () => {
         canUndo, canRedo
     } = useBannerStudioLogic();
 
+    const drawingLogic = useDrawingStudioLogic({
+        width: activeBanner?.designWidth || 800,
+        height: activeBanner?.designHeight || 200,
+        onApply: (dataUrl: string) => {
+            handleApplyDrawing(dataUrl);
+            setIsDrawingMode(false);
+        },
+        onCancel: () => setIsDrawingMode(false)
+    });
+
     const canvasAreaRef = React.useRef<HTMLDivElement>(null);
+    const setZoomRef = React.useRef(setZoom);
+    const setPanRef = React.useRef(setPan);
+
+    React.useEffect(() => {
+        setZoomRef.current = setZoom;
+        setPanRef.current = setPan;
+    }, [setZoom, setPan]);
 
     React.useEffect(() => {
         const area = canvasAreaRef.current;
@@ -68,16 +87,16 @@ export const BannerStudio: React.FC = () => {
             if (e.ctrlKey) {
                 e.preventDefault();
                 const delta = e.deltaY > 0 ? -0.1 : 0.1;
-                setZoom(z => Math.max(0.1, Math.min(4, z + delta)));
+                setZoomRef.current(z => Math.max(0.1, Math.min(4, z + delta)));
             } else {
                 e.preventDefault();
-                setPan(p => ({ x: p.x - e.deltaX, y: p.y - e.deltaY }));
+                setPanRef.current(p => ({ x: p.x - e.deltaX, y: p.y - e.deltaY }));
             }
         };
 
         area.addEventListener('wheel', handleWheelManual, { passive: false });
         return () => area.removeEventListener('wheel', handleWheelManual);
-    }, [setZoom, setPan]);
+    }, []);
 
     const [isExportModalOpen, setIsExportModalOpen] = useState(false);
 
@@ -97,24 +116,21 @@ export const BannerStudio: React.FC = () => {
             {/* --- HEADER --- */}
             <header style={studioStyles.header}>
                 <div style={studioStyles.logoContainer}>
-                    <div style={{ ...studioStyles.logoIcon, background: `linear-gradient(135deg, ${tokens.colors.accentBlue}, ${tokens.colors.accentGreen})` }}>VS</div>
-                    <div style={{ display: 'flex', flexDirection: 'column' }}>
-                        <span style={{ fontSize: '14px', fontWeight: 900, letterSpacing: '1px' }}>VIANKO STUDIO</span>
-                        <span style={{ fontSize: '9px', color: tokens.colors.accentGreen, opacity: 0.8, fontWeight: 900, letterSpacing: '2px' }}>CREATIVE AUTOMATION</span>
+                    <div style={studioStyles.logoIcon}>V</div>
+                    <div style={{ display: 'flex', gap: '8px', alignItems: 'baseline' }}>
+                        <span style={{ fontSize: '12px', fontWeight: 900, letterSpacing: '2px' }}>STUDIO</span>
+                        <span style={{ fontSize: '8px', color: tokens.colors.accentGreen, opacity: 0.6, fontWeight: 900, letterSpacing: '4px' }}>AUTOMATION</span>
                     </div>
                 </div>
 
-                <div style={{ display: 'flex', alignItems: 'center', gap: '24px' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
                     <div style={studioStyles.historyControls}>
-                        <button onClick={undo} disabled={!canUndo} style={{ ...studioStyles.miniBtn, opacity: canUndo ? 1 : 0.3 }}><Undo size={14} /></button>
-                        <button onClick={redo} disabled={!canRedo} style={{ ...studioStyles.miniBtn, opacity: canRedo ? 1 : 0.3 }}><Redo size={14} /></button>
+                        <button onClick={undo} disabled={!canUndo} style={{ ...studioStyles.miniBtn, opacity: canUndo ? 1 : 0.2, border: 'none', background: 'transparent' }}><Undo size={14} /></button>
+                        <button onClick={redo} disabled={!canRedo} style={{ ...studioStyles.miniBtn, opacity: canRedo ? 1 : 0.2, border: 'none', background: 'transparent' }}><Redo size={14} /></button>
                     </div>
-                    <div style={studioStyles.perfBadge}>
-                        <Zap size={10} fill={tokens.colors.accentGreen} />
-                        ELITE SYNC: ACTIVE
-                    </div>
-                    <GlassButtonAtom onClick={() => setIsExportModalOpen(true)} color={tokens.colors.accentGreen} active>
-                        <PlayCircle size={16} /> EXPORTAR BUNDLE
+
+                    <GlassButtonAtom onClick={() => setIsExportModalOpen(true)} color={tokens.colors.accentGreen} active style={{ height: '32px', fontSize: '10px' }}>
+                        EXPORTAR
                     </GlassButtonAtom>
                 </div>
             </header>
@@ -122,26 +138,46 @@ export const BannerStudio: React.FC = () => {
             {/* --- MAIN LAYOUT --- */}
             <main style={studioStyles.mainLayout}>
                 {/* 1. Sidebar Tools */}
-                <motion.aside 
-                    initial={{ x: -100, opacity: 0 }}
-                    animate={{ x: 0, opacity: 1 }}
-                    transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-                    style={studioStyles.sidebar}
-                >
-                    <GlassIconButtonAtom icon={<MousePointer2 size={20} />} active={!isSpacePressed} onClick={() => {}} color={tokens.colors.accentGreen} tooltip="Seleccionar" />
-                    <GlassIconButtonAtom icon={<Move size={20} />} active={isSpacePressed} onClick={() => {}} tooltip="Panear (Espacio)" />
-                    <GlassIconButtonAtom icon={<Type size={20} />} onClick={() => addLayer('text')} tooltip="Texto" />
-                    <GlassIconButtonAtom icon={<ImageIcon size={20} />} onClick={() => addLayer('image')} tooltip="Imagen" />
-                    <GlassIconButtonAtom icon={<Square size={20} />} onClick={() => addLayer('shape')} tooltip="Formas" />
-                    <GlassIconButtonAtom icon={<Star size={20} />} onClick={() => addLayer('particles')} tooltip="Partículas" />
-                    <GlassIconButtonAtom icon={<Activity size={20} />} onClick={() => addLayer('canvas')} tooltip="Canvas FX" />
-                    <GlassIconButtonAtom icon={<Film size={20} />} onClick={() => addLayer('animated')} tooltip="Animated" />
-                    <GlassIconButtonAtom icon={<MonitorPlay size={20} />} onClick={() => addLayer('lottie')} tooltip="Lottie" />
-                    <GlassIconButtonAtom icon={<Paintbrush size={20} />} onClick={() => setIsDrawingMode(true)} tooltip="Dibujo" />
-                    <div style={{ width: '30px', height: '1px', background: 'rgba(255,255,255,0.1)', margin: '8px 0' }} />
-                    <GlassIconButtonAtom icon={<Save size={20} />} onClick={handleSave} tooltip="Guardar Proyecto" />
-                    <GlassIconButtonAtom icon={<Settings2 size={20} />} tooltip="Ajustes" />
-                </motion.aside>
+                {/* 1. Sidebar Tools */}
+                <div style={{ display: 'flex', gap: '8px', alignItems: 'flex-start' }}>
+                    <motion.aside 
+                        initial={{ x: -60, opacity: 0 }}
+                        animate={{ x: 0, opacity: 1 }}
+                        transition={{ type: 'spring', damping: 25, stiffness: 200 }}
+                        style={studioStyles.sidebar}
+                    >
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '4px', alignItems: 'center' }}>
+                            <GlassIconButtonAtom icon={<MousePointer2 size={18} />} active={!isSpacePressed && !isDrawingMode} onClick={() => setIsDrawingMode(false)} color={tokens.colors.accentGreen} tooltip="Seleccionar" />
+                            <GlassIconButtonAtom icon={<Move size={18} />} active={isSpacePressed} onClick={() => {}} tooltip="Panear (Espacio)" />
+                        </div>
+
+                        <div style={{ width: '24px', height: '1px', background: 'rgba(255,255,255,0.05)', margin: '4px 0' }} />
+
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '4px', alignItems: 'center' }}>
+                            <GlassIconButtonAtom icon={<Type size={18} />} onClick={() => addLayer('text')} tooltip="Texto" />
+                            <GlassIconButtonAtom icon={<ImageIcon size={18} />} onClick={() => addLayer('image')} tooltip="Imagen" />
+                            <GlassIconButtonAtom icon={<Square size={18} />} onClick={() => addLayer('shape')} tooltip="Formas" />
+                            <GlassIconButtonAtom icon={<Star size={18} />} onClick={() => addLayer('particles')} tooltip="Partículas" />
+                            <GlassIconButtonAtom icon={<Activity size={18} />} onClick={() => addLayer('canvas')} tooltip="Canvas FX" />
+                            <GlassIconButtonAtom icon={<Film size={18} />} onClick={() => addLayer('animated')} tooltip="Animated" />
+                            <GlassIconButtonAtom icon={<MonitorPlay size={18} />} onClick={() => addLayer('lottie')} tooltip="Lottie" />
+                            <GlassIconButtonAtom icon={<Paintbrush size={18} />} active={isDrawingMode} onClick={() => setIsDrawingMode(true)} tooltip="Dibujo" />
+                        </div>
+
+                        <div style={{ flex: 1 }} />
+                        <GlassIconButtonAtom icon={<Save size={18} />} onClick={handleSave} tooltip="Guardar Proyecto" />
+                    </motion.aside>
+
+                    {isDrawingMode && (
+                        <motion.div
+                            initial={{ x: -20, opacity: 0 }}
+                            animate={{ x: 0, opacity: 1 }}
+                            style={studioStyles.drawingSidebar}
+                        >
+                            <DrawingToolsSidebar logic={drawingLogic} onCancel={() => setIsDrawingMode(false)} />
+                        </motion.div>
+                    )}
+                </div>
 
                 {/* 2. Canvas Area Container */}
                 <motion.div 
@@ -157,22 +193,24 @@ export const BannerStudio: React.FC = () => {
                             cursor: isSpacePressed ? 'grab' : 'default',
                             touchAction: 'none', // Prevent browser touch gestures
                         }}
-                        onPointerDown={(e) => {
+                        onPointerDown={useCallback((e: React.PointerEvent) => {
                             if (isSpacePressed || e.button === 1) { // Space or Middle mouse
-                                (e.currentTarget as any).setPointerCapture(e.pointerId);
-                                e.currentTarget.setAttribute('data-panning', 'true');
-                                e.currentTarget.style.cursor = 'grabbing';
+                                const target = e.currentTarget as HTMLElement;
+                                (target as any).setPointerCapture(e.pointerId);
+                                target.setAttribute('data-panning', 'true');
+                                target.style.cursor = 'grabbing';
                             }
-                        }}
-                        onPointerMove={(e) => {
+                        }, [isSpacePressed])}
+                        onPointerMove={useCallback((e: React.PointerEvent) => {
                             if (e.currentTarget.getAttribute('data-panning') === 'true') {
                                 setPan(p => ({ x: p.x + e.movementX, y: p.y + e.movementY }));
                             }
-                        }}
-                        onPointerUp={(e) => {
-                            e.currentTarget.setAttribute('data-panning', 'false');
-                            e.currentTarget.style.cursor = isSpacePressed ? 'grab' : 'default';
-                        }}
+                        }, [setPan])}
+                        onPointerUp={useCallback((e: React.PointerEvent) => {
+                            const target = e.currentTarget as HTMLElement;
+                            target.setAttribute('data-panning', 'false');
+                            target.style.cursor = isSpacePressed ? 'grab' : 'default';
+                        }, [isSpacePressed])}
                     >
                         {/* THE RENDERER */}
                         <div id="vianko-canvas-root" style={{
@@ -199,7 +237,7 @@ export const BannerStudio: React.FC = () => {
                                     key={layer.id}
                                     layer={layer}
                                     isSelected={selectedLayerIds.includes(layer.id)}
-                                    onSelect={(e) => toggleSelectedLayer(layer.id, e.shiftKey)}
+                                    onSelect={toggleSelectedLayer}
                                     onUpdate={updateLayer}
                                     onDelete={deleteLayer}
                                     onDuplicate={duplicateLayer}
@@ -207,6 +245,15 @@ export const BannerStudio: React.FC = () => {
                                     zoom={zoom}
                                 />
                             ))}
+
+                            {/* DRAWING PREVIEW OVERLAY */}
+                            {isDrawingMode && (
+                                <DrawingCanvasLayer 
+                                    logic={drawingLogic} 
+                                    width={activeBanner?.designWidth || 800} 
+                                    height={activeBanner?.designHeight || 200} 
+                                />
+                            )}
                         </div>
 
                         <div style={studioStyles.zoomControls}>
@@ -283,14 +330,6 @@ export const BannerStudio: React.FC = () => {
                 </motion.aside>
             </main>
 
-            {isDrawingMode && (activeBanner) && (
-                <DrawingStudioAtom
-                    width={activeBanner.designWidth}
-                    height={activeBanner.designHeight}
-                    onApply={handleApplyDrawing}
-                    onCancel={() => setIsDrawingMode(false)}
-                />
-            )}
 
             {isExportModalOpen && (
                 <ExportModal

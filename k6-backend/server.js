@@ -5,6 +5,8 @@ const { exec } = require('child_process');
 const fs = require('fs');
 const path = require('path');
 const { analyzeProject } = require('./analyzer.js');
+const { buildScript } = require('./planScriptBuilder.js');
+const { buildSanityReport } = require('./summaryReportBuilder.js');
 
 const app = express();
 app.use(cors());
@@ -141,6 +143,57 @@ export default function () {
             }
         } catch (e) {
             res.status(500).json({ error: 'Error procesando resultados multiples: ' + e.message });
+        }
+    });
+});
+
+// Ruta 4: Run Plan (Plan K6 / Presets)
+app.post('/api/run-plan', (req, res) => {
+    const planInput = req.body || {};
+
+    let built;
+    try {
+        built = buildScript(planInput);
+    } catch (e) {
+        return res.status(400).json({ error: e.message || 'Plan inválido' });
+    }
+
+    const scriptPath = path.join(__dirname, `generated_plan_script.js`);
+    const summaryPath = path.join(__dirname, `summary.plan.json`);
+
+    try {
+        fs.writeFileSync(scriptPath, built.script);
+    } catch (e) {
+        return res.status(500).json({ error: 'No se pudo escribir el script generado.' });
+    }
+
+    const k6Bin = fs.existsSync('C:\\Program Files\\k6\\k6.exe') ? '"C:\\Program Files\\k6\\k6.exe"' : 'k6';
+    const command = `${k6Bin} run "${scriptPath}" --summary-export="${summaryPath}"`;
+
+    exec(command, { maxBuffer: 1024 * 1024 * 50 }, (error, stdout, stderr) => {
+        try {
+            if (fs.existsSync(summaryPath)) {
+                const summary = JSON.parse(fs.readFileSync(summaryPath, 'utf8'));
+                const report = buildSanityReport(summary, built.plan);
+
+                saveToHistory({
+                    type: 'plan',
+                    projectName: built.plan.projectName,
+                    baseUrl: built.plan.baseUrl,
+                    scenario: built.plan.scenario,
+                    authMode: built.plan.auth?.mode,
+                    stepsEnabled: (built.plan.steps || []).filter((s) => s.enabled).length,
+                    metrics: summary.metrics,
+                    report
+                });
+
+                res.json({ report, metrics: summary.metrics, plan: built.plan });
+            } else {
+                const k6Log = stderr || stdout || (error ? error.message : "Desconocido");
+                res.status(500).json({ error: 'K6 falló al ejecutar el plan:\n' + k6Log });
+            }
+        } catch (e) {
+            res.status(500).json({ error: 'Error procesando resultado del plan: ' + e.message });
         }
     });
 });

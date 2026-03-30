@@ -1,5 +1,2663 @@
 [
   {
+    "id": "1774905965656",
+    "timestamp": "2026-03-30T21:26:05.656Z",
+    "type": "plan",
+    "projectName": "BackCosaif.zip",
+    "baseUrl": "http://localhost:3002",
+    "scenario": {
+      "executor": "constant-vus",
+      "vus": 3,
+      "duration": "1m"
+    },
+    "authMode": "none",
+    "stepsEnabled": 103,
+    "metrics": {
+      "http_req_connecting": {
+        "p(90)": 0,
+        "p(95)": 0,
+        "p(99)": 0,
+        "avg": 0.00020058618794651037,
+        "min": 0,
+        "med": 0,
+        "max": 1.095
+      },
+      "data_sent": {
+        "count": 2180049,
+        "rate": 36043.937610688874
+      },
+      "http_reqs": {
+        "count": 16377,
+        "rate": 270.76986170964585
+      },
+      "vus_max": {
+        "value": 3,
+        "min": 3,
+        "max": 3
+      },
+      "http_req_duration": {
+        "max": 43.0706,
+        "p(90)": 2.01034,
+        "p(95)": 2.9641999999999986,
+        "p(99)": 4.568035999999999,
+        "avg": 1.246813940282103,
+        "min": 0,
+        "med": 1.1092,
+        "thresholds": {
+          "p(95)<500": false
+        }
+      },
+      "http_req_duration{expected_response:true}": {
+        "p(99)": 5.164894000000003,
+        "avg": 1.30008642557652,
+        "min": 0,
+        "med": 1.1014,
+        "max": 42.333,
+        "p(90)": 2.1879199999999996,
+        "p(95)": 3.1853949999999998
+      },
+      "http_req_waiting": {
+        "p(95)": 2.7217399999999983,
+        "p(99)": 4.284059999999998,
+        "avg": 1.1729532881480136,
+        "min": 0,
+        "med": 1.0851,
+        "max": 43.0706,
+        "p(90)": 1.88716
+      },
+      "iterations": {
+        "count": 159,
+        "rate": 2.6288336088315134
+      },
+      "iteration_duration": {
+        "max": 1504.9838,
+        "p(90)": 1177.62894,
+        "p(95)": 1324.66919,
+        "p(99)": 1503.710464,
+        "avg": 1141.1467213836474,
+        "min": 1104.4587,
+        "med": 1119.3953
+      },
+      "checks": {
+        "passes": 1908,
+        "fails": 14469,
+        "value": 0.11650485436893204
+      },
+      "http_req_sending": {
+        "min": 0,
+        "med": 0,
+        "max": 5.9998,
+        "p(90)": 0,
+        "p(95)": 0,
+        "p(99)": 0.587524,
+        "avg": 0.016732826525004588
+      },
+      "http_req_blocked": {
+        "min": 0,
+        "med": 0,
+        "max": 18.0406,
+        "p(90)": 0,
+        "p(95)": 0,
+        "p(99)": 0,
+        "avg": 0.006258411186419984
+      },
+      "http_req_receiving": {
+        "min": 0,
+        "med": 0,
+        "max": 7.0002,
+        "p(90)": 0,
+        "p(95)": 0.5495399999999998,
+        "p(99)": 0.717224,
+        "avg": 0.05712782560908586
+      },
+      "http_req_tls_handshaking": {
+        "med": 0,
+        "max": 0,
+        "p(90)": 0,
+        "p(95)": 0,
+        "p(99)": 0,
+        "avg": 0,
+        "min": 0
+      },
+      "http_req_failed": {
+        "passes": 14469,
+        "fails": 1908,
+        "thresholds": {
+          "rate<0.01": true
+        },
+        "value": 0.883495145631068
+      },
+      "vus": {
+        "min": 3,
+        "max": 3,
+        "value": 3
+      },
+      "data_received": {
+        "count": 7045608,
+        "rate": 116488.87487454202
+      }
+    },
+    "report": {
+      "timestamp": 1774905965655,
+      "projectName": "BackCosaif.zip",
+      "healthScore": 83,
+      "kpis": {
+        "totalRequests": 16377,
+        "avgLatency": 3,
+        "failedRequests": 1908,
+        "successRate": 88.35,
+        "peakRps": 271
+      },
+      "endpointAnalysis": [],
+      "thresholds": [
+        {
+          "metric": "http_req_failed",
+          "expr": "rate<0.01",
+          "pass": false,
+          "actual": 0.11650485436893199
+        },
+        {
+          "metric": "http_req_duration",
+          "expr": "p(95)<500",
+          "pass": true,
+          "actual": 2.9641999999999986
+        }
+      ],
+      "meta": {
+        "baseUrl": "http://localhost:3002",
+        "scenario": {
+          "executor": "constant-vus",
+          "vus": 3,
+          "duration": "1m"
+        },
+        "authMode": "none"
+      }
+    }
+  },
+  {
+    "id": "1774905911519",
+    "timestamp": "2026-03-30T21:25:11.519Z",
+    "type": "plan",
+    "projectName": "BackCosaif.zip",
+    "baseUrl": "http://localhost",
+    "scenario": {
+      "executor": "constant-vus",
+      "vus": 3,
+      "duration": "1m"
+    },
+    "authMode": "none",
+    "stepsEnabled": 103,
+    "metrics": {
+      "http_req_receiving": {
+        "p(99)": 0,
+        "avg": 0,
+        "min": 0,
+        "med": 0,
+        "max": 0,
+        "p(90)": 0,
+        "p(95)": 0
+      },
+      "http_req_duration": {
+        "max": 0,
+        "p(90)": 0,
+        "p(95)": 0,
+        "p(99)": 0,
+        "avg": 0,
+        "min": 0,
+        "med": 0,
+        "thresholds": {
+          "p(95)<500": false
+        }
+      },
+      "http_reqs": {
+        "count": 17304,
+        "rate": 283.45771165264284
+      },
+      "data_sent": {
+        "count": 0,
+        "rate": 0
+      },
+      "http_req_failed": {
+        "passes": 17304,
+        "fails": 0,
+        "thresholds": {
+          "rate<0.01": true
+        },
+        "value": 1
+      },
+      "http_req_waiting": {
+        "p(90)": 0,
+        "p(95)": 0,
+        "p(99)": 0,
+        "avg": 0,
+        "min": 0,
+        "med": 0,
+        "max": 0
+      },
+      "http_req_blocked": {
+        "med": 0,
+        "max": 0,
+        "p(90)": 0,
+        "p(95)": 0,
+        "p(99)": 0,
+        "avg": 0,
+        "min": 0
+      },
+      "iterations": {
+        "count": 168,
+        "rate": 2.7520166179868233
+      },
+      "vus_max": {
+        "max": 3,
+        "value": 3,
+        "min": 3
+      },
+      "http_req_connecting": {
+        "avg": 0,
+        "min": 0,
+        "med": 0,
+        "max": 0,
+        "p(90)": 0,
+        "p(95)": 0,
+        "p(99)": 0
+      },
+      "http_req_tls_handshaking": {
+        "p(95)": 0,
+        "p(99)": 0,
+        "avg": 0,
+        "min": 0,
+        "med": 0,
+        "max": 0,
+        "p(90)": 0
+      },
+      "iteration_duration": {
+        "avg": 1089.991629761905,
+        "min": 1059.2455,
+        "med": 1081.6610999999998,
+        "max": 1203.9106,
+        "p(90)": 1127.40305,
+        "p(95)": 1180.98047,
+        "p(99)": 1196.9362190000002
+      },
+      "data_received": {
+        "count": 0,
+        "rate": 0
+      },
+      "http_req_sending": {
+        "p(95)": 0,
+        "p(99)": 0,
+        "avg": 0,
+        "min": 0,
+        "med": 0,
+        "max": 0,
+        "p(90)": 0
+      },
+      "checks": {
+        "fails": 17304,
+        "passes": 0,
+        "value": 0
+      },
+      "vus": {
+        "value": 3,
+        "min": 3,
+        "max": 3
+      }
+    },
+    "report": {
+      "timestamp": 1774905911519,
+      "projectName": "BackCosaif.zip",
+      "healthScore": 100,
+      "kpis": {
+        "totalRequests": 17304,
+        "avgLatency": 0,
+        "failedRequests": 0,
+        "successRate": 100,
+        "peakRps": 283
+      },
+      "endpointAnalysis": [],
+      "thresholds": [
+        {
+          "metric": "http_req_failed",
+          "expr": "rate<0.01",
+          "pass": true,
+          "actual": 0
+        },
+        {
+          "metric": "http_req_duration",
+          "expr": "p(95)<500",
+          "pass": true,
+          "actual": 0
+        }
+      ],
+      "meta": {
+        "baseUrl": "http://localhost",
+        "scenario": {
+          "executor": "constant-vus",
+          "vus": 3,
+          "duration": "1m"
+        },
+        "authMode": "none"
+      }
+    }
+  },
+  {
+    "id": "1774905802608",
+    "timestamp": "2026-03-30T21:23:22.608Z",
+    "type": "plan",
+    "projectName": "BackCosaif.zip",
+    "baseUrl": "http://localhost",
+    "scenario": {
+      "executor": "constant-vus",
+      "vus": 3,
+      "duration": "1m"
+    },
+    "authMode": "none",
+    "stepsEnabled": 103,
+    "metrics": {
+      "http_req_waiting": {
+        "max": 0,
+        "p(90)": 0,
+        "p(95)": 0,
+        "p(99)": 0,
+        "avg": 0,
+        "min": 0,
+        "med": 0
+      },
+      "iterations": {
+        "count": 160,
+        "rate": 2.6321080963365384
+      },
+      "http_req_receiving": {
+        "avg": 0,
+        "min": 0,
+        "med": 0,
+        "max": 0,
+        "p(90)": 0,
+        "p(95)": 0,
+        "p(99)": 0
+      },
+      "http_req_duration": {
+        "p(99)": 0,
+        "avg": 0,
+        "min": 0,
+        "med": 0,
+        "max": 0,
+        "p(90)": 0,
+        "p(95)": 0,
+        "thresholds": {
+          "p(95)<500": false
+        }
+      },
+      "http_req_failed": {
+        "fails": 0,
+        "passes": 16480,
+        "thresholds": {
+          "rate<0.01": true
+        },
+        "value": 1
+      },
+      "http_req_tls_handshaking": {
+        "avg": 0,
+        "min": 0,
+        "med": 0,
+        "max": 0,
+        "p(90)": 0,
+        "p(95)": 0,
+        "p(99)": 0
+      },
+      "vus_max": {
+        "min": 3,
+        "max": 3,
+        "value": 3
+      },
+      "vus": {
+        "value": 3,
+        "min": 3,
+        "max": 3
+      },
+      "http_req_connecting": {
+        "p(95)": 0,
+        "p(99)": 0,
+        "avg": 0,
+        "min": 0,
+        "med": 0,
+        "max": 0,
+        "p(90)": 0
+      },
+      "http_req_sending": {
+        "max": 0,
+        "p(90)": 0,
+        "p(95)": 0,
+        "p(99)": 0,
+        "avg": 0,
+        "min": 0,
+        "med": 0
+      },
+      "data_received": {
+        "count": 0,
+        "rate": 0
+      },
+      "iteration_duration": {
+        "med": 1088.30985,
+        "max": 1952.2369,
+        "p(90)": 1287.97091,
+        "p(95)": 1359.5610550000001,
+        "p(99)": 1901.096926,
+        "avg": 1131.7376625,
+        "min": 1062.8836
+      },
+      "http_reqs": {
+        "count": 16480,
+        "rate": 271.1071339226634
+      },
+      "data_sent": {
+        "count": 0,
+        "rate": 0
+      },
+      "checks": {
+        "passes": 0,
+        "fails": 16480,
+        "value": 0
+      },
+      "http_req_blocked": {
+        "max": 0,
+        "p(90)": 0,
+        "p(95)": 0,
+        "p(99)": 0,
+        "avg": 0,
+        "min": 0,
+        "med": 0
+      }
+    },
+    "report": {
+      "timestamp": 1774905802604,
+      "projectName": "BackCosaif.zip",
+      "healthScore": 100,
+      "kpis": {
+        "totalRequests": 16480,
+        "avgLatency": 0,
+        "failedRequests": 0,
+        "successRate": 100,
+        "peakRps": 271
+      },
+      "endpointAnalysis": [],
+      "thresholds": [
+        {
+          "metric": "http_req_failed",
+          "expr": "rate<0.01",
+          "pass": true,
+          "actual": 0
+        },
+        {
+          "metric": "http_req_duration",
+          "expr": "p(95)<500",
+          "pass": true,
+          "actual": 0
+        }
+      ],
+      "meta": {
+        "baseUrl": "http://localhost",
+        "scenario": {
+          "executor": "constant-vus",
+          "vus": 3,
+          "duration": "1m"
+        },
+        "authMode": "none"
+      }
+    }
+  },
+  {
+    "id": "1774904128237",
+    "timestamp": "2026-03-30T20:55:28.237Z",
+    "type": "plan",
+    "projectName": "Smoke Plan",
+    "baseUrl": "http://localhost:3002",
+    "scenario": {
+      "executor": "constant-vus",
+      "vus": 3,
+      "duration": "1m"
+    },
+    "authMode": "none",
+    "stepsEnabled": 4,
+    "metrics": {
+      "http_reqs": {
+        "count": 712,
+        "rate": 11.63144275906291
+      },
+      "iteration_duration": {
+        "min": 1002.212,
+        "med": 1004.4429,
+        "max": 1750.4447,
+        "p(90)": 1018.56804,
+        "p(95)": 1077.3632400000004,
+        "p(99)": 1277.4648979999986,
+        "avg": 1019.8906651685389
+      },
+      "http_req_receiving": {
+        "max": 0,
+        "p(90)": 0,
+        "p(95)": 0,
+        "p(99)": 0,
+        "avg": 0,
+        "min": 0,
+        "med": 0
+      },
+      "http_req_blocked": {
+        "p(90)": 0,
+        "p(95)": 0,
+        "p(99)": 0,
+        "avg": 0,
+        "min": 0,
+        "med": 0,
+        "max": 0
+      },
+      "http_req_waiting": {
+        "p(90)": 0,
+        "p(95)": 0,
+        "p(99)": 0,
+        "avg": 0,
+        "min": 0,
+        "med": 0,
+        "max": 0
+      },
+      "http_req_sending": {
+        "avg": 0,
+        "min": 0,
+        "med": 0,
+        "max": 0,
+        "p(90)": 0,
+        "p(95)": 0,
+        "p(99)": 0
+      },
+      "vus_max": {
+        "value": 3,
+        "min": 3,
+        "max": 3
+      },
+      "iterations": {
+        "count": 178,
+        "rate": 2.9078606897657275
+      },
+      "data_sent": {
+        "count": 0,
+        "rate": 0
+      },
+      "vus": {
+        "value": 1,
+        "min": 1,
+        "max": 3
+      },
+      "http_req_connecting": {
+        "avg": 0,
+        "min": 0,
+        "med": 0,
+        "max": 0,
+        "p(90)": 0,
+        "p(95)": 0,
+        "p(99)": 0
+      },
+      "data_received": {
+        "count": 0,
+        "rate": 0
+      },
+      "checks": {
+        "passes": 0,
+        "fails": 712,
+        "value": 0
+      },
+      "http_req_tls_handshaking": {
+        "p(90)": 0,
+        "p(95)": 0,
+        "p(99)": 0,
+        "avg": 0,
+        "min": 0,
+        "med": 0,
+        "max": 0
+      },
+      "http_req_duration": {
+        "avg": 0,
+        "min": 0,
+        "med": 0,
+        "max": 0,
+        "p(90)": 0,
+        "p(95)": 0,
+        "p(99)": 0,
+        "thresholds": {
+          "p(95)<500": false
+        }
+      },
+      "http_req_failed": {
+        "passes": 712,
+        "fails": 0,
+        "thresholds": {
+          "rate<0.01": true
+        },
+        "value": 1
+      }
+    },
+    "report": {
+      "timestamp": 1774904128235,
+      "projectName": "Smoke Plan",
+      "healthScore": 100,
+      "kpis": {
+        "totalRequests": 712,
+        "avgLatency": 0,
+        "failedRequests": 0,
+        "successRate": 100,
+        "peakRps": 12
+      },
+      "endpointAnalysis": [],
+      "thresholds": [
+        {
+          "metric": "http_req_failed",
+          "expr": "rate<0.01",
+          "pass": true,
+          "actual": 0
+        },
+        {
+          "metric": "http_req_duration",
+          "expr": "p(95)<500",
+          "pass": true,
+          "actual": 0
+        }
+      ],
+      "meta": {
+        "baseUrl": "http://localhost:3002",
+        "scenario": {
+          "executor": "constant-vus",
+          "vus": 3,
+          "duration": "1m"
+        },
+        "authMode": "none"
+      }
+    }
+  },
+  {
+    "id": "1774904112785",
+    "timestamp": "2026-03-30T20:55:12.785Z",
+    "type": "plan",
+    "projectName": "Smoke Plan",
+    "baseUrl": "http://localhost:3002",
+    "scenario": {
+      "executor": "constant-vus",
+      "vus": 3,
+      "duration": "1m"
+    },
+    "authMode": "none",
+    "stepsEnabled": 4,
+    "metrics": {
+      "http_req_tls_handshaking": {
+        "med": 0,
+        "max": 0,
+        "p(90)": 0,
+        "p(95)": 0,
+        "p(99)": 0,
+        "avg": 0,
+        "min": 0
+      },
+      "http_req_connecting": {
+        "avg": 0,
+        "min": 0,
+        "med": 0,
+        "max": 0,
+        "p(90)": 0,
+        "p(95)": 0,
+        "p(99)": 0
+      },
+      "http_req_blocked": {
+        "med": 0,
+        "max": 0,
+        "p(90)": 0,
+        "p(95)": 0,
+        "p(99)": 0,
+        "avg": 0,
+        "min": 0
+      },
+      "http_req_sending": {
+        "p(99)": 0,
+        "avg": 0,
+        "min": 0,
+        "med": 0,
+        "max": 0,
+        "p(90)": 0,
+        "p(95)": 0
+      },
+      "http_req_duration": {
+        "p(99)": 0,
+        "avg": 0,
+        "min": 0,
+        "med": 0,
+        "max": 0,
+        "p(90)": 0,
+        "p(95)": 0,
+        "thresholds": {
+          "p(95)<500": false
+        }
+      },
+      "checks": {
+        "passes": 0,
+        "fails": 720,
+        "value": 0
+      },
+      "iteration_duration": {
+        "p(95)": 1036.52015,
+        "p(99)": 1115.676942,
+        "avg": 1010.0757494444451,
+        "min": 1002.1217,
+        "med": 1004.69355,
+        "max": 1216.6032,
+        "p(90)": 1016.9871400000001
+      },
+      "http_req_waiting": {
+        "med": 0,
+        "max": 0,
+        "p(90)": 0,
+        "p(95)": 0,
+        "p(99)": 0,
+        "avg": 0,
+        "min": 0
+      },
+      "vus": {
+        "value": 3,
+        "min": 3,
+        "max": 3
+      },
+      "vus_max": {
+        "value": 3,
+        "min": 3,
+        "max": 3
+      },
+      "data_sent": {
+        "count": 0,
+        "rate": 0
+      },
+      "data_received": {
+        "count": 0,
+        "rate": 0
+      },
+      "http_reqs": {
+        "count": 720,
+        "rate": 11.874820256247176
+      },
+      "http_req_receiving": {
+        "avg": 0,
+        "min": 0,
+        "med": 0,
+        "max": 0,
+        "p(90)": 0,
+        "p(95)": 0,
+        "p(99)": 0
+      },
+      "http_req_failed": {
+        "passes": 720,
+        "fails": 0,
+        "thresholds": {
+          "rate<0.01": true
+        },
+        "value": 1
+      },
+      "iterations": {
+        "count": 180,
+        "rate": 2.968705064061794
+      }
+    },
+    "report": {
+      "timestamp": 1774904112784,
+      "projectName": "Smoke Plan",
+      "healthScore": 100,
+      "kpis": {
+        "totalRequests": 720,
+        "avgLatency": 0,
+        "failedRequests": 0,
+        "successRate": 100,
+        "peakRps": 12
+      },
+      "endpointAnalysis": [],
+      "thresholds": [
+        {
+          "metric": "http_req_failed",
+          "expr": "rate<0.01",
+          "pass": true,
+          "actual": 0
+        },
+        {
+          "metric": "http_req_duration",
+          "expr": "p(95)<500",
+          "pass": true,
+          "actual": 0
+        }
+      ],
+      "meta": {
+        "baseUrl": "http://localhost:3002",
+        "scenario": {
+          "executor": "constant-vus",
+          "vus": 3,
+          "duration": "1m"
+        },
+        "authMode": "none"
+      }
+    }
+  },
+  {
+    "id": "1774904073067",
+    "timestamp": "2026-03-30T20:54:33.067Z",
+    "type": "plan",
+    "projectName": "Smoke Plan",
+    "baseUrl": "http://localhost:3001",
+    "scenario": {
+      "executor": "constant-vus",
+      "vus": 3,
+      "duration": "1m"
+    },
+    "authMode": "none",
+    "stepsEnabled": 4,
+    "metrics": {
+      "http_req_connecting": {
+        "p(95)": 0,
+        "p(99)": 0,
+        "avg": 0.005095000000000001,
+        "min": 0,
+        "med": 0,
+        "max": 1.2228,
+        "p(90)": 0
+      },
+      "iteration_duration": {
+        "min": 1002.6461,
+        "med": 1005.207,
+        "max": 1057.7969,
+        "p(90)": 1012.07086,
+        "p(95)": 1015.519295,
+        "p(99)": 1049.745169,
+        "avg": 1007.7909477777779
+      },
+      "data_received": {
+        "count": 324720,
+        "rate": 5364.400006834687
+      },
+      "http_req_failed": {
+        "passes": 720,
+        "fails": 0,
+        "thresholds": {
+          "rate<0.01": true
+        },
+        "value": 1
+      },
+      "http_req_waiting": {
+        "p(90)": 2.2623,
+        "p(95)": 3.428915,
+        "p(99)": 10.122887999999932,
+        "avg": 1.2810698611111115,
+        "min": 0,
+        "med": 0.8351999999999999,
+        "max": 23.4982
+      },
+      "checks": {
+        "passes": 0,
+        "fails": 720,
+        "value": 0
+      },
+      "iterations": {
+        "count": 180,
+        "rate": 2.9736141944759904
+      },
+      "http_req_blocked": {
+        "min": 0,
+        "med": 0,
+        "max": 25.7025,
+        "p(90)": 0,
+        "p(95)": 0,
+        "p(99)": 0,
+        "avg": 0.10662263888888888
+      },
+      "http_req_tls_handshaking": {
+        "avg": 0,
+        "min": 0,
+        "med": 0,
+        "max": 0,
+        "p(90)": 0,
+        "p(95)": 0,
+        "p(99)": 0
+      },
+      "http_reqs": {
+        "count": 720,
+        "rate": 11.894456777903962
+      },
+      "http_req_sending": {
+        "min": 0,
+        "med": 0,
+        "max": 4.0102,
+        "p(90)": 0,
+        "p(95)": 0,
+        "p(99)": 0.6335189999999994,
+        "avg": 0.023077916666666667
+      },
+      "http_req_receiving": {
+        "p(90)": 0.561,
+        "p(95)": 0.7323499999999994,
+        "p(99)": 1.019158,
+        "avg": 0.15231083333333337,
+        "min": 0,
+        "med": 0,
+        "max": 1.5341
+      },
+      "vus": {
+        "value": 3,
+        "min": 3,
+        "max": 3
+      },
+      "vus_max": {
+        "min": 3,
+        "max": 3,
+        "value": 3
+      },
+      "http_req_duration": {
+        "p(90)": 2.52754,
+        "p(95)": 3.6162599999999983,
+        "p(99)": 10.122887999999932,
+        "avg": 1.4564586111111124,
+        "min": 0,
+        "med": 1.07205,
+        "max": 23.4982,
+        "thresholds": {
+          "p(95)<500": false
+        }
+      },
+      "data_sent": {
+        "count": 91800,
+        "rate": 1516.543239182755
+      }
+    },
+    "report": {
+      "timestamp": 1774904073065,
+      "projectName": "Smoke Plan",
+      "healthScore": 100,
+      "kpis": {
+        "totalRequests": 720,
+        "avgLatency": 4,
+        "failedRequests": 0,
+        "successRate": 100,
+        "peakRps": 12
+      },
+      "endpointAnalysis": [],
+      "thresholds": [
+        {
+          "metric": "http_req_failed",
+          "expr": "rate<0.01",
+          "pass": true,
+          "actual": 0
+        },
+        {
+          "metric": "http_req_duration",
+          "expr": "p(95)<500",
+          "pass": true,
+          "actual": 3.6162599999999983
+        }
+      ],
+      "meta": {
+        "baseUrl": "http://localhost:3001",
+        "scenario": {
+          "executor": "constant-vus",
+          "vus": 3,
+          "duration": "1m"
+        },
+        "authMode": "none"
+      }
+    }
+  },
+  {
+    "id": "1774903999572",
+    "timestamp": "2026-03-30T20:53:19.572Z",
+    "type": "plan",
+    "projectName": "Smoke Plan",
+    "baseUrl": "http://localhost:30001",
+    "scenario": {
+      "executor": "constant-vus",
+      "vus": 3,
+      "duration": "1m"
+    },
+    "authMode": "none",
+    "stepsEnabled": 4,
+    "metrics": {
+      "http_reqs": {
+        "count": 720,
+        "rate": 11.936966826776263
+      },
+      "vus_max": {
+        "value": 3,
+        "min": 3,
+        "max": 3
+      },
+      "iteration_duration": {
+        "p(90)": 1008.1475,
+        "p(95)": 1010.7629949999999,
+        "p(99)": 1030.6237,
+        "avg": 1005.2582405555543,
+        "min": 1001.8984,
+        "med": 1003.8787,
+        "max": 1030.6237
+      },
+      "http_req_blocked": {
+        "med": 0,
+        "max": 0,
+        "p(90)": 0,
+        "p(95)": 0,
+        "p(99)": 0,
+        "avg": 0,
+        "min": 0
+      },
+      "http_req_sending": {
+        "p(99)": 0,
+        "avg": 0,
+        "min": 0,
+        "med": 0,
+        "max": 0,
+        "p(90)": 0,
+        "p(95)": 0
+      },
+      "http_req_connecting": {
+        "avg": 0,
+        "min": 0,
+        "med": 0,
+        "max": 0,
+        "p(90)": 0,
+        "p(95)": 0,
+        "p(99)": 0
+      },
+      "data_sent": {
+        "rate": 0,
+        "count": 0
+      },
+      "data_received": {
+        "count": 0,
+        "rate": 0
+      },
+      "http_req_waiting": {
+        "min": 0,
+        "med": 0,
+        "max": 0,
+        "p(90)": 0,
+        "p(95)": 0,
+        "p(99)": 0,
+        "avg": 0
+      },
+      "checks": {
+        "passes": 0,
+        "fails": 720,
+        "value": 0
+      },
+      "http_req_failed": {
+        "passes": 720,
+        "fails": 0,
+        "thresholds": {
+          "rate<0.01": true
+        },
+        "value": 1
+      },
+      "http_req_tls_handshaking": {
+        "p(95)": 0,
+        "p(99)": 0,
+        "avg": 0,
+        "min": 0,
+        "med": 0,
+        "max": 0,
+        "p(90)": 0
+      },
+      "http_req_duration": {
+        "p(95)": 0,
+        "p(99)": 0,
+        "avg": 0,
+        "min": 0,
+        "med": 0,
+        "max": 0,
+        "p(90)": 0,
+        "thresholds": {
+          "p(95)<500": false
+        }
+      },
+      "vus": {
+        "value": 3,
+        "min": 3,
+        "max": 3
+      },
+      "iterations": {
+        "count": 180,
+        "rate": 2.984241706694066
+      },
+      "http_req_receiving": {
+        "p(90)": 0,
+        "p(95)": 0,
+        "p(99)": 0,
+        "avg": 0,
+        "min": 0,
+        "med": 0,
+        "max": 0
+      }
+    },
+    "report": {
+      "timestamp": 1774903999571,
+      "projectName": "Smoke Plan",
+      "healthScore": 100,
+      "kpis": {
+        "totalRequests": 720,
+        "avgLatency": 0,
+        "failedRequests": 0,
+        "successRate": 100,
+        "peakRps": 12
+      },
+      "endpointAnalysis": [],
+      "thresholds": [
+        {
+          "metric": "http_req_failed",
+          "expr": "rate<0.01",
+          "pass": true,
+          "actual": 0
+        },
+        {
+          "metric": "http_req_duration",
+          "expr": "p(95)<500",
+          "pass": true,
+          "actual": 0
+        }
+      ],
+      "meta": {
+        "baseUrl": "http://localhost:30001",
+        "scenario": {
+          "executor": "constant-vus",
+          "vus": 3,
+          "duration": "1m"
+        },
+        "authMode": "none"
+      }
+    }
+  },
+  {
+    "id": "1774902135445",
+    "timestamp": "2026-03-30T20:22:15.445Z",
+    "type": "plan",
+    "projectName": "Load Transactional Plan",
+    "baseUrl": "http://localhost:3001",
+    "scenario": {
+      "executor": "ramping-vus",
+      "startVUs": 0,
+      "stages": [
+        {
+          "duration": "5m",
+          "target": 75
+        },
+        {
+          "duration": "10m",
+          "target": 75
+        },
+        {
+          "duration": "5m",
+          "target": 0
+        }
+      ]
+    },
+    "authMode": "login",
+    "stepsEnabled": 7,
+    "metrics": {
+      "http_req_duration{group:transacciones}": {
+        "avg": 11.494765489517665,
+        "min": 0,
+        "med": 2.0155000000000003,
+        "max": 371.4533,
+        "p(90)": 34.09528000000001,
+        "p(95)": 56.694045,
+        "p(99)": 126.40518899999998,
+        "thresholds": {
+          "p(95)<800": false
+        }
+      },
+      "http_reqs": {
+        "count": 437077,
+        "rate": 363.97105042164816
+      },
+      "data_received": {
+        "count": 136368049,
+        "rate": 113558.98855002846
+      },
+      "checks": {
+        "passes": 0,
+        "fails": 437077,
+        "value": 0
+      },
+      "iteration_duration": {
+        "p(95)": 1429.34027,
+        "p(99)": 1892.5779340000004,
+        "avg": 1084.1239460193135,
+        "min": 1002.3025,
+        "med": 1015.4176,
+        "max": 2378.0376,
+        "p(90)": 1249.6997400000002
+      },
+      "http_req_receiving": {
+        "min": 0,
+        "med": 0,
+        "max": 29.5638,
+        "p(90)": 0.5115,
+        "p(95)": 0.5617,
+        "p(99)": 0.7865,
+        "avg": 0.07574159106976555
+      },
+      "http_req_blocked": {
+        "p(90)": 0,
+        "p(95)": 0,
+        "p(99)": 0,
+        "avg": 0.0037328630881972714,
+        "min": 0,
+        "med": 0,
+        "max": 34.8016
+      },
+      "vus": {
+        "value": 1,
+        "min": 1,
+        "max": 75
+      },
+      "http_req_duration": {
+        "avg": 11.783288806778023,
+        "min": 0,
+        "med": 2.0022,
+        "max": 377.7661,
+        "p(90)": 34.637840000000004,
+        "p(95)": 59.09805999999957,
+        "p(99)": 129.24472799999995,
+        "thresholds": {
+          "p(95)<500": false
+        }
+      },
+      "data_sent": {
+        "count": 56320509,
+        "rate": 46900.28260698204
+      },
+      "http_req_sending": {
+        "min": 0,
+        "med": 0,
+        "max": 48.6741,
+        "p(90)": 0,
+        "p(95)": 0,
+        "p(99)": 0.5672239999999991,
+        "avg": 0.016738208370607438
+      },
+      "http_req_waiting": {
+        "p(90)": 34.54890000000003,
+        "p(95)": 58.96773999999999,
+        "p(99)": 129.1268,
+        "avg": 11.690809007337542,
+        "min": 0,
+        "med": 1.8856,
+        "max": 377.3923
+      },
+      "iterations": {
+        "count": 62439,
+        "rate": 51.99538849511022
+      },
+      "http_req_connecting": {
+        "avg": 0.00012127748657559199,
+        "min": 0,
+        "med": 0,
+        "max": 2.4785,
+        "p(90)": 0,
+        "p(95)": 0,
+        "p(99)": 0
+      },
+      "vus_max": {
+        "value": 75,
+        "min": 75,
+        "max": 75
+      },
+      "http_req_failed": {
+        "passes": 437077,
+        "fails": 0,
+        "thresholds": {
+          "rate<0.01": true
+        },
+        "value": 1
+      },
+      "http_req_tls_handshaking": {
+        "p(95)": 0,
+        "p(99)": 0,
+        "avg": 0,
+        "min": 0,
+        "med": 0,
+        "max": 0,
+        "p(90)": 0
+      }
+    },
+    "report": {
+      "timestamp": 1774902135444,
+      "projectName": "Load Transactional Plan",
+      "healthScore": 100,
+      "kpis": {
+        "totalRequests": 437077,
+        "avgLatency": 59,
+        "failedRequests": 0,
+        "successRate": 100,
+        "peakRps": 364
+      },
+      "endpointAnalysis": [],
+      "thresholds": [
+        {
+          "metric": "http_req_failed",
+          "expr": "rate<0.01",
+          "pass": true,
+          "actual": 0
+        },
+        {
+          "metric": "http_req_duration",
+          "expr": "p(95)<500",
+          "pass": true,
+          "actual": 59.09805999999957
+        },
+        {
+          "metric": "http_req_duration{group:transacciones}",
+          "expr": "p(95)<800",
+          "pass": true,
+          "actual": 56.694045
+        }
+      ],
+      "meta": {
+        "baseUrl": "http://localhost:3001",
+        "scenario": {
+          "executor": "ramping-vus",
+          "startVUs": 0,
+          "stages": [
+            {
+              "duration": "5m",
+              "target": 75
+            },
+            {
+              "duration": "10m",
+              "target": 75
+            },
+            {
+              "duration": "5m",
+              "target": 0
+            }
+          ]
+        },
+        "authMode": "login"
+      }
+    }
+  },
+  {
+    "id": "1774902125609",
+    "timestamp": "2026-03-30T20:22:05.609Z",
+    "type": "plan",
+    "projectName": "Load Transactional Plan",
+    "baseUrl": "http://localhost:3001",
+    "scenario": {
+      "executor": "ramping-vus",
+      "startVUs": 0,
+      "stages": [
+        {
+          "duration": "5m",
+          "target": 75
+        },
+        {
+          "duration": "10m",
+          "target": 75
+        },
+        {
+          "duration": "5m",
+          "target": 0
+        }
+      ]
+    },
+    "authMode": "login",
+    "stepsEnabled": 7,
+    "metrics": {
+      "iterations": {
+        "count": 62464,
+        "rate": 52.01620357337101
+      },
+      "http_req_duration{group:transacciones}": {
+        "p(99)": 119.29459499999996,
+        "avg": 11.346596875800556,
+        "min": 0,
+        "med": 2.1256,
+        "max": 353.2753,
+        "p(90)": 34.0547,
+        "p(95)": 56.996164999999976,
+        "thresholds": {
+          "p(95)<800": false
+        }
+      },
+      "checks": {
+        "passes": 0,
+        "fails": 437252,
+        "value": 0
+      },
+      "http_req_connecting": {
+        "min": 0,
+        "med": 0,
+        "max": 3.5902,
+        "p(90)": 0,
+        "p(95)": 0,
+        "p(99)": 0,
+        "avg": 0.00012183226148765471
+      },
+      "http_req_failed": {
+        "passes": 437252,
+        "fails": 0,
+        "thresholds": {
+          "rate<0.01": true
+        },
+        "value": 1
+      },
+      "vus": {
+        "min": 1,
+        "max": 75,
+        "value": 1
+      },
+      "http_req_tls_handshaking": {
+        "p(95)": 0,
+        "p(99)": 0,
+        "avg": 0,
+        "min": 0,
+        "med": 0,
+        "max": 0,
+        "p(90)": 0
+      },
+      "http_req_sending": {
+        "p(95)": 0,
+        "p(99)": 0.5683,
+        "avg": 0.01655707989900568,
+        "min": 0,
+        "med": 0,
+        "max": 6.0514,
+        "p(90)": 0
+      },
+      "http_req_duration": {
+        "min": 0,
+        "med": 2.112,
+        "max": 377.2608,
+        "p(90)": 34.194480000000006,
+        "p(95)": 57.810714999999966,
+        "p(99)": 131.98808299999993,
+        "avg": 11.726434648898202,
+        "thresholds": {
+          "p(95)<500": false
+        }
+      },
+      "http_req_blocked": {
+        "p(90)": 0,
+        "p(95)": 0,
+        "p(99)": 0,
+        "avg": 0.0035642034799154665,
+        "min": 0,
+        "med": 0,
+        "max": 8.5789
+      },
+      "vus_max": {
+        "value": 75,
+        "min": 75,
+        "max": 75
+      },
+      "http_req_waiting": {
+        "p(95)": 57.680074999999746,
+        "p(99)": 131.72794599999958,
+        "avg": 11.63439292558982,
+        "min": 0,
+        "med": 1.99315,
+        "max": 377.2608,
+        "p(90)": 34.085680000000025
+      },
+      "http_req_receiving": {
+        "p(99)": 0.7802,
+        "avg": 0.07548464340929179,
+        "min": 0,
+        "med": 0,
+        "max": 38.2164,
+        "p(90)": 0.5137,
+        "p(95)": 0.5609
+      },
+      "http_reqs": {
+        "count": 437252,
+        "rate": 364.1167559692562
+      },
+      "iteration_duration": {
+        "p(95)": 1409.513815,
+        "p(99)": 1954.427839,
+        "avg": 1083.7115906089894,
+        "min": 1002.5165,
+        "med": 1015.96185,
+        "max": 2395.0452,
+        "p(90)": 1244.3177600000001
+      },
+      "data_sent": {
+        "count": 56343059,
+        "rate": 46919.0578075444
+      },
+      "data_received": {
+        "count": 136422649,
+        "rate": 113604.44868088081
+      }
+    },
+    "report": {
+      "timestamp": 1774902125609,
+      "projectName": "Load Transactional Plan",
+      "healthScore": 100,
+      "kpis": {
+        "totalRequests": 437252,
+        "avgLatency": 58,
+        "failedRequests": 0,
+        "successRate": 100,
+        "peakRps": 364
+      },
+      "endpointAnalysis": [],
+      "thresholds": [
+        {
+          "metric": "http_req_failed",
+          "expr": "rate<0.01",
+          "pass": true,
+          "actual": 0
+        },
+        {
+          "metric": "http_req_duration",
+          "expr": "p(95)<500",
+          "pass": true,
+          "actual": 57.810714999999966
+        },
+        {
+          "metric": "http_req_duration{group:transacciones}",
+          "expr": "p(95)<800",
+          "pass": true,
+          "actual": 56.996164999999976
+        }
+      ],
+      "meta": {
+        "baseUrl": "http://localhost:3001",
+        "scenario": {
+          "executor": "ramping-vus",
+          "startVUs": 0,
+          "stages": [
+            {
+              "duration": "5m",
+              "target": 75
+            },
+            {
+              "duration": "10m",
+              "target": 75
+            },
+            {
+              "duration": "5m",
+              "target": 0
+            }
+          ]
+        },
+        "authMode": "login"
+      }
+    }
+  },
+  {
+    "id": "1774902122210",
+    "timestamp": "2026-03-30T20:22:02.210Z",
+    "type": "plan",
+    "projectName": "Load Transactional Plan",
+    "baseUrl": "http://localhost:3001",
+    "scenario": {
+      "executor": "ramping-vus",
+      "startVUs": 0,
+      "stages": [
+        {
+          "duration": "5m",
+          "target": 75
+        },
+        {
+          "duration": "10m",
+          "target": 75
+        },
+        {
+          "duration": "5m",
+          "target": 0
+        }
+      ]
+    },
+    "authMode": "login",
+    "stepsEnabled": 7,
+    "metrics": {
+      "iteration_duration": {
+        "p(99)": 1956.909303999999,
+        "avg": 1083.4829290410837,
+        "min": 1002.3931,
+        "med": 1015.5253,
+        "max": 2372.0215,
+        "p(90)": 1244.63528,
+        "p(95)": 1406.58416
+      },
+      "http_req_blocked": {
+        "p(90)": 0,
+        "p(95)": 0,
+        "p(99)": 0,
+        "avg": 0.0035078352688850665,
+        "min": 0,
+        "med": 0,
+        "max": 14.1028
+      },
+      "http_req_tls_handshaking": {
+        "min": 0,
+        "med": 0,
+        "max": 0,
+        "p(90)": 0,
+        "p(95)": 0,
+        "p(99)": 0,
+        "avg": 0
+      },
+      "http_reqs": {
+        "rate": 364.2719934222714,
+        "count": 437343
+      },
+      "http_req_waiting": {
+        "med": 1.9095,
+        "max": 376.5092,
+        "p(90)": 34.038,
+        "p(95)": 57.40681999999993,
+        "p(99)": 132.330038,
+        "avg": 11.601883410961117,
+        "min": 0
+      },
+      "data_sent": {
+        "rate": 46939.061265033444,
+        "count": 56354785
+      },
+      "http_req_connecting": {
+        "p(95)": 0,
+        "p(99)": 0,
+        "avg": 0.00010461079747475094,
+        "min": 0,
+        "med": 0,
+        "max": 2.4106,
+        "p(90)": 0
+      },
+      "data_received": {
+        "count": 136451041,
+        "rate": 113652.88277076365
+      },
+      "http_req_duration{group:transacciones}": {
+        "p(99)": 124.77155200000001,
+        "avg": 11.41076337372157,
+        "min": 0,
+        "med": 2.0619,
+        "max": 346.8128,
+        "p(90)": 33.83633,
+        "p(95)": 56.58979499999997,
+        "thresholds": {
+          "p(95)<800": false
+        }
+      },
+      "http_req_receiving": {
+        "avg": 0.07731105951164288,
+        "min": 0,
+        "med": 0,
+        "max": 33.7229,
+        "p(90)": 0.5185,
+        "p(95)": 0.5626,
+        "p(99)": 0.7837
+      },
+      "checks": {
+        "passes": 0,
+        "fails": 437343,
+        "value": 0
+      },
+      "vus": {
+        "value": 1,
+        "min": 1,
+        "max": 75
+      },
+      "http_req_failed": {
+        "passes": 437343,
+        "fails": 0,
+        "thresholds": {
+          "rate<0.01": true
+        },
+        "value": 1
+      },
+      "http_req_duration": {
+        "max": 376.5092,
+        "p(90)": 34.1585,
+        "p(95)": 57.523489999999995,
+        "p(99)": 132.48889400000033,
+        "avg": 11.695697005782334,
+        "min": 0,
+        "med": 2.0404,
+        "thresholds": {
+          "p(95)<500": false
+        }
+      },
+      "vus_max": {
+        "max": 75,
+        "value": 75,
+        "min": 75
+      },
+      "iterations": {
+        "count": 62477,
+        "rate": 52.03838024855377
+      },
+      "http_req_sending": {
+        "p(90)": 0,
+        "p(95)": 0,
+        "p(99)": 0.5709,
+        "avg": 0.016502535309814135,
+        "min": 0,
+        "med": 0,
+        "max": 11.9712
+      }
+    },
+    "report": {
+      "timestamp": 1774902122209,
+      "projectName": "Load Transactional Plan",
+      "healthScore": 100,
+      "kpis": {
+        "totalRequests": 437343,
+        "avgLatency": 58,
+        "failedRequests": 0,
+        "successRate": 100,
+        "peakRps": 364
+      },
+      "endpointAnalysis": [],
+      "thresholds": [
+        {
+          "metric": "http_req_failed",
+          "expr": "rate<0.01",
+          "pass": true,
+          "actual": 0
+        },
+        {
+          "metric": "http_req_duration",
+          "expr": "p(95)<500",
+          "pass": true,
+          "actual": 57.523489999999995
+        },
+        {
+          "metric": "http_req_duration{group:transacciones}",
+          "expr": "p(95)<800",
+          "pass": true,
+          "actual": 56.58979499999997
+        }
+      ],
+      "meta": {
+        "baseUrl": "http://localhost:3001",
+        "scenario": {
+          "executor": "ramping-vus",
+          "startVUs": 0,
+          "stages": [
+            {
+              "duration": "5m",
+              "target": 75
+            },
+            {
+              "duration": "10m",
+              "target": 75
+            },
+            {
+              "duration": "5m",
+              "target": 0
+            }
+          ]
+        },
+        "authMode": "login"
+      }
+    }
+  },
+  {
+    "id": "1774900464568",
+    "timestamp": "2026-03-30T19:54:24.568Z",
+    "type": "plan",
+    "projectName": "BackCosaif.zip",
+    "baseUrl": "http://localhost:3001",
+    "scenario": {
+      "executor": "constant-vus",
+      "vus": 1,
+      "duration": "10s"
+    },
+    "authMode": "none",
+    "stepsEnabled": 103,
+    "metrics": {
+      "http_req_tls_handshaking": {
+        "med": 0,
+        "max": 0,
+        "p(90)": 0,
+        "p(95)": 0,
+        "p(99)": 0,
+        "avg": 0,
+        "min": 0
+      },
+      "vus": {
+        "value": 1,
+        "min": 1,
+        "max": 1
+      },
+      "http_reqs": {
+        "rate": 85.93528122195632,
+        "count": 927
+      },
+      "http_req_connecting": {
+        "p(95)": 0,
+        "p(99)": 0,
+        "avg": 0.002232578209277238,
+        "min": 0,
+        "med": 0,
+        "max": 2.0696,
+        "p(90)": 0
+      },
+      "http_req_waiting": {
+        "p(95)": 3.11482,
+        "p(99)": 5.846292000000002,
+        "avg": 1.2615842502696872,
+        "min": 0,
+        "med": 1.0342,
+        "max": 14.415,
+        "p(90)": 2.3223
+      },
+      "http_req_receiving": {
+        "avg": 0.27406936353829553,
+        "min": 0,
+        "med": 0,
+        "max": 13.7722,
+        "p(90)": 0.69714,
+        "p(95)": 0.9483199999999997,
+        "p(99)": 1.540144
+      },
+      "http_req_duration{expected_response:true}": {
+        "p(90)": 2.18513,
+        "p(95)": 2.87235,
+        "p(99)": 4.79596899999999,
+        "avg": 1.393703703703704,
+        "min": 0,
+        "med": 1.1495,
+        "max": 9.1977
+      },
+      "iteration_duration": {
+        "avg": 1198.3984666666668,
+        "min": 1117.8854,
+        "med": 1136.9642,
+        "max": 1353.228,
+        "p(90)": 1318.49552,
+        "p(95)": 1335.86176,
+        "p(99)": 1349.754752
+      },
+      "http_req_failed": {
+        "passes": 819,
+        "fails": 108,
+        "thresholds": {
+          "rate<0.01": true
+        },
+        "value": 0.883495145631068
+      },
+      "data_received": {
+        "count": 398808,
+        "rate": 36970.526034051734
+      },
+      "http_req_blocked": {
+        "min": 0,
+        "med": 0,
+        "max": 52.8921,
+        "p(90)": 0,
+        "p(95)": 0,
+        "p(99)": 0.5151680000000001,
+        "avg": 0.06608705501618123
+      },
+      "vus_max": {
+        "value": 1,
+        "min": 1,
+        "max": 1
+      },
+      "iterations": {
+        "count": 9,
+        "rate": 0.83432311865977
+      },
+      "data_sent": {
+        "count": 123399,
+        "rate": 11439.404279944109
+      },
+      "checks": {
+        "passes": 108,
+        "fails": 819,
+        "value": 0.11650485436893204
+      },
+      "http_req_sending": {
+        "avg": 0.02161499460625674,
+        "min": 0,
+        "med": 0,
+        "max": 1.52,
+        "p(90)": 0,
+        "p(95)": 0,
+        "p(99)": 0.577736
+      },
+      "http_req_duration": {
+        "avg": 1.55726860841424,
+        "min": 0,
+        "med": 1.2119,
+        "max": 26.6423,
+        "p(90)": 2.6557199999999996,
+        "p(95)": 3.4269599999999993,
+        "p(99)": 6.492204000000002,
+        "thresholds": {
+          "p(95)<800": false
+        }
+      }
+    },
+    "report": {
+      "timestamp": 1774900464564,
+      "projectName": "BackCosaif.zip",
+      "healthScore": 83,
+      "kpis": {
+        "totalRequests": 927,
+        "avgLatency": 3,
+        "failedRequests": 108,
+        "successRate": 88.35,
+        "peakRps": 86
+      },
+      "endpointAnalysis": [],
+      "thresholds": [
+        {
+          "metric": "http_req_failed",
+          "expr": "rate<0.01",
+          "pass": false,
+          "actual": 0.11650485436893199
+        },
+        {
+          "metric": "http_req_duration",
+          "expr": "p(95)<800",
+          "pass": true,
+          "actual": 3.4269599999999993
+        }
+      ],
+      "meta": {
+        "baseUrl": "http://localhost:3001",
+        "scenario": {
+          "executor": "constant-vus",
+          "vus": 1,
+          "duration": "10s"
+        },
+        "authMode": "none"
+      }
+    }
+  },
+  {
+    "id": "1774899813507",
+    "timestamp": "2026-03-30T19:43:33.507Z",
+    "type": "plan",
+    "projectName": "Smoke Plan",
+    "baseUrl": "http://localhost",
+    "scenario": {
+      "executor": "constant-vus",
+      "vus": 3,
+      "duration": "1m"
+    },
+    "authMode": "none",
+    "stepsEnabled": 4,
+    "metrics": {
+      "vus": {
+        "min": 3,
+        "max": 3,
+        "value": 3
+      },
+      "http_req_failed": {
+        "passes": 720,
+        "fails": 0,
+        "thresholds": {
+          "rate<0.01": true
+        },
+        "value": 1
+      },
+      "http_req_waiting": {
+        "p(99)": 0,
+        "avg": 0,
+        "min": 0,
+        "med": 0,
+        "max": 0,
+        "p(90)": 0,
+        "p(95)": 0
+      },
+      "data_sent": {
+        "count": 0,
+        "rate": 0
+      },
+      "http_req_tls_handshaking": {
+        "med": 0,
+        "max": 0,
+        "p(90)": 0,
+        "p(95)": 0,
+        "p(99)": 0,
+        "avg": 0,
+        "min": 0
+      },
+      "iterations": {
+        "count": 180,
+        "rate": 2.982904076892599
+      },
+      "http_req_connecting": {
+        "p(95)": 0,
+        "p(99)": 0,
+        "avg": 0,
+        "min": 0,
+        "med": 0,
+        "max": 0,
+        "p(90)": 0
+      },
+      "iteration_duration": {
+        "p(90)": 1006.86228,
+        "p(95)": 1009.6176,
+        "p(99)": 1070.1582,
+        "avg": 1005.6810766666676,
+        "min": 1001.8692,
+        "med": 1003.8149,
+        "max": 1070.1582
+      },
+      "vus_max": {
+        "value": 3,
+        "min": 3,
+        "max": 3
+      },
+      "http_req_sending": {
+        "avg": 0,
+        "min": 0,
+        "med": 0,
+        "max": 0,
+        "p(90)": 0,
+        "p(95)": 0,
+        "p(99)": 0
+      },
+      "http_reqs": {
+        "count": 720,
+        "rate": 11.931616307570396
+      },
+      "http_req_receiving": {
+        "max": 0,
+        "p(90)": 0,
+        "p(95)": 0,
+        "p(99)": 0,
+        "avg": 0,
+        "min": 0,
+        "med": 0
+      },
+      "checks": {
+        "passes": 0,
+        "fails": 720,
+        "value": 0
+      },
+      "data_received": {
+        "count": 0,
+        "rate": 0
+      },
+      "http_req_duration": {
+        "p(90)": 0,
+        "p(95)": 0,
+        "p(99)": 0,
+        "avg": 0,
+        "min": 0,
+        "med": 0,
+        "max": 0,
+        "thresholds": {
+          "p(95)<500": false
+        }
+      },
+      "http_req_blocked": {
+        "med": 0,
+        "max": 0,
+        "p(90)": 0,
+        "p(95)": 0,
+        "p(99)": 0,
+        "avg": 0,
+        "min": 0
+      }
+    },
+    "report": {
+      "timestamp": 1774899813506,
+      "projectName": "Smoke Plan",
+      "healthScore": 100,
+      "kpis": {
+        "totalRequests": 720,
+        "avgLatency": 0,
+        "failedRequests": 0,
+        "successRate": 100,
+        "peakRps": 12
+      },
+      "endpointAnalysis": [],
+      "thresholds": [
+        {
+          "metric": "http_req_failed",
+          "expr": "rate<0.01",
+          "pass": true,
+          "actual": 0
+        },
+        {
+          "metric": "http_req_duration",
+          "expr": "p(95)<500",
+          "pass": true,
+          "actual": 0
+        }
+      ],
+      "meta": {
+        "baseUrl": "http://localhost",
+        "scenario": {
+          "executor": "constant-vus",
+          "vus": 3,
+          "duration": "1m"
+        },
+        "authMode": "none"
+      }
+    }
+  },
+  {
+    "id": "1774898888348",
+    "timestamp": "2026-03-30T19:28:08.348Z",
+    "type": "plan",
+    "projectName": "BackCosaif.zip",
+    "baseUrl": "http://localhost:3001",
+    "scenario": {
+      "executor": "constant-vus",
+      "vus": 1,
+      "duration": "10s"
+    },
+    "authMode": "none",
+    "stepsEnabled": 103,
+    "metrics": {
+      "http_req_tls_handshaking": {
+        "p(95)": 0,
+        "p(99)": 0,
+        "avg": 0,
+        "min": 0,
+        "med": 0,
+        "max": 0,
+        "p(90)": 0
+      },
+      "http_req_receiving": {
+        "min": 0,
+        "med": 0,
+        "max": 11.0327,
+        "p(90)": 0.6769399999999999,
+        "p(95)": 0.8641799999999998,
+        "p(99)": 1.0174100000000001,
+        "avg": 0.22707982740021568
+      },
+      "vus_max": {
+        "value": 1,
+        "min": 1,
+        "max": 1
+      },
+      "http_req_duration": {
+        "p(95)": 2.153189999999999,
+        "p(99)": 3.8693160000000018,
+        "avg": 1.1351866235167207,
+        "min": 0,
+        "med": 1.0358,
+        "max": 24.2585,
+        "p(90)": 1.7211199999999998,
+        "thresholds": {
+          "p(95)<800": false
+        }
+      },
+      "data_received": {
+        "count": 398808,
+        "rate": 38769.053579575135
+      },
+      "http_req_sending": {
+        "avg": 0.020539050701186622,
+        "min": 0,
+        "med": 0,
+        "max": 1.54,
+        "p(90)": 0,
+        "p(95)": 0,
+        "p(99)": 0.6590460000000006
+      },
+      "data_sent": {
+        "rate": 11995.903900287838,
+        "count": 123399
+      },
+      "http_req_duration{expected_response:true}": {
+        "avg": 1.0809361111111109,
+        "min": 0,
+        "med": 0.9916,
+        "max": 6.4721,
+        "p(90)": 1.8044799999999996,
+        "p(95)": 2.0578399999999997,
+        "p(99)": 3.711267
+      },
+      "iteration_duration": {
+        "max": 1278.9984,
+        "p(90)": 1206.48224,
+        "p(95)": 1242.7403199999999,
+        "p(99)": 1271.746784,
+        "avg": 1142.8023888888886,
+        "min": 1090.8825,
+        "med": 1122.4998
+      },
+      "http_req_blocked": {
+        "max": 31.592,
+        "p(90)": 0,
+        "p(95)": 0,
+        "p(99)": 0,
+        "avg": 0.03776796116504854,
+        "min": 0,
+        "med": 0
+      },
+      "vus": {
+        "value": 1,
+        "min": 1,
+        "max": 1
+      },
+      "http_req_failed": {
+        "passes": 819,
+        "fails": 108,
+        "thresholds": {
+          "rate<0.01": true
+        },
+        "value": 0.883495145631068
+      },
+      "http_req_waiting": {
+        "max": 13.2258,
+        "p(90)": 1.53268,
+        "p(95)": 1.748829999999999,
+        "p(99)": 3.4073760000000046,
+        "avg": 0.8875677454153181,
+        "min": 0,
+        "med": 0.5957
+      },
+      "checks": {
+        "passes": 108,
+        "fails": 819,
+        "value": 0.11650485436893204
+      },
+      "iterations": {
+        "count": 9,
+        "rate": 0.8749109401420639
+      },
+      "http_reqs": {
+        "rate": 90.11582683463259,
+        "count": 927
+      },
+      "http_req_connecting": {
+        "p(99)": 0,
+        "avg": 0.0013160733549083064,
+        "min": 0,
+        "med": 0,
+        "max": 1.22,
+        "p(90)": 0,
+        "p(95)": 0
+      }
+    },
+    "report": {
+      "timestamp": 1774898888347,
+      "projectName": "BackCosaif.zip",
+      "healthScore": 83,
+      "kpis": {
+        "totalRequests": 927,
+        "avgLatency": 2,
+        "failedRequests": 108,
+        "successRate": 88.35,
+        "peakRps": 90
+      },
+      "endpointAnalysis": [],
+      "thresholds": [
+        {
+          "metric": "http_req_failed",
+          "expr": "rate<0.01",
+          "pass": false,
+          "actual": 0.11650485436893199
+        },
+        {
+          "metric": "http_req_duration",
+          "expr": "p(95)<800",
+          "pass": true,
+          "actual": 2.153189999999999
+        }
+      ],
+      "meta": {
+        "baseUrl": "http://localhost:3001",
+        "scenario": {
+          "executor": "constant-vus",
+          "vus": 1,
+          "duration": "10s"
+        },
+        "authMode": "none"
+      }
+    }
+  },
+  {
+    "id": "1774898705465",
+    "timestamp": "2026-03-30T19:25:05.465Z",
+    "type": "plan",
+    "projectName": "Smoke Plan",
+    "baseUrl": "http://localhost:3001",
+    "scenario": {
+      "executor": "constant-vus",
+      "vus": 3,
+      "duration": "1m"
+    },
+    "authMode": "none",
+    "stepsEnabled": 4,
+    "metrics": {
+      "http_req_connecting": {
+        "p(95)": 0,
+        "p(99)": 0,
+        "avg": 0.004562288135593221,
+        "min": 0,
+        "med": 0,
+        "max": 1.0767,
+        "p(90)": 0
+      },
+      "vus": {
+        "max": 3,
+        "value": 3,
+        "min": 3
+      },
+      "http_req_blocked": {
+        "p(90)": 0,
+        "p(95)": 0,
+        "p(99)": 0,
+        "avg": 0.14928884180790963,
+        "min": 0,
+        "med": 0,
+        "max": 34.7924
+      },
+      "http_req_receiving": {
+        "p(90)": 0.77894,
+        "p(95)": 0.959755,
+        "p(99)": 1.113501999999998,
+        "avg": 0.26116313559322046,
+        "min": 0,
+        "med": 0,
+        "max": 26.5361
+      },
+      "iterations": {
+        "rate": 2.9071242632675767,
+        "count": 177
+      },
+      "vus_max": {
+        "max": 3,
+        "value": 3,
+        "min": 3
+      },
+      "checks": {
+        "fails": 354,
+        "passes": 354,
+        "value": 0.5
+      },
+      "http_req_sending": {
+        "p(99)": 0.751027999999992,
+        "avg": 0.046059887005649704,
+        "min": 0,
+        "med": 0,
+        "max": 14.532,
+        "p(90)": 0,
+        "p(95)": 0
+      },
+      "http_req_waiting": {
+        "avg": 7.055477118644069,
+        "min": 0,
+        "med": 1.10845,
+        "max": 934.993,
+        "p(90)": 5.377570000000009,
+        "p(95)": 7.504914999999999,
+        "p(99)": 64.75466199999991
+      },
+      "http_req_failed": {
+        "passes": 354,
+        "fails": 354,
+        "thresholds": {
+          "rate<0.01": true
+        },
+        "value": 0.5
+      },
+      "http_req_tls_handshaking": {
+        "max": 0,
+        "p(90)": 0,
+        "p(95)": 0,
+        "p(99)": 0,
+        "avg": 0,
+        "min": 0,
+        "med": 0
+      },
+      "iteration_duration": {
+        "min": 1005.4828,
+        "med": 1009.4368,
+        "max": 2135.2822,
+        "p(90)": 1014.31926,
+        "p(95)": 1044.4398399999998,
+        "p(99)": 2108.518912,
+        "avg": 1031.2729661016951
+      },
+      "http_req_duration": {
+        "med": 1.4771999999999998,
+        "max": 934.993,
+        "p(90)": 5.8665100000000034,
+        "p(95)": 7.7419,
+        "p(99)": 65.23193799999989,
+        "avg": 7.3627001412429465,
+        "min": 0,
+        "thresholds": {
+          "p(95)<500": false
+        }
+      },
+      "data_sent": {
+        "count": 90270,
+        "rate": 1482.6333742664642
+      },
+      "data_received": {
+        "count": 263022,
+        "rate": 4319.986655215619
+      },
+      "http_reqs": {
+        "count": 708,
+        "rate": 11.628497053070307
+      },
+      "http_req_duration{expected_response:true}": {
+        "p(90)": 2.8332599999999992,
+        "p(95)": 5.879079999999988,
+        "p(99)": 57.941397999999865,
+        "avg": 2.9934341807909592,
+        "min": 0,
+        "med": 1.2102,
+        "max": 142.544
+      }
+    },
+    "report": {
+      "timestamp": 1774898705464,
+      "projectName": "Smoke Plan",
+      "healthScore": 45,
+      "kpis": {
+        "totalRequests": 708,
+        "avgLatency": 8,
+        "failedRequests": 354,
+        "successRate": 50,
+        "peakRps": 12
+      },
+      "endpointAnalysis": [],
+      "thresholds": [
+        {
+          "metric": "http_req_failed",
+          "expr": "rate<0.01",
+          "pass": false,
+          "actual": 0.5
+        },
+        {
+          "metric": "http_req_duration",
+          "expr": "p(95)<500",
+          "pass": true,
+          "actual": 7.7419
+        }
+      ],
+      "meta": {
+        "baseUrl": "http://localhost:3001",
+        "scenario": {
+          "executor": "constant-vus",
+          "vus": 3,
+          "duration": "1m"
+        },
+        "authMode": "none"
+      }
+    }
+  },
+  {
+    "id": "1774898521028",
+    "timestamp": "2026-03-30T19:22:01.028Z",
+    "type": "plan",
+    "projectName": "BackCosaif.zip",
+    "baseUrl": "http://localhost",
+    "scenario": {
+      "executor": "constant-vus",
+      "vus": 3,
+      "duration": "1m"
+    },
+    "authMode": "none",
+    "stepsEnabled": 103,
+    "metrics": {
+      "iterations": {
+        "count": 165,
+        "rate": 2.710984839096601
+      },
+      "data_received": {
+        "count": 0,
+        "rate": 0
+      },
+      "http_req_sending": {
+        "avg": 0,
+        "min": 0,
+        "med": 0,
+        "max": 0,
+        "p(90)": 0,
+        "p(95)": 0,
+        "p(99)": 0
+      },
+      "http_reqs": {
+        "count": 16995,
+        "rate": 279.2314384269499
+      },
+      "http_req_waiting": {
+        "min": 0,
+        "med": 0,
+        "max": 0,
+        "p(90)": 0,
+        "p(95)": 0,
+        "p(99)": 0,
+        "avg": 0
+      },
+      "vus_max": {
+        "value": 3,
+        "min": 3,
+        "max": 3
+      },
+      "http_req_blocked": {
+        "max": 0,
+        "p(90)": 0,
+        "p(95)": 0,
+        "p(99)": 0,
+        "avg": 0,
+        "min": 0,
+        "med": 0
+      },
+      "http_req_duration": {
+        "p(95)": 0,
+        "p(99)": 0,
+        "avg": 0,
+        "min": 0,
+        "med": 0,
+        "max": 0,
+        "p(90)": 0,
+        "thresholds": {
+          "p(95)<500": false
+        }
+      },
+      "http_req_receiving": {
+        "max": 0,
+        "p(90)": 0,
+        "p(95)": 0,
+        "p(99)": 0,
+        "avg": 0,
+        "min": 0,
+        "med": 0
+      },
+      "data_sent": {
+        "count": 0,
+        "rate": 0
+      },
+      "http_req_connecting": {
+        "avg": 0,
+        "min": 0,
+        "med": 0,
+        "max": 0,
+        "p(90)": 0,
+        "p(95)": 0,
+        "p(99)": 0
+      },
+      "http_req_tls_handshaking": {
+        "p(90)": 0,
+        "p(95)": 0,
+        "p(99)": 0,
+        "avg": 0,
+        "min": 0,
+        "med": 0,
+        "max": 0
+      },
+      "http_req_failed": {
+        "passes": 16995,
+        "fails": 0,
+        "thresholds": {
+          "rate<0.01": true
+        },
+        "value": 1
+      },
+      "vus": {
+        "value": 3,
+        "min": 3,
+        "max": 3
+      },
+      "iteration_duration": {
+        "p(90)": 1160.17862,
+        "p(95)": 1242.88498,
+        "p(99)": 1262.1671799999997,
+        "avg": 1104.6221290909086,
+        "min": 1053.2703,
+        "med": 1088.0034,
+        "max": 1274.0904
+      },
+      "checks": {
+        "passes": 0,
+        "fails": 16995,
+        "value": 0
+      }
+    },
+    "report": {
+      "timestamp": 1774898521027,
+      "projectName": "BackCosaif.zip",
+      "healthScore": 100,
+      "kpis": {
+        "totalRequests": 16995,
+        "avgLatency": 0,
+        "failedRequests": 0,
+        "successRate": 100,
+        "peakRps": 279
+      },
+      "endpointAnalysis": [],
+      "thresholds": [
+        {
+          "metric": "http_req_failed",
+          "expr": "rate<0.01",
+          "pass": true,
+          "actual": 0
+        },
+        {
+          "metric": "http_req_duration",
+          "expr": "p(95)<500",
+          "pass": true,
+          "actual": 0
+        }
+      ],
+      "meta": {
+        "baseUrl": "http://localhost",
+        "scenario": {
+          "executor": "constant-vus",
+          "vus": 3,
+          "duration": "1m"
+        },
+        "authMode": "none"
+      }
+    }
+  },
+  {
     "id": "1774452935075",
     "timestamp": "2026-03-25T15:35:35.075Z",
     "type": "multi",

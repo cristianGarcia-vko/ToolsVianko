@@ -37,6 +37,8 @@ export const HubModule: React.FC = () => {
                 __html: `
                 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
                 
+                * { box-sizing: border-box; }
+                
                 body, html, #root { 
                     margin: 0; padding: 0; 
                     background: ${tokens.colors.bg}; 
@@ -44,7 +46,21 @@ export const HubModule: React.FC = () => {
                     font-family: 'Inter', sans-serif;
                 }
                 
-                ::-webkit-scrollbar { width: 0px; }
+                /* Scrollbars (premium + subtle) */
+                ::-webkit-scrollbar { width: 10px; height: 10px; }
+                ::-webkit-scrollbar-track { background: transparent; }
+                ::-webkit-scrollbar-thumb { 
+                    background: rgba(255,255,255,0.14); 
+                    border-radius: 999px; 
+                    border: 3px solid transparent;
+                    background-clip: content-box;
+                }
+                ::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.20); background-clip: content-box; }
+                * { scrollbar-width: thin; scrollbar-color: rgba(255,255,255,0.18) transparent; }
+                
+                /* Utility: hide scrollbars for specific containers */
+                .no-scrollbar { scrollbar-width: none; -ms-overflow-style: none; }
+                .no-scrollbar::-webkit-scrollbar { width: 0 !important; height: 0 !important; }
             `}} />
 
             <StatusBar style="light" />

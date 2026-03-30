@@ -18,13 +18,17 @@ export const tokens = {
         accentSuccess: '#10b981', 
         accentError: '#ef4444',
         accentOrange: '#f97316', // Keeping for specific highlights if needed but focusing on G/B
-        accentPurple: '#a855f7', // Keeping but focusing on G/B
+        accentPurple: '#55d1f7', // Keeping but focusing on G/B
 
         // Glows (Corrected colors to Green & Blue)
         glowGreen: 'rgba(46, 229, 157, 0.3)',
         glowBlue: 'rgba(34, 211, 238, 0.3)',
         glowTeal: 'rgba(45, 212, 191, 0.3)',
         glowDeep: 'rgba(59, 130, 246, 0.2)',
+        // Extra glows (UI premium / compatibility)
+        glowMint: 'rgba(46, 229, 157, 0.3)', // alias of glowGreen
+        glowPurple: 'rgba(85, 109, 247, 0.25)',
+        glowPink: 'rgba(236, 72, 153, 0.18)',
         
         // Borders
         border: 'rgba(255, 255, 255, 0.08)',

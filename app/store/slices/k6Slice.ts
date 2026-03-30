@@ -3,9 +3,17 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 interface KpiStats {
     totalRequests: number;
     avgLatency: number;
+    p95Latency?: number;
+    p99Latency?: number;
     failedRequests: number;
     successRate: number;
     peakRps: number;
+    ttfb?: number;
+    connecting?: number;
+    dataSentKB?: number;
+    dataReceivedKB?: number;
+    checkSuccessRate?: number;
+    activeVus?: number;
 }
 
 interface SanityReport {
@@ -14,6 +22,8 @@ interface SanityReport {
     kpis: KpiStats;
     endpointAnalysis: any[];
     healthScore: number;
+    statusCodes?: Record<string, number>;
+    timeSeries?: any[];
 }
 
 interface K6State {

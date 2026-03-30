@@ -5,118 +5,140 @@ export const reportStyles = {
     overlay: { 
         position: 'fixed' as const, 
         inset: 0, 
-        background: 'rgba(0,0,0,0.85)', 
-        backdropFilter: 'blur(20px)', 
+        background: 'rgba(4,6,8,0.78)', 
+        backdropFilter: 'blur(28px)', 
         zIndex: 10000, 
         display: 'flex', 
         alignItems: 'center', 
         justifyContent: 'center', 
-        padding: '40px' 
-    },
+        padding: '16px', 
+    } as React.CSSProperties,
     container: { 
         width: '100%', 
         maxWidth: '1200px', 
         maxHeight: '100%', 
-        background: 'rgba(15,15,25,0.8)', 
-        border: '1px solid rgba(255,255,255,0.1)', 
+        border: '1px solid transparent', 
+        background: `
+            radial-gradient(circle at 12% 18%, ${tokens.colors.glowDeep} 0%, transparent 60%) padding-box,
+            linear-gradient(180deg, rgba(15,15,25,0.82), rgba(15,15,25,0.62)) padding-box,
+            linear-gradient(135deg, rgba(255,255,255,0.18), rgba(255,255,255,0.06), ${tokens.colors.glowDeep}) border-box
+        `, 
+        backdropFilter: 'blur(40px)',
+        WebkitBackdropFilter: 'blur(40px)',
         borderRadius: '32px', 
         display: 'flex', 
         flexDirection: 'column', 
         overflow: 'hidden', 
-        boxShadow: '0 40px 100px rgba(0,0,0,0.8)' 
-    },
+        boxShadow: '0 60px 160px rgba(0,0,0,0.85)' 
+    } as React.CSSProperties,
     header: { 
-        padding: '32px', 
+        padding: '16px', 
         borderBottom: '1px solid rgba(255,255,255,0.08)', 
         display: 'flex', 
         justifyContent: 'space-between', 
         alignItems: 'center' 
-    },
+    } as React.CSSProperties,
     contentGrid: { 
         flex: 1, 
         overflowY: 'auto' as const, 
-        padding: '32px', 
+        padding: '16px', 
         display: 'flex', 
         flexDirection: 'column', 
-        gap: '32px' 
-    },
+        gap: '12px' 
+    } as React.CSSProperties,
     kpiRow: { 
         display: 'grid', 
         gridTemplateColumns: 'repeat(4, 1fr)', 
-        gap: '20px' 
-    },
+        gap: '10px' 
+    } as React.CSSProperties,
     kpiCard: (color: string): React.CSSProperties => ({ 
-        background: 'rgba(255,255,255,0.02)', 
-        padding: '24px', 
-        borderRadius: '24px', 
-        border: `1px solid rgba(255,255,255,0.05)`, 
-        borderLeft: `4px solid ${color}` 
+        border: '1px solid transparent',
+        background: `
+            radial-gradient(circle at 12% 18%, ${color}22 0%, transparent 55%) padding-box,
+            linear-gradient(180deg, rgba(255,255,255,0.07), rgba(255,255,255,0.02)) padding-box,
+            linear-gradient(135deg, rgba(255,255,255,0.18), rgba(255,255,255,0.06), ${color}22) border-box
+        `,
+        padding: '12px', 
+        borderRadius: '16px', 
+        boxShadow: '0 18px 50px rgba(0,0,0,0.35)',
     }),
     badge: (color: string): React.CSSProperties => ({ 
-        padding: '4px 12px', 
+        padding: '4px 10px', 
         borderRadius: '100px', 
         background: color + '22', 
         color: color, 
-        fontSize: '11px', 
+        fontSize: '10px', 
         fontWeight: 900, 
         letterSpacing: '1px' 
     }),
     btnAlt: { 
-        background: 'rgba(255,255,255,0.05)', 
-        border: '1px solid rgba(255,255,255,0.1)', 
+        border: '1px solid transparent',
+        background: `
+            linear-gradient(180deg, rgba(255,255,255,0.10), rgba(255,255,255,0.04)) padding-box,
+            linear-gradient(135deg, rgba(255,255,255,0.22), rgba(255,255,255,0.06)) border-box
+        `,
         color: 'white', 
-        padding: '10px 20px', 
-        borderRadius: '12px', 
-        fontSize: '12px', 
+        padding: '8px 16px', 
+        borderRadius: '10px', 
+        fontSize: '11px', 
         fontWeight: 900, 
         cursor: 'pointer', 
         display: 'flex', 
         alignItems: 'center', 
-        gap: '8px' 
-    },
+        gap: '6px',
+        boxShadow: '0 18px 50px rgba(0,0,0,0.35)',
+    } as React.CSSProperties,
     closeBtn: { 
         background: 'transparent', 
         border: 'none', 
         color: tokens.colors.textMuted, 
         cursor: 'pointer' 
-    },
+    } as React.CSSProperties,
     sectionTitle: { 
-        fontSize: '12px', 
+        fontSize: '11px', 
         fontWeight: 900, 
         letterSpacing: '2px', 
         color: tokens.colors.accentPurple 
-    },
+    } as React.CSSProperties,
     chartSection: { 
-        background: 'rgba(255,255,255,0.02)', 
-        padding: '32px', 
-        borderRadius: '24px', 
-        border: '1px solid rgba(255,255,255,0.03)' 
-    },
+        border: '1px solid transparent',
+        background: `
+            linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02)) padding-box,
+            linear-gradient(135deg, rgba(255,255,255,0.14), rgba(255,255,255,0.04)) border-box
+        `,
+        padding: '16px', 
+        borderRadius: '20px', 
+        boxShadow: '0 24px 70px rgba(0,0,0,0.35)',
+    } as React.CSSProperties,
     tableSection: { 
-        background: 'rgba(255,255,255,0.02)', 
-        padding: '32px', 
-        borderRadius: '24px', 
-        border: '1px solid rgba(255,255,255,0.03)' 
-    },
+        border: '1px solid transparent',
+        background: `
+            linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02)) padding-box,
+            linear-gradient(135deg, rgba(255,255,255,0.14), rgba(255,255,255,0.04)) border-box
+        `,
+        padding: '16px', 
+        borderRadius: '20px', 
+        boxShadow: '0 24px 70px rgba(0,0,0,0.35)',
+    } as React.CSSProperties,
     table: { 
         width: '100%', 
         borderCollapse: 'collapse' as const, 
-        marginTop: '20px', 
+        marginTop: '12px', 
         minWidth: '600px' 
-    },
+    } as React.CSSProperties,
     th: { 
         textAlign: 'left' as const, 
-        padding: '16px', 
-        fontSize: '11px', 
+        padding: '10px 12px', 
+        fontSize: '10px', 
         fontWeight: 900, 
         color: tokens.colors.textMuted, 
         borderBottom: '1px solid rgba(255,255,255,0.05)' 
-    },
+    } as React.CSSProperties,
     td: { 
-        padding: '20px 16px', 
-        fontSize: '13px', 
+        padding: '12px', 
+        fontSize: '12px', 
         borderBottom: '1px solid rgba(255,255,255,0.03)' 
-    },
+    } as React.CSSProperties,
     statusBadge: (color: string): React.CSSProperties => ({ 
         padding: '4px 10px', 
         borderRadius: '8px', 

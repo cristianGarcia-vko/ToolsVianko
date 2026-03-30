@@ -13,6 +13,20 @@ interface SanityReportViewProps {
 export const SanityReportView: React.FC<SanityReportViewProps> = ({ report, onClose }) => {
     if (!report) return null;
 
+    const handleExportJson = () => {
+        try {
+            const blob = new Blob([JSON.stringify(report, null, 2)], { type: 'application/json' });
+            const url = window.URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `k6-report.${report.projectName ? String(report.projectName).replace(/\\s+/g, '_').toLowerCase() : 'export'}.json`;
+            link.click();
+            window.URL.revokeObjectURL(url);
+        } catch (e) {
+            // ignore
+        }
+    };
+
     return (
         <motion.div 
             initial={{ opacity: 0, scale: 0.95 }}
@@ -28,7 +42,7 @@ export const SanityReportView: React.FC<SanityReportViewProps> = ({ report, onCl
                         <h2 style={{ fontSize: '18px', fontWeight: 900 }}>SENTINEL SANITY REPORT: {report.projectName}</h2>
                     </div>
                     <div style={reportStyles.headerActions}>
-                        <button style={reportStyles.btnAlt}><Download size={16} /> EXPORT PDF</button>
+                        <button style={reportStyles.btnAlt} onClick={handleExportJson}><Download size={16} /> EXPORT JSON</button>
                         <button onClick={onClose} style={reportStyles.closeBtn}><X size={20} /></button>
                     </div>
                 </header>
@@ -56,6 +70,49 @@ export const SanityReportView: React.FC<SanityReportViewProps> = ({ report, onCl
                             </ResponsiveContainer>
                         </div>
                     </div>
+
+                    {Array.isArray(report.thresholds) && report.thresholds.length > 0 && (
+                        <div style={reportStyles.tableSection}>
+                            <h3 style={reportStyles.sectionTitle}>THRESHOLDS / UMBRALES</h3>
+                            <div style={reportStyles.tableScroll}>
+                                <table style={reportStyles.table}>
+                                    <thead>
+                                        <tr>
+                                            <th style={reportStyles.th}>MÉTRICA</th>
+                                            <th style={reportStyles.th}>REGLA</th>
+                                            <th style={reportStyles.th}>ACTUAL</th>
+                                            <th style={reportStyles.th}>STATUS</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {report.thresholds.map((t: any, i: number) => {
+                                            const pass = t.pass;
+                                            const color =
+                                                pass === true
+                                                    ? tokens.colors.accentSuccess
+                                                    : pass === false
+                                                        ? tokens.colors.accentError
+                                                        : tokens.colors.accentOrange;
+                                            return (
+                                                <tr key={i}>
+                                                    <td style={reportStyles.td}>{t.metric}</td>
+                                                    <td style={reportStyles.td}>{t.expr}</td>
+                                                    <td style={reportStyles.td}>
+                                                        {t.actual == null ? 'N/A' : (typeof t.actual === 'number' ? t.actual.toFixed(4) : String(t.actual))}
+                                                    </td>
+                                                    <td style={reportStyles.td}>
+                                                        <div style={reportStyles.statusBadge(color)}>
+                                                            {pass === true ? 'PASS' : pass === false ? 'FAIL' : 'N/A'}
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            );
+                                        })}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    )}
 
                     <div style={reportStyles.tableSection}>
                         <h3 style={reportStyles.sectionTitle}>DETAILED ENDPOINT INVESTIGATION</h3>
