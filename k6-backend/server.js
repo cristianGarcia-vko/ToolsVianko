@@ -7,10 +7,12 @@ const path = require('path');
 const { analyzeProject } = require('./analyzer.js');
 const { buildScript } = require('./planScriptBuilder.js');
 const { buildSanityReport } = require('./summaryReportBuilder.js');
+const { sqlGeneratorRouter } = require('./sqlGenerator.js');
 
 const app = express();
 app.use(cors());
 app.use(express.json());
+app.use('/api/sqlgen', sqlGeneratorRouter);
 
 const upload = multer({ dest: 'uploads/' });
 const HISTORY_FILE = path.join(__dirname, 'test_history.json');
@@ -68,6 +70,21 @@ app.post('/api/analyze-zip', upload.single('projectFile'), (req, res) => {
 
     const zipPath = req.file.path;
     const extractPath = path.join(__dirname, 'unzipped', req.file.filename);
+
+    const safeCleanup = () => {
+        // Ensure we don't keep user uploads or extracted projects on disk.
+        try {
+            if (zipPath && fs.existsSync(zipPath)) {
+                fs.rmSync(zipPath, { force: true });
+            }
+        } catch { /* ignore */ }
+
+        try {
+            if (extractPath && fs.existsSync(extractPath)) {
+                fs.rmSync(extractPath, { recursive: true, force: true });
+            }
+        } catch { /* ignore */ }
+    };
     
     try {
         const endpoints = analyzeProject(zipPath, extractPath);
@@ -75,6 +92,8 @@ app.post('/api/analyze-zip', upload.single('projectFile'), (req, res) => {
         res.json({ config: endpoints });
     } catch (e) {
         res.status(500).json({ error: e.message });
+    } finally {
+        safeCleanup();
     }
 });
 

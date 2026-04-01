@@ -1,5 +1,5 @@
 import { BannerDesign, BannerLayer, StudioProject } from './types';
-import { tokens } from '../../../SharedTool/style/tokens.shared.style';
+import { tokens } from '../../../../SharedTool/style/tokens.shared.style';
 
 export const STORAGE_KEYS = {
     projectPrefix: 'vstudio_prj_',

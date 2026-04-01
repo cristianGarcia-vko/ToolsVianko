@@ -1,5 +1,5 @@
 import React from 'react';
-import { tokens } from '../../../SharedTool/style/tokens.shared.style';
+import { tokens } from '../../../../../SharedTool/style/tokens.shared.style';
 
 export const reportStyles = {
     overlay: { 
@@ -194,5 +194,10 @@ export const reportStyles = {
         fontSize: '24px',
         fontWeight: 900,
         marginTop: '12px',
+    } as React.CSSProperties,
+
+    reportMainTitle: {
+        fontSize: '18px',
+        fontWeight: 900,
     } as React.CSSProperties,
 };

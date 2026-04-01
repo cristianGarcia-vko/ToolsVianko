@@ -1,14 +1,7 @@
 import React, { useCallback, useRef, useState, useEffect } from 'react';
-import { BannerLayer } from './types';
-
-/**
- * Safely reads a numeric px value from a CSS style property.
- */
-export const readStylePx = (value: unknown): number => {
-    if (typeof value === 'number' && Number.isFinite(value)) return value;
-    const parsed = parseFloat(String(value ?? '0'));
-    return Number.isFinite(parsed) ? parsed : 0;
-};
+import { BannerLayer } from '../../types/types';
+import { LayerPropsBase } from './LayerItemRenderer.shared';
+import { readStylePx } from './LayerItemRenderer.logics';
 
 interface LayerDragState {
     active: boolean;
@@ -18,19 +11,13 @@ interface LayerDragState {
     startTop: number;
 }
 
-interface LayerLogicArgs {
-    layer: BannerLayer;
-    zoom: number;
-    onSelect: (e: React.MouseEvent) => void;
-    onUpdate: (id: string, updates: Partial<BannerLayer>) => void;
-    onDelete: (id: string) => void;
-    onDuplicate: () => void;
-    onReorder: (id: string, action: 'front' | 'back' | 'forward' | 'backward') => void;
-}
-
+/**
+ * Web-specific Logic for LayerItemRenderer.
+ * Orchestrates DOM pointer events, drag/resize previews, and wheel-resizing.
+ */
 export const useLayerItemLogic = ({
     layer, zoom, onSelect, onUpdate, onDelete, onDuplicate, onReorder
-}: LayerLogicArgs) => {
+}: LayerPropsBase) => {
     const [menu, setMenu] = useState<{ x: number, y: number } | null>(null);
     const [dragPreview, setDragPreview] = useState<{ left: number; top: number; width?: number; height?: number; transform?: string } | null>(null);
     const previewRef = useRef<{ left: number; top: number; width?: number; height?: number; transform?: string } | null>(null);
@@ -58,7 +45,7 @@ export const useLayerItemLogic = ({
         }
     }, [currentLeft, currentTop, currentWidth, currentHeight, currentTransform]);
 
-    // Context menu
+    // Context menu handlers
     const handleContextMenu = useCallback((e: React.MouseEvent) => {
         e.preventDefault();
         e.stopPropagation();
@@ -71,7 +58,7 @@ export const useLayerItemLogic = ({
         return () => window.removeEventListener('click', close);
     }, [menu]);
 
-    // Drag commit
+    // Commit final state to store
     const commitPreview = useCallback(() => {
         const prev = previewRef.current;
         if (!prev) return;
@@ -83,12 +70,12 @@ export const useLayerItemLogic = ({
         if (prev.height !== undefined) updates.styles.height = `${Math.round(prev.height)}px`;
         if (prev.transform !== undefined) updates.styles.transform = prev.transform;
 
-        onUpdate(layer.id, updates);
-    }, [layer.id, layer.styles, onUpdate]);
+        onUpdate(updates);
+    }, [layer.styles, onUpdate]);
 
-    // Pointer drag
+    // Main Drag handler
     const handleLayerPointerDown = useCallback((e: React.PointerEvent<HTMLDivElement>) => {
-        onSelect(e as any);
+        onSelect(e.ctrlKey || e.shiftKey);
         if (layer.locked || e.button !== 0) return;
         if ((e.target as HTMLElement | null)?.closest('[data-layer-handle="true"]')) return;
 
@@ -136,9 +123,9 @@ export const useLayerItemLogic = ({
 
         window.addEventListener('pointermove', handlePointerMove);
         window.addEventListener('pointerup', handlePointerUp, { once: true });
-    }, [layer.locked, currentLeft, currentTop, zoom, onSelect, commitPreview]);
+    }, [layer.locked, currentLeft, currentTop, currentWidth, currentHeight, currentTransform, zoom, onSelect, commitPreview]);
 
-    // Resize Preview
+    // Handle resize calculations
     const handleResizeDetailed = useCallback((updates: { dw?: number, dh?: number, dl?: boolean, dt?: boolean }) => {
         const curW = currentWidth;
         const curH = currentHeight;
@@ -163,7 +150,7 @@ export const useLayerItemLogic = ({
         setDragPreview(nextPreview);
     }, [currentWidth, currentHeight, currentLeft, currentTop]);
 
-    // Rotate Preview
+    // Handle rotation math
     const handleRotate = useCallback((angle: number) => {
         const nextPreview = {
             left: previewRef.current?.left ?? currentLeft,
@@ -175,7 +162,7 @@ export const useLayerItemLogic = ({
         setDragPreview(nextPreview);
     }, [currentLeft, currentTop]);
 
-    // Pointer Up for Resize/Rotate handles (since they are separate in JSX)
+    // Global listener for handle commitments
     useEffect(() => {
         const handleGlobalPointerUp = () => {
             if (previewRef.current && !dragStateRef.current.active) {
@@ -189,7 +176,7 @@ export const useLayerItemLogic = ({
 
     const wheelCommitTimer = useRef<any>(null);
 
-    // Wheel Resize
+    // Mouse wheel resizing logic
     const handleWheelResize = useCallback((e: WheelEvent) => {
         if (layer.locked) return;
         e.preventDefault();
@@ -223,8 +210,7 @@ export const useLayerItemLogic = ({
         }, 500);
     }, [layer.locked, currentWidth, currentHeight, currentLeft, currentTop, commitPreview]);
 
-    // Computed
-    const animationClass = layer.animation?.name ? `animate-${layer.animation.name}` : '';
+    // Derived view state
     const resolvedLeft = dragPreview?.left ?? currentLeft;
     const resolvedTop = dragPreview?.top ?? currentTop;
     const resolvedWidth = dragPreview?.width ?? currentWidth;
@@ -236,7 +222,6 @@ export const useLayerItemLogic = ({
         resolvedLeft, resolvedTop,
         resolvedWidth, resolvedHeight,
         resolvedTransform,
-        animationClass,
         handleContextMenu,
         handleLayerPointerDown,
         handleResizeDetailed,

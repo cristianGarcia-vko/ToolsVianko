@@ -11,6 +11,7 @@ interface ModuleCardProps {
     accent: string;
     delay: number;
     onClick: () => void;
+    onMouseEnter?: () => void;
 }
 
 export const ModuleCardAtom: React.FC<ModuleCardProps> = ({ 
@@ -19,7 +20,8 @@ export const ModuleCardAtom: React.FC<ModuleCardProps> = ({
     icon, 
     accent, 
     delay, 
-    onClick 
+    onClick,
+    onMouseEnter
 }) => {
     return (
         <motion.div
@@ -28,6 +30,7 @@ export const ModuleCardAtom: React.FC<ModuleCardProps> = ({
             transition={{ delay, duration: 0.8, ease: [0.19, 1, 0.22, 1] }}
             whileHover={{ y: -12, transition: { duration: 0.3 } }}
             onClick={onClick}
+            onMouseEnter={onMouseEnter}
             style={cardStyles.card}
         >
             <div style={cardStyles.innerContent}>

@@ -1,47 +1,31 @@
-import React, { useRef, useState, useCallback, useMemo, useEffect } from 'react';
+import React, { useRef, useState, useCallback, useEffect } from 'react';
+import { 
+    type DrawingStudioPropsBase 
+} from './DrawingStudio.shared';
+import { useDrawingStudioBaseLogic } from './DrawingStudio.logics';
 
-export type DrawingTool = 'brush' | 'pencil' | 'airbrush' | 'neon' | 'eraser' | 'rect' | 'circle' | 'line' | 'bucket' | 'pattern';
-
-export interface DrawingLayer {
-    id: string;
-    name: string;
-    visible: boolean;
-    zIndex: number;
-}
-
-interface UseDrawingStudioParams {
-    width: number;
-    height: number;
-    initialData?: string;
-    onApply: (dataUrl: string) => void;
-    onCancel: () => void;
-}
-
-export const useDrawingStudioLogic = ({ width, height, initialData, onApply, onCancel }: UseDrawingStudioParams) => {
+/**
+ * Web-specific Logic for DrawingStudio.
+ * Orchestrates Canvas API, mouse events, and pixel manipulation algorithms.
+ */
+export const useDrawingStudioWebLogic = (props: DrawingStudioPropsBase) => {
+    const { width, height, initialData, onApply, onCancel } = props;
     const canvasRefs = useRef<{ [key: string]: HTMLCanvasElement | null }>({});
     const overlayRef = useRef<HTMLCanvasElement>(null);
     
-    const [tool, setTool] = useState<DrawingTool>('brush');
-    const [color, setColor] = useState('#ffffff');
-    const [size, setSize] = useState(8);
-    const [opacity, setOpacity] = useState(1);
-    const [isFill, setIsFill] = useState(false);
-    const [symmetry, setSymmetry] = useState(false);
-    const [activeTab, setActiveTab] = useState<'tools' | 'layers' | 'settings'>('tools');
-    const [patternImage, setPatternImage] = useState<string | null>(null);
-    
-    const [layers, setLayers] = useState<DrawingLayer[]>([
-        { id: 'base', name: 'Capa Base', visible: true, zIndex: 0 }
-    ]);
-    const [activeLayerId, setActiveLayerId] = useState('base');
-    
+    // Base Logic
+    const base = useDrawingStudioBaseLogic(props);
+    const {
+        tool, setTool, color, setColor, size, setSize, opacity, setOpacity,
+        isFill, setIsFill, symmetry, setSymmetry, activeTab, setActiveTab,
+        layers, setLayers, activeLayerId, setActiveLayerId, activeLayer,
+        history, setHistory, patternImage, setPatternImage
+    } = base;
+
     const [isDrawing, setIsDrawing] = useState(false);
     const [startX, setStartX] = useState(0);
     const [startY, setStartY] = useState(0);
-    const [history, setHistory] = useState<{ [layerId: string]: string[] }>({ 'base': [] });
     const [lastPoints, setLastPoints] = useState<{x: number, y: number}[]>([]);
-
-    const activeLayer = useMemo(() => layers.find(l => l.id === activeLayerId) || layers[0], [layers, activeLayerId]);
 
     useEffect(() => {
         if (initialData) {
@@ -90,12 +74,12 @@ export const useDrawingStudioLogic = ({ width, height, initialData, onApply, onC
         }
     }, [tool, color, size, opacity, patternImage]);
 
-    const floodFill = (ctx: CanvasRenderingContext2D, startX: number, startY: number, fillColor: string) => {
+    const floodFill = (ctx: CanvasRenderingContext2D, sX: number, sY: number, fillColor: string) => {
         const imageData = ctx.getImageData(0, 0, width, height);
         const data = imageData.data;
-        const stack = [[Math.round(startX), Math.round(startY)]];
+        const stack: [number, number][] = [[Math.round(sX), Math.round(sY)]];
         
-        const targetColor = getPixel(data, Math.round(startX), Math.round(startY));
+        const targetColor = getPixel(data, Math.round(sX), Math.round(sY));
         const fillRGB = hexToRgb(fillColor);
 
         if (colorsMatch(targetColor, fillRGB)) return;
@@ -120,11 +104,11 @@ export const useDrawingStudioLogic = ({ width, height, initialData, onApply, onC
         return [data[index], data[index + 1], data[index + 2], data[index + 3]];
     };
 
-    const setPixel = (data: Uint8ClampedArray, x: number, y: number, color: number[]) => {
+    const setPixel = (data: Uint8ClampedArray, x: number, y: number, clr: number[]) => {
         const index = (y * width + x) * 4;
-        data[index] = color[0];
-        data[index + 1] = color[1];
-        data[index + 2] = color[2];
+        data[index] = clr[0];
+        data[index + 1] = clr[1];
+        data[index + 2] = clr[2];
         data[index + 3] = 255;
     };
 
@@ -153,7 +137,10 @@ export const useDrawingStudioLogic = ({ width, height, initialData, onApply, onC
         if (tool === 'bucket') {
             const ctx = canvas.getContext('2d', { willReadFrequently: true });
             if (ctx) {
-                setHistory(prev => ({ ...prev, [activeLayerId]: [...(prev[activeLayerId] || []), canvas.toDataURL()] }));
+                setHistory(prev => ({ 
+                    ...prev, 
+                    [activeLayerId]: [...(prev[activeLayerId] || []), canvas.toDataURL()] 
+                }));
                 floodFill(ctx, x, y, color);
             }
             return;
@@ -176,7 +163,7 @@ export const useDrawingStudioLogic = ({ width, height, initialData, onApply, onC
             ctx.beginPath();
             ctx.moveTo(x, y);
         }
-    }, [activeLayerId, activeLayer.visible, tool, setupContext, color, width, height]);
+    }, [activeLayerId, activeLayer.visible, tool, setupContext, color, width, height, setHistory]);
 
     const handlePatternUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.files && e.target.files[0]) {
@@ -213,7 +200,6 @@ export const useDrawingStudioLogic = ({ width, height, initialData, onApply, onC
                 ctx.stroke();
                 
                 if (symmetry) {
-                    const sx = width - x;
                     const sxc = width - xc;
                     const slpx = width - lastPoints[lastPoints.length - 1].x;
                     ctx.beginPath();
@@ -310,7 +296,7 @@ export const useDrawingStudioLogic = ({ width, height, initialData, onApply, onC
             ...prev,
             [activeLayerId]: prev[activeLayerId].slice(0, -1)
         }));
-    }, [activeLayerId, history, width, height]);
+    }, [activeLayerId, history, width, height, setHistory]);
 
     const clearActiveLayer = useCallback(() => {
         const canvas = canvasRefs.current[activeLayerId];
@@ -322,7 +308,7 @@ export const useDrawingStudioLogic = ({ width, height, initialData, onApply, onC
             }));
             ctx.clearRect(0, 0, width, height);
         }
-    }, [activeLayerId, width, height]);
+    }, [activeLayerId, width, height, setHistory]);
 
     const addLayer = useCallback(() => {
         const id = `layer-${Date.now()}`;
@@ -331,7 +317,7 @@ export const useDrawingStudioLogic = ({ width, height, initialData, onApply, onC
         }]);
         setHistory(prev => ({ ...prev, [id]: [] }));
         setActiveLayerId(id);
-    }, []);
+    }, [setLayers, setHistory, setActiveLayerId]);
 
     const handleFinalApply = useCallback(() => {
         const tempCanvas = document.createElement('canvas');
@@ -349,12 +335,12 @@ export const useDrawingStudioLogic = ({ width, height, initialData, onApply, onC
     }, [width, height, layers, onApply]);
 
     return {
+        ...base,
         canvasRefs, overlayRef,
-        tool, setTool, color, setColor, size, setSize, opacity, setOpacity,
-        isFill, setIsFill, symmetry, setSymmetry, activeTab, setActiveTab,
-        layers, setLayers, activeLayerId, setActiveLayerId,
-        startDrawing, draw, stopDrawing, undo, clearActiveLayer, addLayer, handleFinalApply, onCancel,
-        handlePatternUpload, patternImage
+        startDrawing, draw, stopDrawing, 
+        undo, clearActiveLayer, addLayer, 
+        handleFinalApply, onCancel,
+        handlePatternUpload
     };
 };
 

@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { StudioProject, BannerDesign, BannerLayer } from '../../BannerStudioTool/modules/BannerStudio/types';
-import { createProjectTemplate } from '../../BannerStudioTool/modules/BannerStudio/constants';
+import { StudioProject, BannerDesign, BannerLayer } from '../../BannerStudioTool/modules/BannerStudio/types/types';
+import { createProjectTemplate } from '../../BannerStudioTool/modules/BannerStudio/types/constants';
 
 // Sincronización V7+: Referencias Normalizadas
 

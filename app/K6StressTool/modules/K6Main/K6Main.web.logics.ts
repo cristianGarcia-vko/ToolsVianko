@@ -2,8 +2,9 @@ import { useState, useEffect, useMemo, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../../store/store';
 import { setHistory, setMetrics, setCurrentReport } from '../../../store/slices/k6Slice';
-import { buildPresetPlan } from './k6PlanPresets';
-import type { K6PlanConfig, K6PlanPresetId } from './k6PlanTypes';
+import { buildPresetPlan } from './presets/k6PlanPresets';
+import type { K6PlanConfig, K6PlanPresetId } from './types/k6PlanTypes';
+import { tokens } from '../../../SharedTool/style/tokens.shared.style';
 
 export const useK6MainLogic = () => {
     const dispatch = useDispatch();
@@ -24,6 +25,35 @@ export const useK6MainLogic = () => {
     const [planJsonError, setPlanJsonError] = useState<string | null>(null);
     const [planPreset, setPlanPreset] = useState<K6PlanPresetId>('smoke');
 
+    const [isHistoryLoading, setIsHistoryLoading] = useState(false);
+    const [showReport, setShowReport] = useState(false);
+
+    // AUTO-OPEN REPORT
+    useEffect(() => {
+        if (currentReport) setShowReport(true);
+    }, [currentReport]);
+
+    const stats = useMemo(() => currentReport?.kpis || {
+        totalRequests: 0,
+        failedRequests: 0,
+        healthScore: 0,
+        avgLatency: 0,
+        p95Latency: 0,
+        successRate: 0,
+        peakRps: 0,
+        ttfb: 0,
+        activeVus: 0,
+        dataSentKB: 0,
+        dataReceivedKB: 0
+    }, [currentReport]);
+
+    const healthData = useMemo(() => [
+        { name: 'Healthy', value: currentReport?.healthScore || 0 },
+        { name: 'Failed', value: 100 - (currentReport?.healthScore || 0) }
+    ], [currentReport]);
+
+    const COLORS = useMemo(() => [tokens.colors.accentGreen, 'rgba(255,255,255,0.05)'], []);
+
     // AUTO-SYNC: Sync inputs to Plan JSON
     useEffect(() => {
         try {
@@ -38,9 +68,7 @@ export const useK6MainLogic = () => {
         } catch (e) {
             // Ignore if json is invalid during typing
         }
-    }, [protocol, host, port, route]);
-
-    const [isHistoryLoading, setIsHistoryLoading] = useState(false);
+    }, [protocol, host, port, route, planJson]);
 
     const handleCancel = async () => {
         try {
@@ -409,7 +437,7 @@ export const useK6MainLogic = () => {
         userContext, setUserContext, configJson, setConfigJson,
         zipFile, setZipFile, analysisResult,
         planPreset, planJson, planJsonError, setPlanJson, setPlanJsonError,
-        finalUrl,
+        finalUrl, stats, healthData, COLORS, showReport, setShowReport,
         handleRunSingle, handleAnalyze, fetchHistory, handleZipUpload, handleRunBatch,
         handleLoadPreset,
         handleApplyZipEndpointsToPlan,

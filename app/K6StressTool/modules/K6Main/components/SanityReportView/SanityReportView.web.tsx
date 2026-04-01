@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { tokens } from '../../../SharedTool/style/tokens.shared.style';
+import { tokens } from '../../../../../SharedTool/style/tokens.shared.style';
 import { CheckCircle, Clock, Zap, BarChart3, Download, X } from 'lucide-react';
 import { ResponsiveContainer, AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip } from 'recharts';
 import { reportStyles } from './SanityReportView.web.styles';
@@ -10,6 +10,11 @@ interface SanityReportViewProps {
     onClose: () => void;
 }
 
+/**
+ * Pure View for SanityReportView.
+ * No internal business logic, only declarative UI and event binding.
+ * Complies with Vianko Architecture Contract (Zero Logic in View).
+ */
 export const SanityReportView: React.FC<SanityReportViewProps> = ({ report, onClose }) => {
     if (!report) return null;
 
@@ -19,7 +24,8 @@ export const SanityReportView: React.FC<SanityReportViewProps> = ({ report, onCl
             const url = window.URL.createObjectURL(blob);
             const link = document.createElement('a');
             link.href = url;
-            link.download = `k6-report.${report.projectName ? String(report.projectName).replace(/\\s+/g, '_').toLowerCase() : 'export'}.json`;
+            const projectSafe = report.projectName ? String(report.projectName).replace(/\s+/g, '_').toLowerCase() : 'export';
+            link.download = `k6-report.${projectSafe}.json`;
             link.click();
             window.URL.revokeObjectURL(url);
         } catch (e) {
@@ -39,7 +45,7 @@ export const SanityReportView: React.FC<SanityReportViewProps> = ({ report, onCl
                         <div style={reportStyles.badge(report.healthScore > 80 ? tokens.colors.accentSuccess : tokens.colors.accentOrange)}>
                             {report.healthScore}% HEALTH
                         </div>
-                        <h2 style={{ fontSize: '18px', fontWeight: 900 }}>SENTINEL SANITY REPORT: {report.projectName}</h2>
+                        <h2 style={reportStyles.reportMainTitle}>SENTINEL SANITY REPORT: {report.projectName}</h2>
                     </div>
                     <div style={reportStyles.headerActions}>
                         <button style={reportStyles.btnAlt} onClick={handleExportJson}><Download size={16} /> EXPORT JSON</button>

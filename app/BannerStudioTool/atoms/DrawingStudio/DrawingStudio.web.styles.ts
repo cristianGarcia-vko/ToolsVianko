@@ -143,6 +143,50 @@ export const drawingStyles = {
         zIndex: 1000, cursor: 'crosshair',
     } as CSSProperties,
 
+    toolPreviewImg: {
+        width: '16px', 
+        height: '16px', 
+        borderRadius: '4px'
+    } as CSSProperties,
+
+    hiddenInput: {
+        display: 'none'
+    } as CSSProperties,
+
+    footerActions: {
+        marginTop: 'auto', 
+        display: 'flex', 
+        gap: '8px', 
+        padding: '12px'
+    } as CSSProperties,
+
+    applyBtnElite: {
+        padding: '12px 24px', background: tokens.colors.accentSuccess,
+        color: 'white', border: 'none', borderRadius: '16px',
+        fontWeight: 900, fontSize: '11px', cursor: 'pointer',
+        display: 'flex', alignItems: 'center', gap: '10px',
+        flex: 2
+    } as CSSProperties,
+
+    cancelBtnElite: {
+        padding: '12px 24px', background: 'none',
+        border: `1px solid ${tokens.colors.border}`,
+        borderRadius: '16px', color: 'white',
+        fontWeight: 900, fontSize: '11px', cursor: 'pointer',
+        flex: 1,
+        display: 'flex', alignItems: 'center', justifyContent: 'center'
+    } as CSSProperties,
+
+    drawingLayerWrapper: {
+        pointerEvents: 'auto' as const,
+        position: 'absolute' as const,
+        top: 0,
+        left: 0,
+        zIndex: 1000,
+        boxShadow: 'none',
+        background: 'transparent'
+    } as CSSProperties,
+
     layerName: {
         flex: 1, fontSize: '10px', fontWeight: 900,
     } as CSSProperties,

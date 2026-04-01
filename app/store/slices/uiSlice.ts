@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-export type StudioModule = 'hub' | 'banner-studio' | 'k6-stress';
+export type StudioModule = 'hub' | 'banner-studio' | 'k6-stress' | 'sql-generator';
 
 interface UIState {
     activeModule: StudioModule;

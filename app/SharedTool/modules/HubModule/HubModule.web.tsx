@@ -3,7 +3,7 @@ import { StatusBar } from 'expo-status-bar';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
     PenTool, Activity, Shield, Sparkles, Zap, 
-    MousePointer2, Layout, Timer, Gauge, Palette
+    MousePointer2, Layout, Timer, Gauge, Palette, Database
 } from 'lucide-react';
 import { hubStyles } from './HubModule.web.styles';
 import { useHubLogic } from './HubModule.web.logics';
@@ -19,6 +19,7 @@ import { ToolLogoAtom } from '../../atoms/ToolLogoAtom/ToolLogoAtom.web';
 // --- LAZY-LOADED MODULES (OPTIMIZED BUNDLING) ---
 const K6Main = React.lazy(() => import('../../../K6StressTool/modules/K6Main/K6Main.web'));
 const BannerStudio = React.lazy(() => import('../../../BannerStudioTool/modules/BannerStudio/BannerStudio.web'));
+const SQLGeneratorMain = React.lazy(() => import('../../../SQLGeneratorTool/modules/SQLGeneratorMain/SQLGeneratorMain.web'));
 
 const silkTransition: any = {
     duration: 0.6,
@@ -81,7 +82,6 @@ export const HubModule: React.FC = () => {
                         <LogoAtom />
 
                         <div style={hubStyles.cardList}>
-                             {/* MODULO 1: BANNER DESIGNER (GREEN) */}
                             <ModuleCardAtom
                                 title="Banner Designer"
                                 desc="Orquestador avanzado para la orquestación visual de activos multimedia globales."
@@ -89,6 +89,7 @@ export const HubModule: React.FC = () => {
                                 accent={tokens.colors.accentGreen}
                                 delay={0.2}
                                 onClick={() => navigateTo('banner')}
+                                onMouseEnter={() => import('../../../BannerStudioTool/modules/BannerStudio/BannerStudio.web')}
                             />
 
                              {/* MODULO 2: OVERDRIVE STRESS (BLUE) */}
@@ -99,6 +100,7 @@ export const HubModule: React.FC = () => {
                                 accent={tokens.colors.accentBlue}
                                 delay={0.3}
                                 onClick={() => navigateTo('k6')}
+                                onMouseEnter={() => import('../../../K6StressTool/modules/K6Main/K6Main.web')}
                             />
                         </div>
 
@@ -118,6 +120,14 @@ export const HubModule: React.FC = () => {
                     <ModuleContainerAtom title="Overdrive Analytics" color={tokens.colors.accentBlue} onBack={goBack} logo={<ToolLogoAtom variant="overdriveStress" size={20} />}>
                         <React.Suspense fallback={<AsyncLoaderAtom color={tokens.colors.accentBlue} label="Sintonizando Telemetría..." />}>
                             <K6Main />
+                        </React.Suspense>
+                    </ModuleContainerAtom>
+                )}
+
+                {currentApp === 'sql' && (
+                    <ModuleContainerAtom title="SQL Seed Generator" color={tokens.colors.accentOrange} onBack={goBack} logo={<Database size={18} color={tokens.colors.accentOrange} />}>
+                        <React.Suspense fallback={<AsyncLoaderAtom color={tokens.colors.accentOrange} label="Preparando generador..." />}>
+                            <SQLGeneratorMain />
                         </React.Suspense>
                     </ModuleContainerAtom>
                 )}

@@ -1,4 +1,4 @@
-import type { K6PlanConfig, K6PlanPresetId, K6PlanStep } from './k6PlanTypes';
+import type { K6PlanConfig, K6PlanPresetId, K6PlanStep } from '../types/k6PlanTypes';
 
 const makeStepId = (method: string, path: string) =>
   `${method}:${path}`.toLowerCase().replace(/[^a-z0-9:/_-]+/g, '_');

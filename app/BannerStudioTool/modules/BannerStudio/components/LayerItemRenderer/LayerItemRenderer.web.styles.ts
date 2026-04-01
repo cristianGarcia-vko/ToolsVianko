@@ -1,5 +1,5 @@
 import { CSSProperties } from 'react';
-import { tokens } from '../../../SharedTool/style/tokens.shared.style';
+import { tokens } from '../../../../../SharedTool/style/tokens.shared.style';
 
 /* ============================
    LayerItemRenderer Style Tokens
@@ -120,6 +120,81 @@ export const menuBtnStyle: CSSProperties = {
     display: 'flex', alignItems: 'center', gap: '8px',
     color: 'rgba(255,255,255,0.85)'
 };
+
+export const getTextStyle = (styles: any): CSSProperties => ({
+    display: 'block',
+    textAlign: (styles.textAlign as any) || 'left',
+    whiteSpace: 'pre-wrap',
+    letterSpacing: styles.letterSpacing || '0px',
+    textShadow: styles.textShadow || 'none',
+    color: styles.color || '#fff',
+    fontSize: styles.fontSize || '16px',
+    fontWeight: styles.fontWeight || 400,
+    fontStyle: styles.fontStyle || 'normal',
+    fontFamily: styles.fontFamily || 'Inter, sans-serif',
+    lineHeight: styles.lineHeight || 1.2,
+    wordBreak: 'break-word',
+    overflowWrap: 'break-word'
+});
+
+export const getImageStyle = (fit: any, position: string): CSSProperties => ({
+    width: '100%',
+    height: '100%',
+    objectFit: fit || 'cover',
+    objectPosition: position || 'center',
+});
+
+export const lottiePlaceholder: CSSProperties = {
+    width: '100%',
+    height: '100%',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    border: '1px dashed rgba(255,255,255,0.25)',
+    borderRadius: '14px',
+    color: 'rgba(255,255,255,0.7)',
+    fontSize: '10px',
+    fontWeight: 900,
+    letterSpacing: '1px'
+};
+
+export const animationWrapper: CSSProperties = {
+    width: '100%',
+    height: '100%'
+};
+
+export const getParticleContainer = (color?: string): CSSProperties => ({
+    position: 'absolute',
+    inset: 0,
+    width: '100%',
+    height: '100%',
+    pointerEvents: 'none',
+    background: 'transparent',
+    color: color || 'white',
+    contain: 'strict'
+});
+
+export const getParticleStyle = (p: any, animation: string): CSSProperties => ({
+    position: 'absolute',
+    width: '2px',
+    height: '10px',
+    background: 'currentColor',
+    borderRadius: '50%',
+    left: p.left,
+    top: '-20px',
+    opacity: p.opacity,
+    willChange: 'transform',
+    animation: animation
+});
+
+export const canvasOverlay = (opacity: number): CSSProperties => ({
+    position: 'absolute',
+    inset: 0,
+    width: '100%',
+    height: '100%',
+    pointerEvents: 'none',
+    opacity
+});
 
 export const getResizeHandleStyle = (position: string, isCorner: boolean): CSSProperties => ({
     position: 'absolute',

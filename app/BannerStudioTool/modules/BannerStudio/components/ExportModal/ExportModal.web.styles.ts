@@ -1,5 +1,5 @@
 import { CSSProperties } from 'react';
-import { tokens } from '../../../SharedTool/style/tokens.shared.style';
+import { tokens } from '../../../../../SharedTool/style/tokens.shared.style';
 
 /* ============================
    ExportModal Style Tokens
@@ -157,6 +157,68 @@ export const exportStyles = {
         background: tokens.colors.accentSuccess + '20',
         display: 'flex', alignItems: 'center', justifyContent: 'center',
         marginBottom: '10px'
+    } as CSSProperties,
+
+    headerTitleGroup: {
+        display: 'flex',
+        alignItems: 'center',
+        gap: '12px',
+    } as CSSProperties,
+
+    optionContent: {
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        gap: '4px',
+    } as CSSProperties,
+
+    playerHeader: {
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        marginBottom: '16px',
+    } as CSSProperties,
+
+    playerBannerTitle: {
+        fontSize: '10px',
+        fontWeight: 900,
+        color: tokens.colors.accentPurple,
+    } as CSSProperties,
+
+    previewCanvasArea: {
+        position: 'relative' as const,
+        boxShadow: '0 40px 80px rgba(0,0,0,0.5)',
+        overflow: 'hidden' as const,
+    } as CSSProperties,
+
+    formatSelectorRow: {
+        marginTop: '20px',
+        display: 'flex',
+        gap: '10px',
+        overflowX: 'auto' as const,
+        paddingBottom: '10px',
+    } as CSSProperties,
+
+    roleGridContainer: {
+        display: 'grid',
+        gridTemplateColumns: 'repeat(2, 1fr)',
+        gap: '16px',
+        marginTop: '20px'
+    } as CSSProperties,
+
+    roleLabelStack: {
+        display: 'flex',
+        flexDirection: 'column'
+    } as CSSProperties,
+
+    roleCardTitle: {
+        fontSize: '12px',
+        fontWeight: 900
+    } as CSSProperties,
+
+    roleCardDesc: {
+        fontSize: '9px',
+        opacity: 0.4
     } as CSSProperties,
 
     roleIconBox: {

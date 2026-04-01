@@ -157,12 +157,132 @@ export const createBannerStudioStyles = (theme: ThemeTokens) => ({
         fontSize: '14px',
     } as CSSProperties,
 
+    logoSubtitleContainer: {
+        display: 'flex',
+        gap: '8px',
+        alignItems: 'baseline',
+    } as CSSProperties,
+
+    logoTitle: {
+        fontSize: '12px',
+        fontWeight: 900,
+        letterSpacing: '2px',
+    } as CSSProperties,
+
+    logoAutomation: {
+        fontSize: '8px',
+        color: theme.colors.accentGreen,
+        opacity: 0.6,
+        fontWeight: 900,
+        letterSpacing: '4px',
+    } as CSSProperties,
+
+    headerActions: {
+        display: 'flex',
+        alignItems: 'center',
+        gap: '16px',
+    } as CSSProperties,
+
     historyControls: {
         display: 'flex',
         gap: '4px',
         padding: '4px',
         background: 'rgba(255,255,255,0.03)',
         borderRadius: '12px',
+    } as CSSProperties,
+
+    historyBtn: {
+        width: '32px',
+        height: '32px',
+        borderRadius: '10px',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        cursor: 'pointer',
+        border: 'none',
+        background: 'transparent',
+        color: 'white',
+        transition: 'opacity 0.2s',
+    } as CSSProperties,
+
+    toolsetWrapper: {
+        display: 'flex',
+        gap: '8px',
+        alignItems: 'flex-start',
+    } as CSSProperties,
+
+    sidebarStack: {
+        display: 'flex',
+        flexDirection: 'column' as const,
+        gap: '4px',
+        alignItems: 'center',
+    } as CSSProperties,
+
+    sidebarDivider: {
+        width: '24px',
+        height: '1px',
+        background: 'rgba(255,255,255,0.05)',
+        margin: '4px 0',
+    } as CSSProperties,
+
+    canvasWrapper: {
+        transformOrigin: 'center center',
+        transition: 'transform 0.1s cubic-bezier(0.16, 1, 0.3, 1)',
+        position: 'relative' as const,
+        boxShadow: '0 80px 160px rgba(0,0,0,0.8)',
+        overflow: 'hidden' as const,
+    } as CSSProperties,
+
+    zoomDivider: {
+        width: '1px',
+        height: '20px',
+        background: 'rgba(255,255,255,0.1)',
+    } as CSSProperties,
+
+    formatLabelArea: {
+        display: 'flex',
+        alignItems: 'center',
+        gap: '8px',
+        marginRight: '12px',
+    } as CSSProperties,
+
+    formatScrollArea: {
+        display: 'flex',
+        gap: '12px',
+        overflowX: 'auto' as const,
+        flex: 1,
+        padding: '4px',
+    } as CSSProperties,
+
+    formatPill: {
+        padding: '8px 20px',
+        borderRadius: '14px',
+        background: 'rgba(0,0,0,0.2)',
+        border: '1px solid rgba(255,255,255,0.05)',
+        cursor: 'pointer',
+        display: 'flex',
+        gap: '10px',
+        alignItems: 'center',
+        transition: 'all 0.3s',
+    } as CSSProperties,
+
+    formatPillActive: {
+        padding: '8px 20px',
+        borderRadius: '14px',
+        background: 'rgba(255,255,255,0.08)',
+        border: `1px solid ${theme.colors.accentGreen}80`,
+        cursor: 'pointer',
+        display: 'flex',
+        gap: '10px',
+        alignItems: 'center',
+        transition: 'all 0.3s',
+    } as CSSProperties,
+
+    formatPillDot: {
+        width: '6px',
+        height: '6px',
+        borderRadius: '3px',
+        transition: 'background 0.3s',
     } as CSSProperties,
 
     perfBadge: {

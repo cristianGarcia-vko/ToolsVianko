@@ -1,7 +1,8 @@
 import { useState, useCallback } from 'react';
 import JSZip from 'jszip';
-import { StudioProject } from './types';
-import { buildDashboardBannerContractFromProject } from './dashboardBannerContract';
+import html2canvas from 'html2canvas';
+import { StudioProject } from '../../types/types';
+import { buildDashboardBannerContractFromProject } from '../../types/dashboardBannerContract';
 
 type ExportView = 'menu' | 'player' | 'mosaic';
 type ExportStep = 'config' | 'exporting' | 'complete' | 'error';
@@ -12,6 +13,10 @@ interface ExportLogicArgs {
     onExport: (config: any) => void;
 }
 
+/**
+ * Web-specific Logic for ExportModal.
+ * Handles ZIP bundles, VPRJ project files, and Canvas snapshots via html2canvas.
+ */
 export const useExportModalLogic = ({ project, onClose, onExport }: ExportLogicArgs) => {
     const [view, setView] = useState<ExportView>('menu');
     const [exportStep, setExportStep] = useState<ExportStep>('config');
@@ -116,10 +121,36 @@ export const useExportModalLogic = ({ project, onClose, onExport }: ExportLogicA
         setExportStep('complete');
     }, [project, onExport]);
 
-    const handleImageExport = useCallback((type: 'png' | 'jpg' | 'gif') => {
-        onExport({ type });
-        setExportStep('complete');
-    }, [onExport]);
+    const handleImageExport = useCallback(async (type: 'png' | 'jpg' | 'gif') => {
+        setExportStep('exporting');
+        setProgress(30);
+        
+        // Target can be the main canvas or the preview in the modal
+        const element = document.getElementById('vianko-export-preview') || document.getElementById('vianko-canvas-root');
+        
+        if (element) {
+            try {
+                const canvas = await html2canvas(element as HTMLElement, { 
+                    backgroundColor: null, 
+                    useCORS: true, 
+                    scale: 2 
+                });
+                setProgress(80);
+                const dataUrl = canvas.toDataURL(`image/${type === 'jpg' ? 'jpeg' : type}`);
+                const link = document.createElement('a');
+                link.download = `${project.name.replace(/\s+/g, '_')}.${type}`;
+                link.href = dataUrl;
+                link.click();
+                setProgress(100);
+                setExportStep('complete');
+            } catch (err) {
+                console.error("Export Error:", err);
+                setExportStep('error');
+            }
+        } else {
+            setExportStep('error');
+        }
+    }, [project.name]);
 
     return {
         view, setView,
