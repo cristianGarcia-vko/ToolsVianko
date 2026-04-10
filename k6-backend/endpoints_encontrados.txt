@@ -6,16 +6,6 @@
   },
   {
     "method": "GET",
-    "route": "/health",
-    "payload": null
-  },
-  {
-    "method": "GET",
-    "route": "/",
-    "payload": null
-  },
-  {
-    "method": "GET",
     "route": "/usuario/:usuarioId",
     "payload": null
   },
@@ -53,17 +43,77 @@
   },
   {
     "method": "GET",
-    "route": "/bonos/excel",
-    "payload": null
-  },
-  {
-    "method": "GET",
     "route": "/movimientos/pdf",
     "payload": null
   },
   {
     "method": "GET",
+    "route": "/admin",
+    "payload": null
+  },
+  {
+    "method": "GET",
     "route": "/admin/pdf",
+    "payload": null
+  },
+  {
+    "method": "GET",
+    "route": "/ceo/cumplimiento",
+    "payload": null
+  },
+  {
+    "method": "GET",
+    "route": "/ceo/cumplimiento/pdf",
+    "payload": null
+  },
+  {
+    "method": "GET",
+    "route": "/ceo/trafico-cliente",
+    "payload": null
+  },
+  {
+    "method": "GET",
+    "route": "/ceo/trafico-cliente/pdf",
+    "payload": null
+  },
+  {
+    "method": "GET",
+    "route": "/ceo/turnos",
+    "payload": null
+  },
+  {
+    "method": "GET",
+    "route": "/ceo/turnos/pdf",
+    "payload": null
+  },
+  {
+    "method": "GET",
+    "route": "/ceo/maquinistas",
+    "payload": null
+  },
+  {
+    "method": "GET",
+    "route": "/ceo/maquinistas/pdf",
+    "payload": null
+  },
+  {
+    "method": "GET",
+    "route": "/ceo/comparativo",
+    "payload": null
+  },
+  {
+    "method": "GET",
+    "route": "/ceo/comparativo/pdf",
+    "payload": null
+  },
+  {
+    "method": "GET",
+    "route": "/coordinador",
+    "payload": null
+  },
+  {
+    "method": "GET",
+    "route": "/coordinador/pdf",
     "payload": null
   },
   {
@@ -74,11 +124,6 @@
   {
     "method": "GET",
     "route": "/empresas/pdf",
-    "payload": null
-  },
-  {
-    "method": "GET",
-    "route": "/bonos/pdf",
     "payload": null
   },
   {

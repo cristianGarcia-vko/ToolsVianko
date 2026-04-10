@@ -5,6 +5,8 @@ import { setHistory, setMetrics, setCurrentReport } from '../../../store/slices/
 import { buildPresetPlan } from './presets/k6PlanPresets';
 import type { K6PlanConfig, K6PlanPresetId } from './types/k6PlanTypes';
 import { tokens } from '../../../SharedTool/style/tokens.shared.style';
+import { useExecutionStream } from './components/K6ExecutionConsole/K6ExecutionConsole.web.logics';
+import { useToast } from './components/K6Toast/K6Toast.web';
 
 export const useK6MainLogic = () => {
     const dispatch = useDispatch();
@@ -27,6 +29,15 @@ export const useK6MainLogic = () => {
 
     const [isHistoryLoading, setIsHistoryLoading] = useState(false);
     const [showReport, setShowReport] = useState(false);
+
+    // ─── Execution Stream (Phase 1) ────────────────────────────────────
+    const executionStream = useExecutionStream();
+    const [showConsole, setShowConsole] = useState(false);
+    const [lastRunType, setLastRunType] = useState<'single' | 'plan'>('plan');
+
+    // ─── Wizard + Toast (Phase 2/3) ───────────────────────────────────
+    const [showWizard, setShowWizard] = useState(false);
+    const toast = useToast();
 
     // AUTO-OPEN REPORT
     useEffect(() => {
@@ -89,7 +100,8 @@ export const useK6MainLogic = () => {
     const [zipFile, setZipFile] = useState<File | null>(null);
     const [analysisResult, setAnalysisResult] = useState<any>(null);
 
-    const finalUrl = useMemo(() => `${protocol}${host}${port ? ':' + port : ''}${route}`, [protocol, host, port, route]);
+    const monitorBaseUrl = useMemo(() => `${protocol}${host}${port ? ':' + port : ''}`, [protocol, host, port]);
+    const finalUrl = useMemo(() => `${monitorBaseUrl}${route}`, [monitorBaseUrl, route]);
 
     const fetchHistory = useCallback(async () => {
         setIsHistoryLoading(true);
@@ -223,30 +235,20 @@ export const useK6MainLogic = () => {
         if (e) e.preventDefault();
         setLoading(true);
         setError(null);
+        setLastRunType('single');
 
-        try {
-            const res = await fetch('http://localhost:3001/api/run-test', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    url: finalUrl,
-                    vus: vusSingle,
-                    duration: `${durationSingle}s`
-                })
-            });
-            const data = await res.json();
-            if (data.error) {
-                setError(data.error);
-            } else {
-                const report = mapK6ToReport(data.metrics, host || "Single Target");
-                dispatch(setCurrentReport(report));
-                setAnalysisResult(report);
-            }
-            fetchHistory();
-        } catch (err) {
-            setError("Error conectando con el servicio de estrés K6.");
-        } finally {
+        const started = await executionStream.startTest('single', {
+            url: finalUrl,
+            vus: vusSingle,
+            duration: `${durationSingle}s`,
+        });
+
+        if (started) {
+            setShowConsole(true);
+            setStatusMessage(null);
+        } else {
             setLoading(false);
+            setError('No se pudo iniciar la prueba de estrés.');
         }
     };
 
@@ -350,32 +352,66 @@ export const useK6MainLogic = () => {
     const handleRunPlan = async () => {
         setLoading(true);
         setError(null);
-        setStatusMessage("Compilando y enviando plan a K6 Engine...");
+        setStatusMessage(null);
+        setLastRunType('plan');
+
         try {
             const plan: K6PlanConfig = JSON.parse(planJson);
-            const res = await fetch('http://localhost:3001/api/run-plan', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ plan, authToken })
-            });
-            const data = await res.json();
-            if (data.error) {
-                setError(data.error);
-                setStatusMessage("Error en ejecución.");
+            const started = await executionStream.startTest('plan', { plan, authToken });
+
+            if (started) {
+                setShowConsole(true);
             } else {
-                const report = mapK6ToReport(data.metrics, plan.projectName || "Plan Test");
-                dispatch(setCurrentReport(report));
-                setStatusMessage("Plan ejecutado con éxito.");
-                setTimeout(() => setStatusMessage(null), 5000);
+                setLoading(false);
+                setError('No se pudo iniciar la ejecución del plan.');
             }
-            fetchHistory();
         } catch (err) {
-            setError("Error en el formato del plan o conexión.");
-            setStatusMessage("Fallo en la comunicación.");
-        } finally {
+            setError('Error en el formato del plan JSON.');
             setLoading(false);
         }
     };
+
+    // ─── Stream completion handlers ────────────────────────────────────
+
+    const handleStreamComplete = useCallback(() => {
+        setLoading(false);
+        const result = executionStream.result;
+        if (result?.success && result.summary) {
+            const report = result.report || mapK6ToReport(result.summary, host || 'K6 Test');
+            dispatch(setCurrentReport(report));
+        }
+        fetchHistory();
+    }, [executionStream.result, dispatch, fetchHistory, host]);
+
+    const handleViewReport = useCallback(() => {
+        handleStreamComplete();
+        setShowConsole(false);
+        executionStream.closeStream();
+        setShowReport(true);
+    }, [handleStreamComplete, executionStream]);
+
+    const handleConsoleClose = useCallback(() => {
+        if (executionStream.isComplete) {
+            handleStreamComplete();
+        }
+        setShowConsole(false);
+        executionStream.closeStream();
+        setLoading(false);
+    }, [executionStream, handleStreamComplete]);
+
+    const handleConsoleRerun = useCallback(() => {
+        setShowConsole(false);
+        executionStream.closeStream();
+        if (lastRunType === 'single') {
+            handleRunSingle();
+        } else {
+            handleRunPlan();
+        }
+    }, [executionStream, lastRunType]);
+
+    const handleCancelStream = useCallback(async () => {
+        await executionStream.cancelActiveTest();
+    }, [executionStream]);
 
     const handleRunBatch = async () => {
         if (!analysisResult?.endpoints) return;
@@ -428,6 +464,33 @@ export const useK6MainLogic = () => {
             setLoading(false);
         }
     };
+    // ─── Wizard handlers (Phase 3) ────────────────────────────────────
+    const handleWizardStart = useCallback(async (_type: 'plan', payload: any): Promise<boolean> => {
+        setLoading(true);
+        setLastRunType('plan');
+        const started = await executionStream.startTest('plan', payload);
+        if (started) {
+            toast.addToast('info', 'Prueba iniciada desde el asistente.');
+            return true;
+        } else {
+            setLoading(false);
+            toast.addToast('error', 'No se pudo iniciar la prueba.');
+            return false;
+        }
+    }, [executionStream, toast]);
+
+    const handleWizardViewReport = useCallback(() => {
+        const result = executionStream.result;
+        if (result?.success && result.summary) {
+            const report = result.report || mapK6ToReport(result.summary, host || 'Wizard Test');
+            dispatch(setCurrentReport(report));
+        }
+        fetchHistory();
+        setShowWizard(false);
+        setShowReport(true);
+        executionStream.closeStream();
+        setLoading(false);
+    }, [executionStream, dispatch, fetchHistory, host]);
 
     return {
         historyData, globalMetrics, currentReport, loading, 
@@ -437,12 +500,24 @@ export const useK6MainLogic = () => {
         userContext, setUserContext, configJson, setConfigJson,
         zipFile, setZipFile, analysisResult,
         planPreset, planJson, planJsonError, setPlanJson, setPlanJsonError,
-        finalUrl, stats, healthData, COLORS, showReport, setShowReport,
+        finalUrl, monitorBaseUrl, stats, healthData, COLORS, showReport, setShowReport,
         handleRunSingle, handleAnalyze, fetchHistory, handleZipUpload, handleRunBatch,
         handleLoadPreset,
         handleApplyZipEndpointsToPlan,
         handleRunPlan,
         setBaseUrlOnPlanJson,
-        statusMessage, handleCancel
+        statusMessage, handleCancel,
+        // Phase 1 — Execution Console
+        executionStream,
+        showConsole,
+        handleViewReport,
+        handleConsoleClose,
+        handleConsoleRerun,
+        handleCancelStream,
+        // Phase 2/3 — Wizard + Toast
+        showWizard, setShowWizard,
+        toast,
+        handleWizardStart,
+        handleWizardViewReport,
     };
 };

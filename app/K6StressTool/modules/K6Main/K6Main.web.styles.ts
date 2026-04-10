@@ -54,7 +54,6 @@ export const createK6Styles = (theme: ThemeTokens) => {
         dashboardGrid: {
             display: 'grid',
             gridTemplateColumns: 'repeat(12, 1fr)',
-            gridTemplateRows: 'auto 1fr auto',
             gap: '12px',
             flex: 1,
             overflow: 'hidden',
@@ -102,6 +101,100 @@ export const createK6Styles = (theme: ThemeTokens) => {
             maxHeight: 'calc(100vh - 100px)',
             paddingRight: '6px',
         } as CSSProperties,
+
+        toolGroup: (accent: string, background: string) => ({
+            background,
+            border: `1px solid ${accent}`,
+            borderRadius: '28px',
+            padding: '18px',
+            display: 'flex',
+            flexDirection: 'column' as const,
+            gap: '16px',
+            boxShadow: '0 20px 50px rgba(0,0,0,0.2)',
+        }) as CSSProperties,
+
+        toolGroupHeader: {
+            display: 'flex',
+            alignItems: 'flex-start',
+            justifyContent: 'space-between',
+            gap: '12px',
+        } as CSSProperties,
+
+        toolGroupEyebrow: (color: string) => ({
+            fontSize: '10px',
+            fontWeight: 900,
+            letterSpacing: '1.5px',
+            textTransform: 'uppercase' as const,
+            color,
+            marginBottom: '8px',
+        }) as CSSProperties,
+
+        toolGroupTitle: {
+            margin: 0,
+            fontSize: '20px',
+            fontWeight: 800,
+            color: 'white',
+            letterSpacing: '-0.4px',
+        } as CSSProperties,
+
+        toolGroupText: {
+            margin: '8px 0 0 0',
+            fontSize: '12px',
+            lineHeight: 1.6,
+            color: 'rgba(255,255,255,0.66)',
+        } as CSSProperties,
+
+        toolGroupStack: {
+            display: 'flex',
+            flexDirection: 'column' as const,
+            gap: '12px',
+        } as CSSProperties,
+
+        moduleCard: (accent: string) => ({
+            background: 'rgba(7, 9, 16, 0.4)',
+            border: `1px solid ${accent}2e`,
+            borderRadius: '22px',
+            padding: '14px',
+            display: 'flex',
+            flexDirection: 'column' as const,
+            gap: '12px',
+        }) as CSSProperties,
+
+        moduleCardHeader: {
+            display: 'flex',
+            alignItems: 'flex-start',
+            justifyContent: 'space-between',
+            gap: '12px',
+        } as CSSProperties,
+
+        moduleCardTitle: {
+            margin: 0,
+            fontSize: '15px',
+            fontWeight: 800,
+            color: 'white',
+        } as CSSProperties,
+
+        moduleCardDescription: {
+            margin: '6px 0 0 0',
+            fontSize: '11px',
+            lineHeight: 1.5,
+            color: 'rgba(255,255,255,0.58)',
+            maxWidth: '720px',
+        } as CSSProperties,
+
+        moduleHelpButton: (accent: string) => ({
+            border: `1px solid ${accent}40`,
+            background: `${accent}14`,
+            color: accent,
+            borderRadius: '999px',
+            padding: '8px 12px',
+            cursor: 'pointer',
+            fontSize: '10px',
+            fontWeight: 900,
+            textTransform: 'uppercase' as const,
+            letterSpacing: '1px',
+            whiteSpace: 'nowrap' as const,
+        }) as CSSProperties,
 
         glassCard: {
             background: 'rgba(17, 19, 26, 0.6)',
@@ -361,6 +454,294 @@ export const createK6Styles = (theme: ThemeTokens) => {
             display: 'flex',
             gap: '8px',
             marginTop: '8px'
+        } as CSSProperties,
+
+        discoveryCard: {
+            background: 'linear-gradient(180deg, rgba(8, 29, 34, 0.95) 0%, rgba(10, 18, 24, 0.88) 100%)',
+            border: `1px solid ${theme.colors.accentTeal}33`,
+            borderRadius: '24px',
+            padding: '18px',
+            display: 'flex',
+            flexDirection: 'column' as const,
+            gap: '16px',
+            boxShadow: '0 24px 60px rgba(0,0,0,0.22)',
+        } as CSSProperties,
+
+        discoveryHeader: {
+            display: 'flex',
+            alignItems: 'flex-start',
+            justifyContent: 'space-between',
+            gap: '16px',
+            flexWrap: 'wrap' as const,
+        } as CSSProperties,
+
+        discoveryEyebrow: {
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: '6px',
+            color: theme.colors.accentTeal,
+            fontSize: '10px',
+            fontWeight: 900,
+            letterSpacing: '1.4px',
+            textTransform: 'uppercase' as const,
+            marginBottom: '10px',
+        } as CSSProperties,
+
+        discoveryTitle: {
+            margin: 0,
+            fontSize: '22px',
+            fontWeight: 800,
+            color: 'white',
+        } as CSSProperties,
+
+        discoverySubtitle: {
+            margin: '8px 0 0 0',
+            fontSize: '12px',
+            lineHeight: 1.7,
+            color: 'rgba(255,255,255,0.68)',
+            maxWidth: '680px',
+        } as CSSProperties,
+
+        discoveryBadge: {
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: '6px',
+            padding: '8px 12px',
+            borderRadius: '999px',
+            background: `${theme.colors.accentTeal}1c`,
+            color: theme.colors.accentTeal,
+            fontSize: '10px',
+            fontWeight: 900,
+            letterSpacing: '1px',
+            textTransform: 'uppercase' as const,
+            border: `1px solid ${theme.colors.accentTeal}33`,
+        } as CSSProperties,
+
+        discoveryGrid: {
+            display: 'grid',
+            gridTemplateColumns: 'minmax(260px, 0.9fr) minmax(300px, 1.1fr)',
+            gap: '16px',
+        } as CSSProperties,
+
+        discoveryUploadBox: {
+            background: 'rgba(255,255,255,0.03)',
+            borderRadius: '18px',
+            border: '1px solid rgba(255,255,255,0.05)',
+            padding: '16px',
+        } as CSSProperties,
+
+        discoveryConsumerBox: {
+            background: 'rgba(255,255,255,0.025)',
+            borderRadius: '18px',
+            border: '1px solid rgba(255,255,255,0.05)',
+            padding: '16px',
+            display: 'flex',
+            flexDirection: 'column' as const,
+            gap: '14px',
+        } as CSSProperties,
+
+        discoveryConsumerHeader: {
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            gap: '8px',
+            flexWrap: 'wrap' as const,
+        } as CSSProperties,
+
+        discoveryCount: {
+            fontSize: '10px',
+            color: theme.colors.accentGreen,
+            fontWeight: 900,
+            textTransform: 'uppercase' as const,
+            letterSpacing: '1px',
+        } as CSSProperties,
+
+        discoveryPillRow: {
+            display: 'flex',
+            gap: '8px',
+            flexWrap: 'wrap' as const,
+        } as CSSProperties,
+
+        discoveryPill: (color: string) => ({
+            display: 'inline-flex',
+            alignItems: 'center',
+            padding: '6px 10px',
+            borderRadius: '999px',
+            background: `${color}14`,
+            color,
+            border: `1px solid ${color}33`,
+            fontSize: '10px',
+            fontWeight: 800,
+        }) as CSSProperties,
+
+        discoveryTerminal: {
+            background: '#070b11',
+            borderRadius: '16px',
+            padding: '12px',
+            minHeight: '132px',
+            maxHeight: '220px',
+            overflowY: 'auto' as const,
+            border: '1px solid rgba(255,255,255,0.04)',
+            fontFamily: "'JetBrains Mono', monospace",
+        } as CSSProperties,
+
+        discoveryEmptyState: {
+            minHeight: '108px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: '8px',
+            textAlign: 'center' as const,
+            color: 'rgba(255,255,255,0.45)',
+            fontSize: '11px',
+            lineHeight: 1.6,
+        } as CSSProperties,
+
+        guideOverlay: {
+            position: 'fixed' as const,
+            inset: 0,
+            background: 'rgba(4, 7, 12, 0.72)',
+            backdropFilter: 'blur(10px)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            padding: '24px',
+            zIndex: 9999,
+        } as CSSProperties,
+
+        guideModal: {
+            width: 'min(920px, 100%)',
+            maxHeight: '88vh',
+            overflowY: 'auto' as const,
+            background: 'linear-gradient(180deg, rgba(12, 15, 24, 0.98) 0%, rgba(8, 10, 17, 0.98) 100%)',
+            border: '1px solid rgba(255,255,255,0.08)',
+            borderRadius: '28px',
+            boxShadow: '0 30px 80px rgba(0,0,0,0.45)',
+            padding: '22px',
+        } as CSSProperties,
+
+        guideHeader: {
+            display: 'flex',
+            alignItems: 'flex-start',
+            justifyContent: 'space-between',
+            gap: '16px',
+            marginBottom: '18px',
+        } as CSSProperties,
+
+        guideBadge: {
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: '6px',
+            padding: '7px 10px',
+            borderRadius: '999px',
+            background: `${theme.colors.accentBlue}1c`,
+            color: theme.colors.accentBlue,
+            border: `1px solid ${theme.colors.accentBlue}33`,
+            fontSize: '10px',
+            fontWeight: 900,
+            textTransform: 'uppercase' as const,
+            letterSpacing: '1px',
+            marginBottom: '12px',
+        } as CSSProperties,
+
+        guideTitle: {
+            margin: 0,
+            fontSize: '26px',
+            fontWeight: 800,
+            color: 'white',
+        } as CSSProperties,
+
+        guideSummary: {
+            margin: '10px 0 0 0',
+            fontSize: '13px',
+            lineHeight: 1.7,
+            color: 'rgba(255,255,255,0.7)',
+            maxWidth: '760px',
+        } as CSSProperties,
+
+        guideCloseButton: {
+            width: '40px',
+            height: '40px',
+            borderRadius: '999px',
+            border: '1px solid rgba(255,255,255,0.08)',
+            background: 'rgba(255,255,255,0.04)',
+            color: 'white',
+            cursor: 'pointer',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            flexShrink: 0,
+        } as CSSProperties,
+
+        guideContent: {
+            display: 'flex',
+            flexDirection: 'column' as const,
+            gap: '14px',
+        } as CSSProperties,
+
+        guideSection: {
+            background: 'rgba(255,255,255,0.03)',
+            border: '1px solid rgba(255,255,255,0.05)',
+            borderRadius: '20px',
+            padding: '16px',
+        } as CSSProperties,
+
+        guideSectionTitle: {
+            margin: 0,
+            fontSize: '13px',
+            fontWeight: 800,
+            color: theme.colors.accentTeal,
+            textTransform: 'uppercase' as const,
+            letterSpacing: '1px',
+        } as CSSProperties,
+
+        guideBulletList: {
+            display: 'flex',
+            flexDirection: 'column' as const,
+            gap: '10px',
+            marginTop: '12px',
+        } as CSSProperties,
+
+        guideBulletItem: {
+            display: 'flex',
+            alignItems: 'flex-start',
+            gap: '10px',
+            fontSize: '12px',
+            lineHeight: 1.6,
+            color: 'rgba(255,255,255,0.8)',
+        } as CSSProperties,
+
+        guideBulletDot: {
+            width: '8px',
+            height: '8px',
+            borderRadius: '999px',
+            background: theme.colors.accentGreen,
+            marginTop: '6px',
+            flexShrink: 0,
+        } as CSSProperties,
+
+        guideExample: {
+            margin: '12px 0 0 0',
+            background: '#070b11',
+            border: '1px solid rgba(255,255,255,0.05)',
+            borderRadius: '16px',
+            padding: '14px',
+            fontSize: '11px',
+            lineHeight: 1.6,
+            color: 'rgba(255,255,255,0.86)',
+            whiteSpace: 'pre-wrap' as const,
+            wordBreak: 'break-word' as const,
+            fontFamily: "'JetBrains Mono', monospace",
+        } as CSSProperties,
+
+        guideNote: {
+            padding: '14px 16px',
+            borderRadius: '16px',
+            background: `${theme.colors.accentOrange}14`,
+            border: `1px solid ${theme.colors.accentOrange}2d`,
+            color: 'rgba(255,255,255,0.86)',
+            fontSize: '12px',
+            lineHeight: 1.6,
         } as CSSProperties,
 
         planConfigBox: {

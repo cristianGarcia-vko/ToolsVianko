@@ -5,8 +5,13 @@ const fs = require('fs');
 const path = require('path');
 
 const router = express.Router();
+const SQLGEN_UPLOADS_DIR = path.join(__dirname, 'uploads');
 
-const upload = multer({ dest: 'uploads/' });
+if (!fs.existsSync(SQLGEN_UPLOADS_DIR)) {
+  fs.mkdirSync(SQLGEN_UPLOADS_DIR, { recursive: true });
+}
+
+const upload = multer({ dest: SQLGEN_UPLOADS_DIR });
 
 function extractEnumBlocks(schema) {
   const blocks = [];
@@ -92,6 +97,7 @@ function parsePrisma(content) {
     const uniques = [];
     const indexes = [];
     const fields = [];
+    const relations = [];
 
     const lines = String(body || '').split(/\r?\n/);
     lines.forEach((line) => {
@@ -138,11 +144,33 @@ function parsePrisma(content) {
       const isUnique = noComment.includes('@unique');
       const mappedField = noComment.match(/@map\(\s*\"([^\"]+)\"\s*\)/);
       const dbName = mappedField && mappedField[1] ? mappedField[1] : undefined;
+      const relationMatch = noComment.match(
+        /@relation\((?:[^)]*?)fields:\s*\[([^\]]+)\]\s*,\s*references:\s*\[([^\]]+)\]([^)]*)\)/
+      );
+
+      if (relationMatch) {
+        const relationFields = String(relationMatch[1] || '')
+          .split(',')
+          .map((entry) => entry.trim())
+          .filter(Boolean);
+        const relationReferences = String(relationMatch[2] || '')
+          .split(',')
+          .map((entry) => entry.trim())
+          .filter(Boolean);
+
+        relations.push({
+          fieldName: name,
+          targetModel: type,
+          sourceFields: relationFields,
+          targetFields: relationReferences,
+          isOptional,
+        });
+      }
 
       fields.push({ name, type, isId, isOptional, isUnique, dbName, raw: noComment });
     });
 
-    models[modelName] = { tableName, fields, uniques, indexes };
+    models[modelName] = { tableName, fields, uniques, indexes, relations };
   });
 
   return models;
@@ -162,7 +190,8 @@ function normalizeModels(input) {
       const fields = Array.isArray(entry.fields) ? entry.fields : [];
       const uniques = Array.isArray(entry.uniques) ? entry.uniques : [];
       const indexes = Array.isArray(entry.indexes) ? entry.indexes : [];
-      out[modelName] = { tableName, fields, uniques, indexes };
+      const relations = Array.isArray(entry.relations) ? entry.relations : [];
+      out[modelName] = { tableName, fields, uniques, indexes, relations };
     }
   });
 
@@ -212,7 +241,7 @@ function buildModelConstraints(model, fields) {
   return { uniqueSingles, uniqueGroups, indexedFields };
 }
 
-function ensureUniqueSingle(usedByField, fieldName, raw, rowKey) {
+function ensureUniqueSingle(usedByField, fieldName, raw, rowKey, isEnum = false) {
   if (raw == null) return raw;
   const set = usedByField[fieldName] || (usedByField[fieldName] = new Set());
   if (typeof raw === 'number') {
@@ -227,6 +256,12 @@ function ensureUniqueSingle(usedByField, fieldName, raw, rowKey) {
     return raw;
   }
   // Collision: append suffix.
+  // CRITICAL: Enums cannot have suffixes in Postgres.
+  if (isEnum) {
+    // For enums, we just return the raw value and let the DB handle the potential unique constraint error,
+    // or we could try picking another one, but we must NOT corrupt the string.
+    return raw;
+  }
   const next = `${raw}${makeUniqueSuffix(rowKey, set.size)}`;
   set.add(String(next));
   return next;
@@ -235,6 +270,195 @@ function ensureUniqueSingle(usedByField, fieldName, raw, rowKey) {
 function isCompositeKeyEnforceable(parts) {
   // If any part is NULL, most DBs allow duplicates on UNIQUE (Postgres does), so we won't enforce.
   return parts.every((p) => p != null);
+}
+
+function getFiniteFieldDomain(field, normalizedEnums) {
+  if (!field) return null;
+
+  if (normalizedEnums[field.type] && Array.isArray(normalizedEnums[field.type])) {
+    const values = [...normalizedEnums[field.type]];
+    if (field.isOptional) values.unshift(null);
+    return values;
+  }
+
+  if (field.type === 'Boolean') {
+    const values = [true, false];
+    if (field.isOptional) values.unshift(null);
+    return values;
+  }
+
+  return null;
+}
+
+function buildCompositeUniquePlans(model, fields, count, normalizedEnums) {
+  const plans = new Map();
+  if (!Array.isArray(model?.uniques) || !count) return plans;
+
+  (model.uniques || []).forEach((group) => {
+    if (!Array.isArray(group) || group.length < 2) return;
+
+    const fieldMetas = group
+      .map((name) => fields.find((field) => field.name === name))
+      .filter(Boolean);
+    if (fieldMetas.length !== group.length) return;
+
+    const domains = fieldMetas.map((field) => getFiniteFieldDomain(field, normalizedEnums));
+    if (domains.some((domain) => !domain || domain.length === 0)) return;
+
+    const combos = [];
+    const build = (index, current) => {
+      if (combos.length >= count) return;
+      if (index >= domains.length) {
+        combos.push([...current]);
+        return;
+      }
+
+      for (const value of domains[index]) {
+        current.push(value);
+        build(index + 1, current);
+        current.pop();
+        if (combos.length >= count) return;
+      }
+    };
+
+    build(0, []);
+
+    const maxNonNullCombos = domains.reduce((acc, domain) => {
+      const usable = domain.filter((value) => value !== null).length;
+      return acc * Math.max(usable, 1);
+    }, 1);
+
+    plans.set(group.join('|'), {
+      group,
+      combos,
+      exhausted: count > maxNonNullCombos,
+    });
+  });
+
+  return plans;
+}
+
+function buildRelationMetadata(models) {
+  const byModel = {};
+  const graph = {};
+
+  Object.entries(models || {}).forEach(([modelName, model]) => {
+    const fields = Array.isArray(model?.fields) ? model.fields : [];
+    const fieldByName = new Map(fields.map((field) => [field.name, field]));
+    const idField =
+      fields.find((field) => field.isId) ||
+      fields.find((field) => field.name === 'id') ||
+      null;
+    const relationBySourceField = {};
+    const deps = new Set();
+
+    (model.relations || []).forEach((relation) => {
+      if (!relation || !relation.targetModel || !Array.isArray(relation.sourceFields)) return;
+
+      relation.sourceFields.forEach((sourceField, index) => {
+        relationBySourceField[sourceField] = {
+          ...relation,
+          sourceField,
+          targetField: relation.targetFields?.[index] || relation.targetFields?.[0] || 'id',
+          sourceFieldMeta: fieldByName.get(sourceField) || null,
+        };
+      });
+
+      if (relation.targetModel !== modelName) deps.add(relation.targetModel);
+    });
+
+    byModel[modelName] = {
+      idField,
+      relationBySourceField,
+    };
+    graph[modelName] = deps;
+  });
+
+  return { byModel, graph };
+}
+
+function orderModelsByDependencies(models, counts) {
+  const entries = Object.entries(models || {});
+  const { graph } = buildRelationMetadata(models);
+  const active = new Set(
+    entries
+      .filter(([modelName]) => Number((counts && counts[modelName]) || 0) > 0)
+      .map(([modelName]) => modelName)
+  );
+  const pendingDeps = new Map();
+  const dependents = new Map();
+
+  active.forEach((modelName) => {
+    const deps = new Set(
+      Array.from(graph[modelName] || []).filter((dep) => active.has(dep) && dep !== modelName)
+    );
+    pendingDeps.set(modelName, deps);
+    deps.forEach((dep) => {
+      const set = dependents.get(dep) || new Set();
+      set.add(modelName);
+      dependents.set(dep, set);
+    });
+  });
+
+  const originalOrder = entries.map(([modelName]) => modelName);
+  const queue = originalOrder.filter((modelName) => active.has(modelName) && pendingDeps.get(modelName)?.size === 0);
+  const ordered = [];
+  const visited = new Set();
+
+  while (queue.length > 0) {
+    const current = queue.shift();
+    if (!current || visited.has(current)) continue;
+    visited.add(current);
+    ordered.push(current);
+
+    (dependents.get(current) || []).forEach((next) => {
+      const deps = pendingDeps.get(next);
+      if (!deps) return;
+      deps.delete(current);
+      if (deps.size === 0) queue.push(next);
+    });
+  }
+
+  originalOrder.forEach((modelName) => {
+    if (active.has(modelName) && !visited.has(modelName)) ordered.push(modelName);
+  });
+
+  return ordered.map((modelName) => [modelName, models[modelName]]);
+}
+
+function pickForeignKeyValue({
+  relation,
+  field,
+  modelName,
+  generatedIds,
+  currentId,
+}) {
+  if (!relation) return { handled: false };
+
+  const targetModel = relation.targetModel;
+  const targetIds = generatedIds[targetModel] || [];
+  const targetField = relation.targetField || 'id';
+  const isSelfRelation = targetModel === modelName;
+  const canUseGeneratedId = targetField === 'id';
+
+  if (canUseGeneratedId && targetIds.length > 0) {
+    if (isSelfRelation) {
+      const eligible = currentId == null ? targetIds : targetIds.filter((id) => id !== currentId);
+      if (eligible.length > 0) {
+        const raw = faker.helpers.arrayElement(eligible);
+        return { handled: true, raw, sqlValue: typeof raw === 'number' ? String(raw) : asSqlString(raw) };
+      }
+    } else {
+      const raw = faker.helpers.arrayElement(targetIds);
+      return { handled: true, raw, sqlValue: typeof raw === 'number' ? String(raw) : asSqlString(raw) };
+    }
+  }
+
+  if (field.isOptional || relation.isOptional) {
+    return { handled: true, raw: null, sqlValue: 'NULL' };
+  }
+
+  return { handled: true, raw: null, sqlValue: 'NULL' };
 }
 
 router.post('/upload', upload.single('schema'), (req, res) => {
@@ -278,12 +502,15 @@ ${doDollar};
       '-- Archivo de insercion SQL generado automaticamente para PostgreSQL (pgAdmin)\n' +
       '-- Nota: cada sentencia se ejecuta dentro de un DO/EXCEPTION para que los errores no detengan el resto del script.\n\n' +
       "SET client_min_messages TO NOTICE;\n\n";
+    const warnings = [];
     const generatedIds = {};
 
     const normalized = normalizeModels(models);
     const normalizedEnums = enums && typeof enums === 'object' ? enums : {};
+    const relationMetadata = buildRelationMetadata(normalized);
+    const orderedModels = orderModelsByDependencies(normalized, counts);
 
-    for (const [modelName, model] of Object.entries(normalized)) {
+    for (const [modelName, model] of orderedModels) {
       const tableName = model.tableName || modelName;
       const fields = Array.isArray(model.fields) ? model.fields : [];
       const count = (counts && counts[modelName]) || 0;
@@ -294,6 +521,18 @@ ${doDollar};
       const usedByField = {};
       const usedByGroup = new Map();
       const { uniqueSingles, uniqueGroups, indexedFields } = buildModelConstraints(model, fields);
+      const compositePlans = buildCompositeUniquePlans(model, fields, count, normalizedEnums);
+
+      compositePlans.forEach((plan, key) => {
+        if (plan.exhausted) {
+          warnings.push(
+            `-- WARNING: ${model.tableName || modelName} solicita ${count} filas, pero la combinacion unica (${plan.group.join(
+              ', '
+            )}) solo tiene ${plan.combos.length} combinaciones distintas generables sin repetir valores.`
+          );
+        }
+        usedByGroup.set(key, new Set());
+      });
 
       sqlFile += `-- --------------------------------------------------------\n`;
       sqlFile += `-- Insertando datos para la tabla: ${tableName}\n`;
@@ -305,15 +544,33 @@ ${doDollar};
         let currentId = null;
         const rowKey = startId + i;
         const rawByField = {};
+        const modelRelations = relationMetadata.byModel[modelName]?.relationBySourceField || {};
+        const plannedValues = {};
+
+        compositePlans.forEach((plan) => {
+          const combo = plan.combos[i];
+          if (!combo) return;
+          plan.group.forEach((fieldName, index) => {
+            plannedValues[fieldName] = combo[index];
+          });
+        });
 
         (fields || []).forEach((field) => {
           if (normalized[field.type]) return; // skip relations
 
           const isIndexed = indexedFields.has(field.name);
+          const relation = modelRelations[field.name] || null;
           let raw = null;
           let sqlValue = 'NULL';
 
-          if (shouldNull(field, isIndexed)) {
+          if (Object.prototype.hasOwnProperty.call(plannedValues, field.name)) {
+            raw = plannedValues[field.name];
+            if (raw == null) sqlValue = 'NULL';
+            else if (typeof raw === 'number') sqlValue = String(raw);
+            else if (raw === true) sqlValue = 'true';
+            else if (raw === false) sqlValue = 'false';
+            else sqlValue = asSqlString(raw);
+          } else if (shouldNull(field, isIndexed)) {
             raw = null;
             sqlValue = 'NULL';
           } else if (field.isId && field.type === 'Int') {
@@ -352,20 +609,38 @@ ${doDollar};
               raw = rowKey;
               sqlValue = String(raw);
             } else {
-              const relatedModelName = Object.keys(normalized).find((m) =>
-                String(field.name || '').toLowerCase().includes(m.toLowerCase())
-              );
-              if (
-                relatedModelName &&
-                generatedIds[relatedModelName] &&
-                generatedIds[relatedModelName].length > 0
-              ) {
-                raw = faker.helpers.arrayElement(generatedIds[relatedModelName]);
-                sqlValue = String(raw);
+              const relationValue = pickForeignKeyValue({
+                relation,
+                field,
+                modelName,
+                generatedIds,
+                currentId,
+              });
+              if (relationValue.handled) {
+                raw = relationValue.raw;
+                sqlValue = relationValue.sqlValue;
               } else {
                 raw = faker.number.int({ min: 1, max: 1000 });
                 sqlValue = String(raw);
               }
+            }
+          } else if (field.type === 'BigInt') {
+            const relationValue = pickForeignKeyValue({
+              relation,
+              field,
+              modelName,
+              generatedIds,
+              currentId,
+            });
+            if (relationValue.handled) {
+              raw = relationValue.raw;
+              sqlValue = relationValue.sqlValue;
+            } else if (uniqueSingles.has(field.name)) {
+              raw = rowKey;
+              sqlValue = String(raw);
+            } else {
+              raw = faker.number.int({ min: 1, max: 100000 });
+              sqlValue = String(raw);
             }
           } else if (field.type === 'Boolean') {
             raw = faker.datatype.boolean();
@@ -388,7 +663,8 @@ ${doDollar};
           }
 
           if (uniqueSingles.has(field.name) && raw != null) {
-            raw = ensureUniqueSingle(usedByField, field.name, raw, rowKey);
+            const isEnum = Boolean(normalizedEnums[field.type]);
+            raw = ensureUniqueSingle(usedByField, field.name, raw, rowKey, isEnum);
             if (raw == null) sqlValue = 'NULL';
             else if (typeof raw === 'number') sqlValue = String(raw);
             else if (raw === true) sqlValue = 'true';
@@ -415,12 +691,22 @@ ${doDollar};
           }
 
           const targetField =
-            group.find((name) => typeof rawByField[name] === 'string') || group[0];
+            group.find((name) => {
+              const f = fields.find((f) => f.name === name);
+              const isEnum = f && Boolean(normalizedEnums[f.type]);
+              return typeof rawByField[name] === 'string' && !isEnum;
+            }) || group.find((name) => typeof rawByField[name] === 'number') || group[0];
+
           const curr = rawByField[targetField];
+          const fMeta = fields.find((f) => f.name === targetField);
+          const isEnum = fMeta && Boolean(normalizedEnums[fMeta.type]);
+
           const mutated =
             typeof curr === 'number'
               ? curr + 1
-              : `${String(curr)}${makeUniqueSuffix(rowKey, set.size)}`;
+              : isEnum
+                ? curr // cannot mutate enums with suffixes
+                : `${String(curr)}${makeUniqueSuffix(rowKey, set.size)}`;
           rawByField[targetField] = mutated;
 
           const colName = `"${(fields.find((f) => f.name === targetField)?.dbName) || targetField}"`;
@@ -444,6 +730,10 @@ ${doDollar};
       }
 
       sqlFile += '\n';
+    }
+
+    if (warnings.length > 0) {
+      sqlFile = `${warnings.join('\n')}\n\n${sqlFile}`;
     }
 
     res.setHeader('Content-Type', 'text/sql; charset=utf-8');

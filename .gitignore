@@ -22,6 +22,12 @@ expo-env.d.ts
 # Metro
 .metro-health-check*
 
+# Generated tooling data that should not be watched by Expo/Metro
+k6-backend/unzipped/
+k6-backend/uploads/
+k6-backend/reports/
+public/k6-dashboard/
+
 # debug
 npm-debug.*
 yarn-debug.*

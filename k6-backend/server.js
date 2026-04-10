@@ -1,222 +1,469 @@
 const express = require('express');
 const cors = require('cors');
 const multer = require('multer');
-const { exec } = require('child_process');
+const { spawn } = require('child_process');
 const fs = require('fs');
+const os = require('os');
 const path = require('path');
 const { analyzeProject } = require('./analyzer.js');
 const { buildScript } = require('./planScriptBuilder.js');
 const { buildSanityReport } = require('./summaryReportBuilder.js');
+const { runMonitor, saveReport } = require('./monitor.controller.js');
+const { startStreamTest, getTest, cancelTest } = require('./k6StreamRunner.js');
 const { sqlGeneratorRouter } = require('./sqlGenerator.js');
 
 const app = express();
 app.use(cors());
-app.use(express.json());
-app.use('/api/sqlgen', sqlGeneratorRouter);
+app.use(express.json({ limit: '5mb' }));
 
-const upload = multer({ dest: 'uploads/' });
+const RUNTIME_ROOT = path.join(
+  process.env.LOCALAPPDATA || os.tmpdir(),
+  'ToolsVianko',
+  'k6-runtime',
+);
+const UPLOADS_DIR = path.join(RUNTIME_ROOT, 'uploads');
+const UNZIPPED_DIR = path.join(RUNTIME_ROOT, 'unzipped');
+const LEGACY_UPLOADS_DIR = path.join(__dirname, 'uploads');
+const LEGACY_UNZIPPED_DIR = path.join(__dirname, 'unzipped');
+
+const ensureDir = (dirPath) => {
+  if (!fs.existsSync(dirPath)) {
+    fs.mkdirSync(dirPath, { recursive: true });
+  }
+};
+
+const removePathSafe = (targetPath) => {
+  try {
+    if (fs.existsSync(targetPath)) {
+      fs.rmSync(targetPath, { recursive: true, force: true });
+    }
+  } catch {}
+};
+
+const emptyDirSafe = (dirPath) => {
+  try {
+    if (!fs.existsSync(dirPath)) return;
+    for (const entry of fs.readdirSync(dirPath)) {
+      removePathSafe(path.join(dirPath, entry));
+    }
+  } catch {}
+};
+
+ensureDir(RUNTIME_ROOT);
+ensureDir(UPLOADS_DIR);
+ensureDir(UNZIPPED_DIR);
+ensureDir(LEGACY_UPLOADS_DIR);
+ensureDir(LEGACY_UNZIPPED_DIR);
+emptyDirSafe(LEGACY_UPLOADS_DIR);
+emptyDirSafe(LEGACY_UNZIPPED_DIR);
+
+const upload = multer({ dest: UPLOADS_DIR });
 const HISTORY_FILE = path.join(__dirname, 'test_history.json');
+const SUMMARY_FILE = path.join(__dirname, 'summary.json');
+const PLAN_SUMMARY_FILE = path.join(__dirname, 'summary.plan.json');
+const PLAN_SCRIPT_FILE = path.join(__dirname, 'generated_plan_script.js');
+const SINGLE_SCRIPT_FILE = path.join(__dirname, 'script.js');
+
+let currentK6Process = null;
+
+const k6Binary = () => (fs.existsSync('C:\\Program Files\\k6\\k6.exe') ? 'C:\\Program Files\\k6\\k6.exe' : 'k6');
+
+const readJsonSafe = (filePath, fallback) => {
+  try {
+    if (!fs.existsSync(filePath)) return fallback;
+    return JSON.parse(fs.readFileSync(filePath, 'utf8'));
+  } catch {
+    return fallback;
+  }
+};
 
 const saveToHistory = (testData) => {
-    let history = [];
-    if (fs.existsSync(HISTORY_FILE)) {
-        try { history = JSON.parse(fs.readFileSync(HISTORY_FILE, 'utf8')); } catch (e) { }
-    }
-    history.unshift({ id: Date.now().toString(), timestamp: new Date().toISOString(), ...testData });
-    // Limitar historial a los ultimos 50 para rendimiento
-    if(history.length > 50) history = history.slice(0, 50);
-    fs.writeFileSync(HISTORY_FILE, JSON.stringify(history, null, 2));
+  const history = readJsonSafe(HISTORY_FILE, []);
+  history.unshift({
+    id: Date.now().toString(),
+    timestamp: new Date().toISOString(),
+    ...testData,
+  });
+  fs.writeFileSync(HISTORY_FILE, JSON.stringify(history.slice(0, 50), null, 2), 'utf8');
 };
 
-app.get('/api/history', (req, res) => {
-    if (fs.existsSync(HISTORY_FILE)) {
-        try {
-            res.json(JSON.parse(fs.readFileSync(HISTORY_FILE, 'utf8')));
-        } catch (e) { res.status(500).json({ error: 'Error leyendo historial' }); }
-    } else {
-        res.json([]);
-    }
-});
-
-// Ruta 1: Modo Singular
-app.post('/api/run-test', (req, res) => {
-    const { url, vus, duration } = req.body;
-    
-    if (!url) return res.status(400).json({ error: 'Falta la URL' });
-
-    const k6Bin = fs.existsSync('C:\\Program Files\\k6\\k6.exe') ? '"C:\\Program Files\\k6\\k6.exe"' : 'k6';
-    const command = `${k6Bin} run script.js --summary-export=summary.json`;
-    
-    exec(command, { env: { ...process.env, TARGET_URL: url, VUS: vus, DURATION: duration } }, (error, stdout, stderr) => {
-        try {
-            if (fs.existsSync('summary.json')) {
-                const summary = JSON.parse(fs.readFileSync('summary.json', 'utf8'));
-                saveToHistory({ type: 'single', url, vus, duration, metrics: summary.metrics });
-                res.json({ metrics: summary.metrics });
-            } else {
-                res.status(500).json({ error: 'No se generaron las métricas (summary.json no encontrado).' });
-            }
-        } catch (e) {
-            res.status(500).json({ error: 'Error procesando resultado: ' + e.message });
-        }
+const runK6 = ({ scriptFile, summaryFile, env = {} }) =>
+  new Promise((resolve, reject) => {
+    const args = ['run', scriptFile, `--summary-export=${summaryFile}`];
+    const child = spawn(k6Binary(), args, {
+      cwd: __dirname,
+      env: { ...process.env, ...env },
+      windowsHide: true,
+      shell: false,
     });
+
+    currentK6Process = child;
+
+    let stdout = '';
+    let stderr = '';
+
+    child.stdout.on('data', (chunk) => {
+      stdout += chunk.toString();
+    });
+
+    child.stderr.on('data', (chunk) => {
+      stderr += chunk.toString();
+    });
+
+    child.on('error', (error) => {
+      currentK6Process = null;
+      reject(error);
+    });
+
+    child.on('close', (code) => {
+      currentK6Process = null;
+      if (code === 0 && fs.existsSync(summaryFile)) {
+        return resolve({
+          summary: readJsonSafe(summaryFile, null),
+          stdout,
+          stderr,
+        });
+      }
+
+      return reject(
+        new Error(stderr || stdout || `k6 finalizo con codigo ${code}`),
+      );
+    });
+  });
+
+app.get('/api/history', (_req, res) => {
+  return res.json(readJsonSafe(HISTORY_FILE, []));
 });
 
-// Ruta 2: Auto Discovery, Sube ZIP y Analiza
+app.post('/api/cancel-test', (_req, res) => {
+  if (!currentK6Process) {
+    return res.json({ cancelled: false, message: 'No hay proceso activo.' });
+  }
+
+  try {
+    currentK6Process.kill();
+    currentK6Process = null;
+    return res.json({ cancelled: true });
+  } catch (error) {
+    return res.status(500).json({
+      error: error instanceof Error ? error.message : 'No se pudo cancelar el proceso',
+    });
+  }
+});
+
+app.post('/api/run-test', async (req, res) => {
+  const { url, vus, duration } = req.body || {};
+  if (!url) {
+    return res.status(400).json({ error: 'Falta la URL' });
+  }
+
+  try {
+    const { summary } = await runK6({
+      scriptFile: SINGLE_SCRIPT_FILE,
+      summaryFile: SUMMARY_FILE,
+      env: {
+        TARGET_URL: String(url),
+        VUS: String(vus || 1),
+        DURATION: String(duration || '10s').replace(/s$/, ''),
+      },
+    });
+
+    saveToHistory({ type: 'single', url, vus, duration, metrics: summary.metrics });
+    return res.json({ metrics: summary.metrics });
+  } catch (error) {
+    return res.status(500).json({
+      error: error instanceof Error ? error.message : 'No se pudo ejecutar k6',
+    });
+  }
+});
+
 app.post('/api/analyze-zip', upload.single('projectFile'), (req, res) => {
-    if (!req.file) {
-        return res.status(400).json({ error: 'No file uploaded' });
-    }
+  if (!req.file) {
+    return res.status(400).json({ error: 'No file uploaded' });
+  }
 
-    const zipPath = req.file.path;
-    const extractPath = path.join(__dirname, 'unzipped', req.file.filename);
+  const zipPath = req.file.path;
+  const extractPath = path.join(UNZIPPED_DIR, req.file.filename);
+  ensureDir(extractPath);
 
-    const safeCleanup = () => {
-        // Ensure we don't keep user uploads or extracted projects on disk.
-        try {
-            if (zipPath && fs.existsSync(zipPath)) {
-                fs.rmSync(zipPath, { force: true });
-            }
-        } catch { /* ignore */ }
+  try {
+    const endpoints = analyzeProject(zipPath, extractPath);
+    fs.writeFileSync(
+      path.join(__dirname, 'endpoints_encontrados.txt'),
+      JSON.stringify(endpoints, null, 2),
+      'utf8',
+    );
+    return res.json({ config: endpoints });
+  } catch (error) {
+    return res.status(500).json({
+      error: error instanceof Error ? error.message : 'No se pudo analizar el ZIP',
+    });
+  } finally {
+    removePathSafe(zipPath);
+    removePathSafe(extractPath);
+    emptyDirSafe(UPLOADS_DIR);
+    emptyDirSafe(UNZIPPED_DIR);
+    emptyDirSafe(LEGACY_UPLOADS_DIR);
+    emptyDirSafe(LEGACY_UNZIPPED_DIR);
+  }
+});
 
-        try {
-            if (extractPath && fs.existsSync(extractPath)) {
-                fs.rmSync(extractPath, { recursive: true, force: true });
-            }
-        } catch { /* ignore */ }
+app.post('/api/run-plan', async (req, res) => {
+  const body = req.body || {};
+  const plan = body.plan || body;
+  const authToken = body.authToken ? String(body.authToken).trim() : '';
+
+  try {
+    const planWithToken =
+      authToken && (!plan.auth || plan.auth.mode === 'none')
+        ? {
+            ...plan,
+            auth: {
+              mode: 'staticToken',
+              token: authToken,
+              headerName: 'Authorization',
+              headerPrefix: 'Bearer ',
+            },
+          }
+        : plan;
+
+    const { plan: cleanPlan, script } = buildScript(planWithToken);
+    fs.writeFileSync(PLAN_SCRIPT_FILE, script, 'utf8');
+
+    const { summary } = await runK6({
+      scriptFile: PLAN_SCRIPT_FILE,
+      summaryFile: PLAN_SUMMARY_FILE,
+    });
+
+    const report = buildSanityReport(summary, cleanPlan);
+    saveToHistory({
+      type: 'plan',
+      projectName: cleanPlan.projectName,
+      baseUrl: cleanPlan.baseUrl,
+      metrics: summary.metrics,
+      report,
+    });
+
+    return res.json({ metrics: summary.metrics, report });
+  } catch (error) {
+    return res.status(500).json({
+      error: error instanceof Error ? error.message : 'No se pudo ejecutar el plan',
+    });
+  }
+});
+
+app.post('/api/monitor/run', runMonitor);
+app.post('/api/monitor/save', saveReport);
+app.use('/api/sqlgen', sqlGeneratorRouter);
+
+// ─── STREAMING ENDPOINTS (Phase 1) ───────────────────────────────────────────
+
+/**
+ * Start a single-URL test with streaming output.
+ * Returns { testId } immediately; use GET /api/test-stream/:testId for SSE.
+ */
+app.post('/api/start-stream-test', (req, res) => {
+  const { url, vus, duration } = req.body || {};
+  if (!url) return res.status(400).json({ error: 'Falta la URL' });
+
+  try {
+    const testId = `single_${Date.now()}`;
+    const scriptPath = path.join(RUNTIME_ROOT, `script_${testId}.js`);
+    const summaryPath = path.join(RUNTIME_ROOT, `summary_${testId}.json`);
+
+    // Copy single script to a unique temp file
+    fs.copyFileSync(SINGLE_SCRIPT_FILE, scriptPath);
+
+    const test = startStreamTest({
+      scriptFile: scriptPath,
+      summaryFile: summaryPath,
+      env: {
+        TARGET_URL: String(url),
+        VUS: String(vus || 1),
+        DURATION: String(duration || '10s').replace(/s$/, ''),
+      },
+      planMeta: {
+        projectName: 'Single Target',
+        stepCount: 1,
+        vus: vus || 1,
+        baseUrl: url,
+      },
+    });
+
+    // On completion, save to history and cleanup
+    const completionHandler = (event) => {
+      if (event.type !== 'complete') return;
+      test.removeListener(completionHandler);
+
+      if (event.data.success && event.data.summary) {
+        saveToHistory({ type: 'single', url, vus, duration, metrics: event.data.summary });
+      }
+      setTimeout(() => {
+        try { fs.unlinkSync(scriptPath); } catch {}
+        try { fs.unlinkSync(summaryPath); } catch {}
+      }, 10000);
     };
-    
-    try {
-        const endpoints = analyzeProject(zipPath, extractPath);
-        fs.writeFileSync('endpoints_encontrados.txt', JSON.stringify(endpoints, null, 2));
-        res.json({ config: endpoints });
-    } catch (e) {
-        res.status(500).json({ error: e.message });
-    } finally {
-        safeCleanup();
-    }
+    test.addListener(completionHandler);
+
+    return res.json({ testId: test.id });
+  } catch (error) {
+    return res.status(500).json({
+      error: error instanceof Error ? error.message : 'Error starting stream test',
+    });
+  }
 });
 
-// Ruta 3: Batería Múltiple (Auto Discovery)
-app.post('/api/run-multiple', (req, res) => {
-    const { endpoints, baseUrl, vus, duration } = req.body;
-    
-    if (!endpoints || !endpoints.length) {
-        return res.status(400).json({ error: 'No endpoints' });
-    }
+/**
+ * Start a plan-based test with streaming output.
+ * Returns { testId } immediately; use GET /api/test-stream/:testId for SSE.
+ */
+app.post('/api/start-stream-plan', (req, res) => {
+  const body = req.body || {};
+  const plan = body.plan || body;
+  const authToken = body.authToken ? String(body.authToken).trim() : '';
 
-    let scriptContent = `
-import http from 'k6/http';
-import { check, sleep } from 'k6';
+  try {
+    const planWithToken =
+      authToken && (!plan.auth || plan.auth.mode === 'none')
+        ? {
+            ...plan,
+            auth: {
+              mode: 'staticToken',
+              token: authToken,
+              headerName: 'Authorization',
+              headerPrefix: 'Bearer ',
+            },
+          }
+        : plan;
 
-export const options = {
-  vus: ${vus || 10},
-  duration: '${duration || 5}s',
-};
+    const { plan: cleanPlan, script } = buildScript(planWithToken);
+    const testId = `plan_${Date.now()}`;
+    const scriptPath = path.join(RUNTIME_ROOT, `script_${testId}.js`);
+    const summaryPath = path.join(RUNTIME_ROOT, `summary_${testId}.json`);
 
-const BASE_URL = '${baseUrl || 'http://localhost:3000'}';
+    fs.writeFileSync(scriptPath, script, 'utf8');
 
-export default function () {
-    let res;
-    let url;
-    let payload;
-    let params = { headers: { 'Content-Type': 'application/json' } };
-`;
+    const scenario = cleanPlan.scenario || {};
+    const vusDisplay = scenario.vus || (scenario.stages ? 'ramping' : '?');
 
-    endpoints.forEach(ep => {
-        // Reemplazar parametros como :id, :usuarioId por 1 para el testing dummy
-        const cleanRoute = (ep.route || '').replace(/:[a-zA-Z0-9_]+/g, '1').replace(/\(\.\*\)/g, '');
-        
-        scriptContent += `\n    // Method: ${ep.method}\n`;
-        scriptContent += `    url = BASE_URL + '${cleanRoute.startsWith('/') ? cleanRoute : '/' + cleanRoute}';\n`;
-        
-        if (['POST', 'PUT', 'PATCH'].includes(ep.method)) {
-            const pl = ep.payload ? JSON.stringify(ep.payload) : '{}';
-            scriptContent += `    payload = JSON.stringify(${pl});\n`;
-            scriptContent += `    res = http.${ep.method.toLowerCase()}(url, payload, params);\n`;
-        } else if (ep.method === 'DELETE') {
-            scriptContent += `    res = http.del(url, null, params);\n`;
-        } else {
-            scriptContent += `    res = http.get(url, params);\n`;
-        }
-        
-        scriptContent += `    check(res, { '${cleanRoute} responds with ok target': (r) => r.status >= 200 && r.status < 500 });\n`;
+    const test = startStreamTest({
+      scriptFile: scriptPath,
+      summaryFile: summaryPath,
+      planMeta: {
+        projectName: cleanPlan.projectName,
+        stepCount: cleanPlan.steps ? cleanPlan.steps.length : 0,
+        vus: vusDisplay,
+        baseUrl: cleanPlan.baseUrl,
+      },
     });
 
-    scriptContent += `\n    sleep(1);\n}\n`;
+    // On completion, build report, save to history, store report on test entry
+    const completionHandler = (event) => {
+      if (event.type !== 'complete') return;
+      test.removeListener(completionHandler);
 
-    fs.writeFileSync('generated_script.js', scriptContent);
+      if (event.data.success && event.data.summary) {
+        const fullSummary = { metrics: event.data.summary };
+        const report = buildSanityReport(fullSummary, cleanPlan);
+        test._finalReport = report;
+        test._finalMetrics = event.data.summary;
 
-    const k6Bin = fs.existsSync('C:\\Program Files\\k6\\k6.exe') ? '"C:\\Program Files\\k6\\k6.exe"' : 'k6';
-    const command = `${k6Bin} run generated_script.js --summary-export=summary.json`;
-    
-    exec(command, (error, stdout, stderr) => {
-        try {
-            if (fs.existsSync('summary.json')) {
-                const summary = JSON.parse(fs.readFileSync('summary.json', 'utf8'));
-                saveToHistory({ type: 'multi', endpointsCount: endpoints.length, baseUrl, vus, duration, metrics: summary.metrics });
-                res.json({ metrics: summary.metrics });
-            } else {
-                const k6Log = stderr || stdout || (error ? error.message : "Desconocido");
-                res.status(500).json({ error: 'K6 fallo al ejecutar:\n' + k6Log });
-            }
-        } catch (e) {
-            res.status(500).json({ error: 'Error procesando resultados multiples: ' + e.message });
-        }
+        saveToHistory({
+          type: 'plan',
+          projectName: cleanPlan.projectName,
+          baseUrl: cleanPlan.baseUrl,
+          metrics: event.data.summary,
+          report,
+        });
+      }
+      setTimeout(() => {
+        try { fs.unlinkSync(scriptPath); } catch {}
+        try { fs.unlinkSync(summaryPath); } catch {}
+      }, 10000);
+    };
+    test.addListener(completionHandler);
+
+    return res.json({ testId: test.id });
+  } catch (error) {
+    return res.status(500).json({
+      error: error instanceof Error ? error.message : 'Error starting stream plan',
     });
+  }
 });
 
-// Ruta 4: Run Plan (Plan K6 / Presets)
-app.post('/api/run-plan', (req, res) => {
-    const planInput = req.body || {};
+/**
+ * SSE stream for a running test. Replays buffered events on connect.
+ */
+app.get('/api/test-stream/:testId', (req, res) => {
+  const test = getTest(req.params.testId);
+  if (!test) return res.status(404).json({ error: 'Test not found' });
 
-    let built;
-    try {
-        built = buildScript(planInput);
-    } catch (e) {
-        return res.status(400).json({ error: e.message || 'Plan inválido' });
+  res.setHeader('Content-Type', 'text/event-stream');
+  res.setHeader('Cache-Control', 'no-cache');
+  res.setHeader('Connection', 'keep-alive');
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.flushHeaders();
+
+  const listener = (event) => {
+    let data = event.data;
+
+    // Enhance complete event with report if available
+    if (event.type === 'complete' && test._finalReport) {
+      data = { ...data, report: test._finalReport };
     }
 
-    const scriptPath = path.join(__dirname, `generated_plan_script.js`);
-    const summaryPath = path.join(__dirname, `summary.plan.json`);
+    res.write(`event: ${event.type}\ndata: ${JSON.stringify(data)}\n\n`);
 
-    try {
-        fs.writeFileSync(scriptPath, built.script);
-    } catch (e) {
-        return res.status(500).json({ error: 'No se pudo escribir el script generado.' });
+    if (event.type === 'complete' || (event.type === 'error' && !event.data?.recoverable)) {
+      setTimeout(() => { try { res.end(); } catch {} }, 300);
     }
+  };
 
-    const k6Bin = fs.existsSync('C:\\Program Files\\k6\\k6.exe') ? '"C:\\Program Files\\k6\\k6.exe"' : 'k6';
-    const command = `${k6Bin} run "${scriptPath}" --summary-export="${summaryPath}"`;
+  test.addListener(listener);
 
-    exec(command, { maxBuffer: 1024 * 1024 * 50 }, (error, stdout, stderr) => {
-        try {
-            if (fs.existsSync(summaryPath)) {
-                const summary = JSON.parse(fs.readFileSync(summaryPath, 'utf8'));
-                const report = buildSanityReport(summary, built.plan);
-
-                saveToHistory({
-                    type: 'plan',
-                    projectName: built.plan.projectName,
-                    baseUrl: built.plan.baseUrl,
-                    scenario: built.plan.scenario,
-                    authMode: built.plan.auth?.mode,
-                    stepsEnabled: (built.plan.steps || []).filter((s) => s.enabled).length,
-                    metrics: summary.metrics,
-                    report
-                });
-
-                res.json({ report, metrics: summary.metrics, plan: built.plan });
-            } else {
-                const k6Log = stderr || stdout || (error ? error.message : "Desconocido");
-                res.status(500).json({ error: 'K6 falló al ejecutar el plan:\n' + k6Log });
-            }
-        } catch (e) {
-            res.status(500).json({ error: 'Error procesando resultado del plan: ' + e.message });
-        }
-    });
+  req.on('close', () => {
+    test.removeListener(listener);
+  });
 });
 
-app.listen(3001, () => {
-    console.log('Backend K6 Dashboard escuchando puerto 3001...');
+/**
+ * Cancel a streaming test by testId.
+ */
+app.post('/api/cancel-stream-test/:testId', (req, res) => {
+  const cancelled = cancelTest(req.params.testId);
+  return res.json({ cancelled });
+});
+
+/**
+ * Ping check — verify connectivity to a target URL.
+ */
+app.get('/api/ping-check', async (req, res) => {
+  const targetUrl = String(req.query.url || '').trim();
+  if (!targetUrl) return res.status(400).json({ error: 'url query param required' });
+
+  const start = performance.now();
+  try {
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 5000);
+    const response = await fetch(targetUrl, {
+      method: 'GET',
+      signal: controller.signal,
+    });
+    clearTimeout(timeout);
+    const latency = Math.round(performance.now() - start);
+    return res.json({ reachable: true, status: response.status, latency });
+  } catch (error) {
+    const latency = Math.round(performance.now() - start);
+    return res.json({
+      reachable: false,
+      status: 0,
+      latency,
+      error: error instanceof Error ? error.message : 'Network error',
+    });
+  }
+});
+
+const PORT = 3001;
+app.listen(PORT, () => {
+  console.log(`Backend K6 Dashboard escuchando puerto ${PORT}...`);
 });

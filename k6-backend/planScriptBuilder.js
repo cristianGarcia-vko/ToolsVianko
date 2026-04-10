@@ -148,15 +148,25 @@ const buildK6OptionsObject = (plan) => {
   if (plan.scenario.executor === 'ramping-vus') {
     return {
       ...base,
-      ...(plan.scenario.startVUs != null ? { startVUs: plan.scenario.startVUs } : {}),
-      stages: plan.scenario.stages,
+      scenarios: {
+        default: {
+          executor: 'ramping-vus',
+          ...(plan.scenario.startVUs != null ? { startVUs: plan.scenario.startVUs } : {}),
+          stages: plan.scenario.stages,
+        },
+      },
     };
   }
 
   return {
     ...base,
-    vus: plan.scenario.vus,
-    duration: plan.scenario.duration,
+    scenarios: {
+      default: {
+        executor: 'constant-vus',
+        vus: plan.scenario.vus,
+        duration: plan.scenario.duration,
+      },
+    },
   };
 };
 
@@ -245,6 +255,27 @@ const request = (method, url, payload, params) => {
   return fn(url, payload ? JSON.stringify(payload) : null, params);
 };
 
+const failWithResponseContext = (label, res, parseError) => {
+  const body = typeof res.body === 'string' ? res.body.slice(0, 240) : '';
+  const contentType = res && res.headers ? (res.headers['Content-Type'] || res.headers['content-type'] || 'unknown') : 'unknown';
+  throw new Error(
+    label +
+    ' devolvio una respuesta no JSON o invalida. ' +
+    'status=' + res.status +
+    ' content-type=' + contentType +
+    ' body-preview=' + JSON.stringify(body) +
+    (parseError ? ' parse-error=' + String(parseError.message || parseError) : '')
+  );
+};
+
+const parseJsonOrFail = (label, res) => {
+  try {
+    return res.json();
+  } catch (error) {
+    failWithResponseContext(label, res, error);
+  }
+};
+
 export function setup() {
   const ctx = {};
 
@@ -259,7 +290,7 @@ export function setup() {
     const params = { headers, tags: { name: 'AUTH login', group: 'auth' } };
     const res = request(AUTH.login.method || 'POST', loginUrl, loginPayload, params);
     check(res, { 'AUTH login status 2xx': (r) => r.status >= 200 && r.status < 300 });
-    const json = res.json();
+    const json = parseJsonOrFail('AUTH login ' + loginUrl, res);
     const token = pickPath(json, AUTH.login.tokenPath || 'token');
     if (token) ctx.__token = token;
   }
@@ -271,7 +302,7 @@ export function setup() {
       const params = { headers, tags: { name: 'SEED ' + (s.name || s.saveAs || s.path), group: 'seed' } };
       const res = request(s.method || 'GET', seedUrl, null, params);
       check(res, { ['SEED ' + (s.saveAs || s.path) + ' status 2xx']: (r) => r.status >= 200 && r.status < 300 });
-      const picked = pickPath(res.json(), s.pickPath);
+      const picked = pickPath(parseJsonOrFail('SEED ' + (s.name || s.saveAs || s.path) + ' ' + seedUrl, res), s.pickPath);
       if (picked != null) ctx[s.saveAs] = picked;
     }
   }
@@ -296,7 +327,7 @@ export default function (data) {
     check(res, { [tags.name + ' status 2xx']: (r) => r.status >= 200 && r.status < 300 });
 
     if (step.extract && step.extract.pickPath && step.extract.saveAs) {
-      const extracted = pickPath(res.json(), step.extract.pickPath);
+      const extracted = pickPath(parseJsonOrFail(tags.name + ' ' + url, res), step.extract.pickPath);
       if (extracted != null) ctx[step.extract.saveAs] = extracted;
     }
   }
@@ -309,4 +340,3 @@ export default function (data) {
 };
 
 module.exports = { buildScript, sanitizePlan };
-
