@@ -41,16 +41,22 @@ export const getLayerWrapperStyle = (
     userSelect: 'none'
 });
 
-export const getInnerContainerStyle = (transform: string, isSelected: boolean): CSSProperties => ({
+export const getInnerContainerStyle = (
+    transform: string,
+    isSelected: boolean,
+    transformOrigin: string,
+    customOutline?: string,
+    customOutlineOffset?: string | number
+): CSSProperties => ({
     width: '100%',
     height: '100%',
     transform: transform,
-    transformOrigin: '50% 50%',
+    transformOrigin: transformOrigin || '50% 50%',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    outline: isSelected ? `2px solid ${tokens.colors.accentGreen}` : 'none',
-    outlineOffset: '2px',
+    outline: customOutline || (isSelected ? `2px solid ${tokens.colors.accentGreen}` : 'none'),
+    outlineOffset: customOutlineOffset ?? '2px',
     position: 'relative'
 });
 

@@ -142,6 +142,7 @@ function parsePrisma(content) {
       const type = rawTypeToken.replace('?', '').replace('[]', '');
       const isId = noComment.includes('@id');
       const isUnique = noComment.includes('@unique');
+      const isAutoIncrement = noComment.includes('@default(autoincrement())');
       const mappedField = noComment.match(/@map\(\s*\"([^\"]+)\"\s*\)/);
       const dbName = mappedField && mappedField[1] ? mappedField[1] : undefined;
       const relationMatch = noComment.match(
@@ -167,7 +168,7 @@ function parsePrisma(content) {
         });
       }
 
-      fields.push({ name, type, isId, isOptional, isUnique, dbName, raw: noComment });
+      fields.push({ name, type, isId, isOptional, isUnique, isAutoIncrement, dbName, raw: noComment });
     });
 
     models[modelName] = { tableName, fields, uniques, indexes, relations };
@@ -424,6 +425,14 @@ function orderModelsByDependencies(models, counts) {
   });
 
   return ordered.map((modelName) => [modelName, models[modelName]]);
+}
+
+function buildSequenceResetSql(tableName, idColumnName) {
+  return `SELECT setval(
+  pg_get_serial_sequence('${tableName}', '${idColumnName}'),
+  COALESCE((SELECT MAX("${idColumnName}") FROM "${tableName}"), 1),
+  true
+)`;
 }
 
 function pickForeignKeyValue({
@@ -727,6 +736,14 @@ ${doDollar};
           ', '
         )})`;
         sqlFile += wrapSafe(insertSql) + '\n';
+      }
+
+      const autoIncrementIdField = fields.find(
+        (field) => field.isId && field.type === 'Int' && field.isAutoIncrement
+      );
+      if (autoIncrementIdField) {
+        const idColumnName = autoIncrementIdField.dbName || autoIncrementIdField.name;
+        sqlFile += wrapSafe(buildSequenceResetSql(tableName, idColumnName)) + '\n';
       }
 
       sqlFile += '\n';

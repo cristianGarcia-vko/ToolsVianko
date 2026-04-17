@@ -21,6 +21,9 @@ export interface BannerLayer {
     visible: boolean;
     locked: boolean;
     styles: CSSProperties | any;
+    nativeStyles?: CSSProperties | any;
+    imageStyles?: CSSProperties | any;
+    nativeImageStyles?: CSSProperties | any;
     // Core properties
     content?: string;
     src?: string;
@@ -32,6 +35,8 @@ export interface BannerLayer {
     position?: string;
     assetType?: 'text' | 'image' | 'tag';
     actionUrl?: string;
+    priority?: boolean;
+    lcp?: boolean;
     animation?: {
         name: string;
         duration: string;
@@ -86,6 +91,11 @@ export interface BannerDesign {
     duration?: number;
     styles?: {
         borderRadius?: string | number;
+        [key: string]: any;
+    };
+    nativeStyles?: {
+        borderRadius?: string | number;
+        [key: string]: any;
     };
 }
 

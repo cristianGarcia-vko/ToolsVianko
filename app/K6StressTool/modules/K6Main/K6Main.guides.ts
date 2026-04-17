@@ -99,6 +99,17 @@ export const k6ModuleGuides = {
             { title: 'Secuencia recomendada', items: ['1. Abre el generador.', '2. Carga o pega tu schema.', '3. Define volumen por modelo.', '4. Genera el SQL para preparar datos previos a la prueba.'] },
         ],
     },
+    dataMigrator: {
+        badge: 'Migrator',
+        title: 'Traductor universal de BD',
+        summary: 'Detecta y traduce CSV, XML, JSON o SQL Inserts a un formato canonico con mapeo configurable y exportacion multipropósito.',
+        sections: [
+            { title: 'Que necesitas proporcionar', items: ['Archivo origen: .csv, .xml, .json o .sql con inserts.', 'Opcional: schema.prisma para sugerir tipos y tabla destino.'] },
+            { title: 'Formato esperado', items: ['MappingConfig JSON valido para renombrar y tipar columnas.', 'Selecciona salida: SQL, JSON, CSV o Prisma migration SQL.'] },
+            { title: 'Secuencia recomendada', items: ['1. Carga archivo origen.', '2. (Opcional) agrega schema.prisma.', '3. Analiza estructura.', '4. Ajusta mapping.', '5. Convierte y descarga salida.'] },
+        ],
+        note: 'El motor prioriza la deteccion por contenido cuando extension y firma no coinciden.',
+    },
 } as const satisfies Record<string, ModuleGuide>;
 
 export type ModuleGuideKey = keyof typeof k6ModuleGuides;

@@ -235,6 +235,7 @@ export const BannerStudio: React.FC = memo(() => {
                             width: activeBanner?.designWidth || 800,
                             height: activeBanner?.designHeight || 200,
                             ...(activeBanner ? buildBackgroundStyle(activeBanner.background) : { backgroundColor: '#fff' }),
+                            ...(activeBanner?.styles || {}),
                         }}>
                              {(activeBanner?.layers || []).filter((l: BannerLayer) => l.visible).map((layer: BannerLayer) => (
                                 <LayerItemRenderer

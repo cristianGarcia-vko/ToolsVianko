@@ -123,6 +123,7 @@ export const ExportModal: React.FC<ExportModalProps> = ({
                                     width: previewBanner?.designWidth,
                                     height: previewBanner?.designHeight,
                                     ...(previewBanner ? buildBackgroundStyle(previewBanner.background) : { backgroundColor: '#000' }),
+                                    ...(previewBanner?.styles || {}),
                                 }}>
                                     {(previewBanner?.layers || []).filter((l: BannerLayer)=>l.visible).map((layer: BannerLayer) => (
                                         <LayerItemRenderer 

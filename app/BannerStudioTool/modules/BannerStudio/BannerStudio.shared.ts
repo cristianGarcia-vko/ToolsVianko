@@ -61,6 +61,11 @@ export const resolveAnimationKeyframesName = (name: string) => {
     if (!normalized) return '';
     const compact = normalized.replace(/[\s_]/g, '').toLowerCase();
     const map: Record<string, string> = {
+        slideinleft: 'slideRight',
+        slideinright: 'slideLeft',
+        slideinup: 'slideUp',
+        slideindown: 'slideDown',
+        slideacrossright: 'slideLeft',
         glow: 'glowPulse',
         glowpulse: 'glowPulse',
         bouncein: 'bounce',

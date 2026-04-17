@@ -50,11 +50,49 @@ export const LayerItemRenderer: React.FC<LayerPropsBase> = memo((props) => {
 
     if (!layer.visible) return null;
 
+    const layerStyles = (layer.styles || {}) as Record<string, any>;
+    const passthroughVisualStyle: Record<string, any> = {
+        ...layerStyles,
+    };
+    [
+        'position',
+        'left',
+        'top',
+        'right',
+        'bottom',
+        'width',
+        'height',
+        'minWidth',
+        'minHeight',
+        'maxWidth',
+        'maxHeight',
+        'zIndex',
+        'cursor',
+        'userSelect',
+        'pointerEvents',
+        'transform',
+    ].forEach((key) => {
+        delete passthroughVisualStyle[key];
+    });
+
+    const textStyleFromLayer = getTextStyle(layerStyles);
+    const imageStyleFromLayer = getImageStyle(layer.fit, layer.position || 'center');
+    const imageStyleOverrides = ((layer as any).imageStyles || {}) as Record<string, any>;
+    const transformOrigin = String(layerStyles.transformOrigin || '50% 50%');
+    const customOutline =
+        layerStyles.outline
+        || (
+            layerStyles.outlineWidth
+            ? `${layerStyles.outlineWidth} ${layerStyles.outlineStyle || 'solid'} ${layerStyles.outlineColor || '#ffffff'}`
+            : undefined
+        );
+    const customOutlineOffset = layerStyles.outlineOffset;
+
     const renderContent = () => {
         const contentStyle = getContentBase(
-            layer.styles.opacity,
-            layer.styles.filter,
-            layer.styles.borderRadius?.toString()
+            layerStyles.opacity,
+            layerStyles.filter,
+            layerStyles.borderRadius?.toString()
         );
 
         switch (layer.type) {
@@ -65,7 +103,7 @@ export const LayerItemRenderer: React.FC<LayerPropsBase> = memo((props) => {
                     {
                         style: {
                             ...contentStyle,
-                            ...getTextStyle(layer.styles)
+                            ...textStyleFromLayer
                         }
                     },
                     layer.content
@@ -80,7 +118,8 @@ export const LayerItemRenderer: React.FC<LayerPropsBase> = memo((props) => {
                         loading="lazy"
                         style={{
                             ...contentStyle,
-                            ...getImageStyle(layer.fit, layer.position || 'center')
+                            ...imageStyleFromLayer,
+                            ...imageStyleOverrides
                         }}
                         alt={layer.alt || layer.name}
                     />
@@ -90,9 +129,9 @@ export const LayerItemRenderer: React.FC<LayerPropsBase> = memo((props) => {
                     </div>
                 );
             case 'particles':
-                return <ParticleEffect effect={layer.effect} density={(layer as any).density} color={layer.styles.color} />;
+                return <ParticleEffect effect={layer.effect} density={(layer as any).density} color={layerStyles.color} />;
             case 'canvas':
-                return <NodeCanvas opacity={layer.styles.opacity as number} />;
+                return <NodeCanvas opacity={layerStyles.opacity as number} />;
             case 'lottie':
                 return (
                     <div style={{ ...contentStyle, ...lottiePlaceholder }}>
@@ -104,7 +143,7 @@ export const LayerItemRenderer: React.FC<LayerPropsBase> = memo((props) => {
         }
     };
 
-    const wrapperZIndex = isSelected ? 1000 : (layer.styles.zIndex as number) || 1;
+    const wrapperZIndex = isSelected ? 1000 : (layerStyles.zIndex as number) || 1;
     const animationStyle = resolveAnimationStyle(layer.animation);
 
     return (
@@ -123,7 +162,16 @@ export const LayerItemRenderer: React.FC<LayerPropsBase> = memo((props) => {
             )}
         >
             <div style={{ ...animationWrapper, ...animationStyle }}>
-                <div style={getInnerContainerStyle(resolvedTransform, isSelected)}>
+                <div style={{
+                    ...getInnerContainerStyle(
+                        resolvedTransform,
+                        isSelected,
+                        transformOrigin,
+                        customOutline,
+                        customOutlineOffset
+                    ),
+                    ...passthroughVisualStyle,
+                }}>
                     {renderContent()}
 
                     {isSelected && !layer.locked && (

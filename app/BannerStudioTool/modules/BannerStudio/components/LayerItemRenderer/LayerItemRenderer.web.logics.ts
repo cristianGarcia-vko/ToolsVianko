@@ -11,6 +11,18 @@ interface LayerDragState {
     startTop: number;
 }
 
+const upsertTransform = (transformValue: unknown, fn: string, value: number, unit: string) => {
+    const normalized = String(transformValue || '').trim();
+    const safeFn = fn.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    const token = `${fn}(${Number.isFinite(value) ? value : 0}${unit})`;
+    if (!normalized) return token;
+    const pattern = new RegExp(`${safeFn}\\([^)]*\\)`);
+    if (pattern.test(normalized)) {
+        return normalized.replace(pattern, token).trim();
+    }
+    return `${normalized} ${token}`.trim();
+};
+
 /**
  * Web-specific Logic for LayerItemRenderer.
  * Orchestrates DOM pointer events, drag/resize previews, and wheel-resizing.
@@ -156,7 +168,7 @@ export const useLayerItemLogic = ({
             left: previewRef.current?.left ?? currentLeft,
             top: previewRef.current?.top ?? currentTop,
             ...previewRef.current,
-            transform: `rotate(${angle}deg)`
+            transform: upsertTransform(previewRef.current?.transform ?? currentTransform, 'rotate', angle, 'deg')
         };
         previewRef.current = nextPreview;
         setDragPreview(nextPreview);
