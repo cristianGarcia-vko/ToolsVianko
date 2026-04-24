@@ -30,7 +30,9 @@ export type StreamResult = {
 
 // ─── Hook ────────────────────────────────────────────────────────────────────
 
-const BACKEND_URL = 'http://localhost:3001';
+const BACKEND_URL =
+    process.env.EXPO_PUBLIC_K6_API_BASE_URL ||
+    'http://localhost:4001';
 
 export const useExecutionStream = () => {
     const [testId, setTestId] = useState<string | null>(null);
@@ -201,7 +203,7 @@ export const useExecutionStream = () => {
                 return false;
             }
         } catch (err) {
-            addEntry('Error de conexión con el backend K6 (puerto 3001)', 'error', 'error');
+            addEntry(`Error de conexión con el backend K6 (${BACKEND_URL})`, 'error', 'error');
             setIsError(true);
             return false;
         }

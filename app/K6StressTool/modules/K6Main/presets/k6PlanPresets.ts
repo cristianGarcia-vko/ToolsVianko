@@ -9,7 +9,7 @@ const step = (input: Omit<K6PlanStep, 'id'>): K6PlanStep => ({
 });
 
 export const buildPresetPlan = (preset: Exclude<K6PlanPresetId, 'custom'>): K6PlanConfig => {
-  const baseUrl = 'http://localhost:3000';
+  const baseUrl = 'http://localhost:3002';
 
   if (preset === 'smoke') {
     return {

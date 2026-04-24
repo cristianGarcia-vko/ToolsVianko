@@ -166,7 +166,7 @@ export const K6Wizard: React.FC<K6WizardProps> = memo(({ onClose, onStartTest, e
                     <span className={S.fieldLabel}>Puerto</span>
                     <input className={S.fieldInput} value={wiz.connection.port}
                         onChange={e => wiz.updateConnection({ port: e.target.value })}
-                        placeholder="3000" />
+                        placeholder="3002" />
                 </div>
             </div>
 

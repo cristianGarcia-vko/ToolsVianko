@@ -1,8 +1,8 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { createSlice, PayloadAction, current } from '@reduxjs/toolkit';
 import { StudioProject, BannerDesign, BannerLayer } from '../../BannerStudioTool/modules/BannerStudio/types/types';
 import { createProjectTemplate } from '../../BannerStudioTool/modules/BannerStudio/types/constants';
 
-// Sincronización V7+: Referencias Normalizadas
+// Sincronización V7+: Referencias Normalizadas con Optimized History
 
 interface BannerState {
     project: StudioProject;
@@ -31,8 +31,8 @@ const bannerSlice = createSlice({
             state.activeBannerId = action.payload.activeBannerId || action.payload.banners[0].id;
         },
         updateProject: (state, action: PayloadAction<Partial<StudioProject>>) => {
-            // Push to undo before change
-            state.undoStack.push(JSON.parse(JSON.stringify(state.project)));
+            // Push to undo before change using current() for structural sharing
+            state.undoStack.push(current(state.project));
             if (state.undoStack.length > 50) state.undoStack.shift();
             state.redoStack = [];
 
@@ -47,7 +47,7 @@ const bannerSlice = createSlice({
             state.selectedLayerId = action.payload;
         },
         updateLayer: (state, action: PayloadAction<{ bannerId: string, layerId: string, updates: Partial<BannerLayer> }>) => {
-             // Basic state update for performance (don't push to undo on every pixel movement, maybe handle that in components)
+             // Basic state update for performance (don't push to undo on every pixel movement)
              const banner = state.project.banners.find(b => b.id === action.payload.bannerId);
              if (banner) {
                  const layer = banner.layers.find(l => l.id === action.payload.layerId);
@@ -59,14 +59,14 @@ const bannerSlice = createSlice({
         undo: (state) => {
             if (state.undoStack.length === 0) return;
             const prev = state.undoStack.pop()!;
-            state.redoStack.push(JSON.parse(JSON.stringify(state.project)));
+            state.redoStack.push(current(state.project));
             state.project = prev;
             state.activeBannerId = prev.activeBannerId;
         },
         redo: (state) => {
             if (state.redoStack.length === 0) return;
             const next = state.redoStack.pop()!;
-            state.undoStack.push(JSON.parse(JSON.stringify(state.project)));
+            state.undoStack.push(current(state.project));
             state.project = next;
             state.activeBannerId = next.activeBannerId;
         }

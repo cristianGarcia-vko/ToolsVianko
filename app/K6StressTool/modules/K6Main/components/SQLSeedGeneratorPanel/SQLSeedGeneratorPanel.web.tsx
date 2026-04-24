@@ -49,7 +49,7 @@ export const SQLSeedGeneratorPanel: React.FC = () => {
               <header style={sqlSeedStyles.header}>
                 <div style={sqlSeedStyles.titleRow}>
                   <h3 style={sqlSeedStyles.title}>SQL Seed Generator</h3>
-                  <p style={sqlSeedStyles.subtitle}>Se integra al backend de Overdrive (puerto 3001).</p>
+                  <p style={sqlSeedStyles.subtitle}>Se integra al backend de Overdrive (puerto 4001).</p>
                 </div>
 
                 <button style={sqlSeedStyles.closeBtn} onClick={() => setOpen(false)} aria-label="Cerrar">

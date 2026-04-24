@@ -5,7 +5,10 @@ type PrismaModelPayload = PrismaField[] | { tableName?: string; fields: PrismaFi
 export type PrismaModels = Record<string, PrismaModelPayload>;
 export type PrismaEnums = Record<string, string[]>;
 
-const API_BASE = 'http://localhost:3001/api/sqlgen';
+const K6_API_BASE_URL =
+  process.env.EXPO_PUBLIC_K6_API_BASE_URL ||
+  'http://localhost:4001';
+const API_BASE = `${K6_API_BASE_URL}/api/sqlgen`;
 
 const safeJson = async (res: Response) => {
   try {

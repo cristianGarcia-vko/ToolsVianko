@@ -20,7 +20,9 @@ const EMPTY_ENDPOINT: Omit<EndpointConfig, 'id'> = {
   sourceKey: '',
 };
 
-const API_BASE = 'http://localhost:3001';
+const API_BASE =
+  process.env.EXPO_PUBLIC_K6_API_BASE_URL ||
+  'http://localhost:4001';
 const ALLOWED_METHODS = new Set(['GET', 'POST', 'PUT', 'PATCH', 'DELETE']);
 
 const createEndpoint = (overrides?: Partial<EndpointConfig>): EndpointConfig => ({

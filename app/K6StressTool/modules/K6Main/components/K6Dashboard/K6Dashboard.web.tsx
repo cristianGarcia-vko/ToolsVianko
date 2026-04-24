@@ -127,7 +127,7 @@ export const K6Dashboard: React.FC<K6DashboardProps> = memo((props) => {
                 {/* NEW CHART: VUS vs RPS (Throughput vs Concurrency) */}
                 <motion.div style={{ ...styles.glassCard, gridColumn: '1 / -1' }} whileHover={{ scale: 1.002 }}>
                     <div style={styles.chartTitle}><Users size={14} color={tokens.colors.accentOrange}/> CONCURRENCIA: VUs vs THROUGHPUT (RPS)</div>
-                    <div style={styles.chartContainer} style={{ height: '280px', minHeight: '280px' }}>
+                    <div style={{ ...styles.chartContainer, height: '280px', minHeight: '280px' }}>
                         <ResponsiveContainer width="100%" height="100%" minWidth={0}>
                             <ComposedChart data={timeSeriesData}>
                                 <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.03)" vertical={false} />

@@ -3,12 +3,14 @@
   "version": "1.0.0",
   "main": "index.ts",
   "scripts": {
-    "start": "expo start",
+    "start": "expo start --port 3013",
+    "dev:web": "vite",
+    "build:web": "vite build",
     "android": "expo start --android",
     "ios": "expo start --ios",
-    "web": "expo start --web",
+    "web": "npm run dev:web",
     "build:k6": "cd k6-frontend && npm run build -- --outDir ../dist/k6-dashboard",
-    "build:exe": "npm run build:k6 && npx expo export -p web && npx electron-builder --win",
+    "build:exe": "npm run build:web && npm run build:k6 && npx electron-builder --win",
     "start:desktop": "electron main.js"
   },
   "build": {
@@ -67,12 +69,13 @@
   },
   "devDependencies": {
     "@types/react": "~19.2.2",
-    "@vitejs/plugin-react": "^6.0.1",
+    "@vitejs/plugin-react": "^4.7.0",
     "electron": "^41.0.3",
     "electron-builder": "^26.8.1",
     "react-native-web": "^0.21.0",
     "typescript": "~5.9.2",
-    "vite": "^8.0.2"
+    "vite": "^6.4.2",
+    "vite-tsconfig-paths": "^5.1.4"
   },
   "private": true
 }

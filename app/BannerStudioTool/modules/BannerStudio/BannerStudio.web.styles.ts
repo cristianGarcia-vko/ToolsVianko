@@ -86,6 +86,7 @@ export const createBannerStudioStyles = (theme: ThemeTokens) => ({
         border: '1px solid rgba(255,255,255,0.05)',
         backdropFilter: 'blur(10px)',
         zIndex: 10,
+        willChange: 'transform',
     } as CSSProperties,
 
     drawingSidebar: {
@@ -94,6 +95,7 @@ export const createBannerStudioStyles = (theme: ThemeTokens) => ({
         flexDirection: 'column' as const,
         zIndex: 9,
         marginLeft: '-12px', 
+        willChange: 'transform',
     } as CSSProperties,
 
     canvasAreaContainer: {
@@ -116,6 +118,7 @@ export const createBannerStudioStyles = (theme: ThemeTokens) => ({
         alignItems: 'center',
         justifyContent: 'center',
         boxShadow: 'inset 0 0 100px rgba(0,0,0,0.8)',
+        willChange: 'transform',
     } as CSSProperties,
 
     propertiesWrapper: {

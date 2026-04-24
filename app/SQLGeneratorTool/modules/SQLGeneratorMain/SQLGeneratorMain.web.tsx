@@ -5,6 +5,9 @@ import { sqlStyles } from './SQLGeneratorMain.web.styles';
 import { useSQLGeneratorMainLogic } from './SQLGeneratorMain.web.logics';
 
 const ACCENT = tokens.colors.accentOrange;
+const K6_API_BASE_URL =
+  process.env.EXPO_PUBLIC_K6_API_BASE_URL ||
+  'http://localhost:4001';
 
 const SQLGeneratorMainModule: React.FC = memo(() => {
   const logic = useSQLGeneratorMainLogic();
@@ -39,7 +42,7 @@ const SQLGeneratorMainModule: React.FC = memo(() => {
             <FileUp size={16} /> 1. Subir schema.prisma
           </span>
           <span style={{ ...sqlStyles.hint, marginLeft: 'auto' }}>
-            Backend: <strong>localhost:3001</strong>
+            Backend: <strong>{K6_API_BASE_URL}</strong>
           </span>
         </div>
 

@@ -8,6 +8,10 @@ import { tokens } from '../../../SharedTool/style/tokens.shared.style';
 import { useExecutionStream } from './components/K6ExecutionConsole/K6ExecutionConsole.web.logics';
 import { useToast } from './components/K6Toast/K6Toast.web';
 
+const K6_API_BASE_URL =
+    process.env.EXPO_PUBLIC_K6_API_BASE_URL ||
+    'http://localhost:4001';
+
 export const useK6MainLogic = () => {
     const dispatch = useDispatch();
     const historyData = useSelector((state: RootState) => state.k6?.historyData || []);
@@ -17,7 +21,7 @@ export const useK6MainLogic = () => {
     const [loading, setLoading] = useState(false);
     const [protocol, setProtocol] = useState('http://');
     const [host, setHost] = useState('localhost');
-    const [port, setPort] = useState('3000');
+    const [port, setPort] = useState('3002');
     const [route, setRoute] = useState('/api/ping');
     const [vusSingle, setVusSingle] = useState(1);
     const [durationSingle, setDurationSingle] = useState(10);
@@ -84,7 +88,7 @@ export const useK6MainLogic = () => {
     const handleCancel = async () => {
         try {
             setStatusMessage("Cancelando ejecución...");
-            await fetch('http://localhost:3001/api/cancel-test', { method: 'POST' });
+            await fetch(`${K6_API_BASE_URL}/api/cancel-test`, { method: 'POST' });
             setStatusMessage("Ejecución cancelada.");
             setTimeout(() => setStatusMessage(null), 3000);
             setLoading(false);
@@ -106,7 +110,7 @@ export const useK6MainLogic = () => {
     const fetchHistory = useCallback(async () => {
         setIsHistoryLoading(true);
         try {
-            const res = await fetch('http://localhost:3001/api/history');
+            const res = await fetch(`${K6_API_BASE_URL}/api/history`);
             const data = await res.json();
             dispatch(setHistory(data));
         } catch (err) {
@@ -270,7 +274,7 @@ export const useK6MainLogic = () => {
             const formData = new FormData();
             formData.append('projectFile', zipFile);
             
-            const res = await fetch('http://localhost:3001/api/analyze-zip', {
+            const res = await fetch(`${K6_API_BASE_URL}/api/analyze-zip`, {
                 method: 'POST',
                 body: formData
             });
@@ -448,7 +452,7 @@ export const useK6MainLogic = () => {
                 },
             };
 
-            const res = await fetch('http://localhost:3001/api/run-plan', {
+            const res = await fetch(`${K6_API_BASE_URL}/api/run-plan`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(planToSend),

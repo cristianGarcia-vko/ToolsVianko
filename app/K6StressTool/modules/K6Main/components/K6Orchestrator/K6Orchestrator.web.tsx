@@ -247,7 +247,7 @@ export const K6Orchestrator: React.FC<K6OrchestratorProps> = memo(({
                             style={S.urlInput}
                             value={`${host}${port ? ':' + port : ''}`}
                             onChange={e => handleUnifiedUrlChange(e.target.value)}
-                            placeholder="localhost:3000"
+                            placeholder="localhost:3002"
                         />
                         <span style={S.urlStatus(null)}>●</span>
                     </div>

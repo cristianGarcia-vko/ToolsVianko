@@ -153,13 +153,16 @@ export const LayerItemRenderer: React.FC<LayerPropsBase> = memo((props) => {
             onContextMenu={handleContextMenu}
             whileHover={!isSelected && !layer.locked ? { scale: 1.02, boxShadow: '0 10px 30px rgba(0,255,130,0.1)' } : {}}
             transition={{ type: 'spring', stiffness: 300, damping: 30 }}
-            style={getLayerWrapperStyle(
-                resolvedLeft, resolvedTop,
-                `${resolvedWidth}px`,
-                `${resolvedHeight}px`,
-                wrapperZIndex as number,
-                layer.locked
-            )}
+            style={{
+                ...getLayerWrapperStyle(
+                    resolvedLeft, resolvedTop,
+                    `${resolvedWidth}px`,
+                    `${resolvedHeight}px`,
+                    wrapperZIndex as number,
+                    layer.locked
+                ),
+                willChange: isSelected ? 'transform, left, top, width, height' : 'auto'
+            }}
         >
             <div style={{ ...animationWrapper, ...animationStyle }}>
                 <div style={{

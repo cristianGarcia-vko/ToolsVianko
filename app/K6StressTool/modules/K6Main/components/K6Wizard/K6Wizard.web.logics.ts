@@ -49,6 +49,9 @@ const URL_KEY_REGEX = /(base.?url|api.?url|backend.?url|server.?url|public.?url|
 const HOST_KEY_REGEX = /(api.?host|backend.?host|server.?host|host(name)?)/i;
 const PORT_KEY_REGEX = /(api.?port|backend.?port|server.?port|port)/i;
 const TOKEN_KEY_REGEX = /(bearer|jwt|token|auth)/i;
+const K6_API_BASE_URL =
+    process.env.EXPO_PUBLIC_K6_API_BASE_URL ||
+    'http://localhost:4001';
 
 const cleanEnvValue = (raw: string) => {
     const trimmed = raw.trim();
@@ -188,7 +191,7 @@ export const useK6Wizard = () => {
     const [connection, setConnection] = useState<WizardConnectionData>({
         protocol: 'http://',
         host: 'localhost',
-        port: '3000',
+        port: '3002',
         authToken: '',
     });
     const [endpoints, setEndpoints] = useState<WizardEndpoint[]>([]);
@@ -317,7 +320,7 @@ export const useK6Wizard = () => {
         try {
             const formData = new FormData();
             formData.append('projectFile', zipFile);
-            const res = await fetch('http://localhost:3001/api/analyze-zip', {
+            const res = await fetch(`${K6_API_BASE_URL}/api/analyze-zip`, {
                 method: 'POST', body: formData,
             });
             const data = await res.json();

@@ -6,13 +6,17 @@ import {
 } from 'recharts'
 import { Activity, Zap, BarChart3 } from 'lucide-react'
 
+const K6_API_BASE_URL = import.meta.env.VITE_K6_API_BASE_URL || 'http://localhost:4001'
+const DEFAULT_TARGET_HOST = import.meta.env.VITE_DEFAULT_TARGET_HOST || 'localhost'
+const DEFAULT_TARGET_PORT = import.meta.env.VITE_DEFAULT_TARGET_PORT || '3002'
+
 function App() {
   const [activeTab, setActiveTab] = useState('single'); // 'single' o 'multi'
 
   // ================= ESTADO MODO SIMPLE =================
   const [protocol, setProtocol] = useState('http://');
-  const [host, setHost] = useState('localhost');
-  const [port, setPort] = useState('3000');
+  const [host, setHost] = useState(DEFAULT_TARGET_HOST);
+  const [port, setPort] = useState(DEFAULT_TARGET_PORT);
   const [route, setRoute] = useState('/api/ping');
   const [vusSingle, setVusSingle] = useState(10);
   const [durationSingle, setDurationSingle] = useState(5);
@@ -26,7 +30,7 @@ function App() {
   // ================= ESTADO MODO MULTIPLE (ZIP) =================
   const [file, setFile] = useState(null);
   const [endpointsConfig, setEndpointsConfig] = useState(null);
-  const [baseUrlMulti, setBaseUrlMulti] = useState('http://localhost:3000');
+  const [baseUrlMulti, setBaseUrlMulti] = useState(`http://${DEFAULT_TARGET_HOST}:${DEFAULT_TARGET_PORT}`);
   const [vusMulti, setVusMulti] = useState(10);
   const [durationMulti, setDurationMulti] = useState(5);
 
@@ -38,7 +42,7 @@ function App() {
 
   const fetchHistory = async () => {
     try {
-      const res = await axios.get('http://localhost:3001/api/history');
+      const res = await axios.get(`${K6_API_BASE_URL}/api/history`);
       setHistoryData(res.data);
     } catch(err) { console.error('No se pudo cargar el historial:', err); }
   };
@@ -51,7 +55,7 @@ function App() {
     setLoading(true); setError(null); setGlobalMetrics(null);
 
     try {
-      const response = await axios.post('http://localhost:3001/api/run-test', {
+      const response = await axios.post(`${K6_API_BASE_URL}/api/run-test`, {
         url: finalUrl,
         vus: vusSingle,
         duration: durationSingle,
@@ -77,7 +81,7 @@ function App() {
     formData.append('projectFile', file);
 
     try {
-      const res = await axios.post('http://localhost:3001/api/analyze-zip', formData, {
+      const res = await axios.post(`${K6_API_BASE_URL}/api/analyze-zip`, formData, {
         headers: { 'Content-Type': 'multipart/form-data' }
       });
       
@@ -135,7 +139,7 @@ function App() {
     }
 
     try {
-      const response = await axios.post('http://localhost:3001/api/run-multiple', {
+      const response = await axios.post(`${K6_API_BASE_URL}/api/run-multiple`, {
         endpoints: activeEndpoints,
         baseUrl: baseUrlMulti,
         vus: vusMulti,
@@ -250,7 +254,7 @@ function App() {
                     </div>
                     <div className="md:col-span-3">
                       <label className="block text-xs font-semibold mb-1.5 text-slate-400">Puerto</label>
-                      <input type="text" value={port} onChange={(e) => setPort(e.target.value)} className="w-full bg-[#1A2234] border border-slate-700/50 rounded-xl px-4 py-3 text-sm focus:border-indigo-500 focus:ring-1 outline-none" placeholder="3000" />
+                      <input type="text" value={port} onChange={(e) => setPort(e.target.value)} className="w-full bg-[#1A2234] border border-slate-700/50 rounded-xl px-4 py-3 text-sm focus:border-indigo-500 focus:ring-1 outline-none" placeholder="3002" />
                     </div>
                   </div>
 

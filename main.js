@@ -6,13 +6,15 @@ const { spawn } = require('child_process');
 
 let mainWindow;
 let k6ServerProcess;
+const K6_BACKEND_PORT = process.env.K6_BACKEND_PORT || process.env.PORT || '4001';
+const K6_BACKEND_URL = `http://localhost:${K6_BACKEND_PORT}`;
 const CONTENT_SECURITY_POLICY = [
   "default-src 'self'",
   "script-src 'self'",
   "style-src 'self' 'unsafe-inline'",
   "img-src 'self' data: blob: http: https:",
   "font-src 'self' data:",
-  "connect-src 'self' http://localhost:3001 http://127.0.0.1:3001 ws://localhost:3001 ws://127.0.0.1:3001",
+  `connect-src 'self' ${K6_BACKEND_URL} http://127.0.0.1:${K6_BACKEND_PORT} ws://localhost:${K6_BACKEND_PORT} ws://127.0.0.1:${K6_BACKEND_PORT}`,
   "media-src 'self' data: blob:",
   "object-src 'none'",
   "base-uri 'self'",
@@ -155,7 +157,10 @@ if (app) {
     const serverPath = path.join(__dirname, 'k6-backend', 'server.js');
     if (fs.existsSync(serverPath)) {
       log(`Found k6-backend at ${serverPath}. Starting...`);
-      k6ServerProcess = spawn('node', [serverPath], { stdio: 'inherit' });
+      k6ServerProcess = spawn('node', [serverPath], {
+        stdio: 'inherit',
+        env: { ...process.env, PORT: K6_BACKEND_PORT },
+      });
       k6ServerProcess.on('error', (err) => {
         log(`Failed to start k6-backend: ${err.message}`);
       });
@@ -165,7 +170,10 @@ if (app) {
       const indexBackend = path.join(__dirname, 'k6-backend', 'index.js');
       if (fs.existsSync(indexBackend)) {
         log(`Found k6-backend at ${indexBackend}. Starting...`);
-        k6ServerProcess = spawn('node', [indexBackend], { stdio: 'inherit' });
+        k6ServerProcess = spawn('node', [indexBackend], {
+          stdio: 'inherit',
+          env: { ...process.env, PORT: K6_BACKEND_PORT },
+        });
       }
     }
 

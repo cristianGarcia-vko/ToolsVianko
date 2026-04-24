@@ -22,7 +22,7 @@ const BannerStudio = React.lazy(() => import('../../../BannerStudioTool/modules/
 const SQLGeneratorMain = React.lazy(() => import('../../../SQLGeneratorTool/modules/SQLGeneratorMain/SQLGeneratorMain.web'));
 
 const silkTransition: any = {
-    duration: 0.6,
+    duration: 0.4,
     ease: [0.19, 1, 0.22, 1],
 };
 
@@ -36,7 +36,8 @@ export const HubModule: React.FC = () => {
 
             <style dangerouslySetInnerHTML={{
                 __html: `
-                @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+                /* Inter Font is assumed to be loaded via <link> for performance. 
+                   If not, consider using expo-font or a non-blocking method. */
                 
                 * { box-sizing: border-box; }
                 
@@ -44,7 +45,7 @@ export const HubModule: React.FC = () => {
                     margin: 0; padding: 0; 
                     background: ${tokens.colors.bg}; 
                     min-height: 100vh;
-                    font-family: 'Inter', sans-serif;
+                    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
                 }
                 
                 /* Scrollbars (premium + subtle) */
@@ -66,18 +67,17 @@ export const HubModule: React.FC = () => {
 
             <StatusBar style="light" />
 
-            <OptimizedBackgroundAtom />
-
             <AnimatePresence mode="wait">
                 {currentApp === 'home' && (
                     <motion.div
                         key="hub-home"
-                        initial={{ opacity: 0, y: 15 }}
+                        initial={{ opacity: 0, y: 10 }}
                         animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, scale: 1.05, filter: 'blur(20px)' }}
+                        exit={{ opacity: 0, scale: 0.98 }}
                         transition={silkTransition}
-                        style={hubStyles.hubContent}
+                        style={{ ...hubStyles.hubContent, willChange: 'transform, opacity' }}
                     >
+                        <OptimizedBackgroundAtom />
 
                         <LogoAtom />
 
