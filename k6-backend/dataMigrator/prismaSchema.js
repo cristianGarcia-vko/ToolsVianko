@@ -31,6 +31,8 @@ const normalizePrismaType = (prismaType) => {
   return 'TEXT';
 };
 
+const normalizeMatchKey = (value) => normalizeColumnName(value).toLowerCase();
+
 const parsePrismaSchema = (bufferOrText) => {
   const schema = toUtf8(bufferOrText);
   const models = [];
@@ -55,10 +57,15 @@ const parsePrismaSchema = (bufferOrText) => {
       const clean = trimmed.split('//')[0].trim();
       const [name, rawType] = clean.split(/\s+/);
       if (!name || !rawType || name.startsWith('@')) return;
+      const autoIncrement = /@default\(\s*autoincrement\(\s*\)\s*\)/.test(clean);
+      const isRequired = !rawType.includes('?') && !rawType.includes('[]') && !autoIncrement;
       fields.push({
         name: normalizeColumnName(name),
         prismaType: rawType.replace('?', '').replace('[]', ''),
         sqlType: normalizePrismaType(rawType),
+        required: isRequired,
+        isRequired,
+        autoIncrement,
       });
     });
 
@@ -75,12 +82,12 @@ const parsePrismaSchema = (bufferOrText) => {
 };
 
 const pickBestModelTemplate = ({ models, columns }) => {
-  const normalizedColumns = new Set((columns || []).map((col) => normalizeColumnName(col)));
+  const normalizedColumns = new Set((columns || []).map((col) => normalizeMatchKey(col)));
   let best = null;
   let bestScore = -1;
 
   (models || []).forEach((model) => {
-    const modelColumns = model.fields.map((field) => field.name);
+    const modelColumns = model.fields.map((field) => normalizeMatchKey(field.name));
     const overlap = modelColumns.filter((field) => normalizedColumns.has(field)).length;
     const score = overlap / Math.max(modelColumns.length, 1);
     if (score > bestScore) {
@@ -97,7 +104,29 @@ const pickBestModelTemplate = ({ models, columns }) => {
   return best;
 };
 
+const buildModelPredictions = ({ models, columns }) => {
+  const normalizedColumns = new Set((columns || []).map((col) => normalizeMatchKey(col)));
+
+  return (models || [])
+    .map((model) => {
+      const matchedFields = model.fields
+        .filter((field) => normalizedColumns.has(normalizeMatchKey(field.name)))
+        .map((field) => field.name);
+      const score = matchedFields.length / Math.max(model.fields.length, 1);
+
+      return {
+        modelName: model.modelName,
+        tableName: model.tableName,
+        score,
+        matchedFields,
+        fields: model.fields,
+      };
+    })
+    .sort((a, b) => b.score - a.score || a.modelName.localeCompare(b.modelName));
+};
+
 module.exports = {
   parsePrismaSchema,
   pickBestModelTemplate,
+  buildModelPredictions,
 };

@@ -65,13 +65,18 @@ class CsvParser extends BaseParser {
 
     const delimiter = guessDelimiter(lines[0]);
     const rawHeaders = splitCsvLine(lines[0], delimiter);
-    const headers = rawHeaders.map((header, index) => normalizeColumnName(header) || `column_${index + 1}`);
+    const headers = rawHeaders
+      .map((header, index) => ({
+        index,
+        name: normalizeColumnName(header),
+      }))
+      .filter((header) => header.name);
 
     const rows = lines.slice(1).map((line) => {
       const values = splitCsvLine(line, delimiter);
       const row = {};
-      headers.forEach((header, index) => {
-        row[header] = values[index] ?? null;
+      headers.forEach((header) => {
+        row[header.name] = values[header.index] ?? null;
       });
       return row;
     });
@@ -79,7 +84,7 @@ class CsvParser extends BaseParser {
     return {
       format: this.format,
       rows,
-      columns: uniq(headers),
+      columns: uniq(headers.map((header) => header.name)),
       meta: { delimiter },
     };
   }

@@ -3,6 +3,7 @@ import { useK6MainLogic } from './K6Main.web.logics';
 import { tokens } from '../../../SharedTool/style/tokens.shared.style';
 import { k6Styles as styles } from './K6Main.web.styles';
 import { k6ModuleGuides, ModuleGuideKey } from './K6Main.guides';
+import { Maximize2, Minimize2 } from 'lucide-react';
 
 // Lazy loading for heavy sub-components to optimize initial bundle size and UI performance
 const K6Dashboard = lazy(() => import('./components/K6Dashboard/K6Dashboard.web').then(m => ({ default: m.K6Dashboard })));
@@ -64,6 +65,8 @@ const K6MainModule: React.FC = memo(() => {
         toast,
         handleWizardStart,
         handleWizardViewReport,
+        maximizedModuleKey,
+        setMaximizedModuleKey,
     } = logic;
 
     // Pre-warming fragments for seamless UX
@@ -78,30 +81,158 @@ const K6MainModule: React.FC = memo(() => {
         [activeGuideKey],
     );
 
+    const moduleMeta = useMemo(() => ({
+        discovery: {
+            title: 'Endpoint Discovery Hub',
+            description: 'Guia de carga ZIP, deteccion automatica y distribucion a los demas modulos.',
+            accent: tokens.colors.accentTeal,
+        },
+        dashboard: {
+            title: 'Dashboard',
+            description: 'Resumen ejecutivo de salud, RPS, error rate y latencia del ultimo reporte.',
+            accent: tokens.colors.accentBlue,
+        },
+        qaAnalysis: {
+            title: 'QA Analysis',
+            description: 'Lectura de codigos HTTP y detalle por endpoint para localizar riesgos.',
+            accent: tokens.colors.accentOrange,
+        },
+        insights: {
+            title: 'Decision Insights',
+            description: 'Interpretacion guiada del resultado para usuarios tecnicos y no tecnicos.',
+            accent: tokens.colors.accentGreen,
+        },
+        orchestrator: {
+            title: 'Orchestrator',
+            description: 'Configura URL base, autenticacion, prueba simple y plan JSON para lanzar cargas.',
+            accent: tokens.colors.accentGreen,
+        },
+        monitor: {
+            title: 'Monitor Proactivo',
+            description: 'Evalua endpoints detectados o manuales y permite registrar resultados.',
+            accent: tokens.colors.accentPurple,
+        },
+        history: {
+            title: 'Historial',
+            description: 'Consulta rapida de ejecuciones recientes para revisar contexto operativo.',
+            accent: tokens.colors.accentTeal,
+        },
+        sqlSeed: {
+            title: 'SQL Seed Generator',
+            description: 'Prepara datos de prueba para poblar la base antes de correr carga.',
+            accent: tokens.colors.accentOrange,
+        },
+        dataMigrator: {
+            title: 'Traductor de BD',
+            description: 'Motor universal para convertir CSV/XML/JSON/SQL Inserts hacia SQL, JSON, CSV o migracion Prisma.',
+            accent: tokens.colors.accentBlue,
+        },
+    }) satisfies Record<ModuleGuideKey, { title: string; description: string; accent: string }>, []);
+
+    const renderModuleContent = (moduleKey: ModuleGuideKey) => {
+        switch (moduleKey) {
+            case 'discovery':
+                return (
+                    <EndpointDiscoveryPanel
+                        loading={loading}
+                        zipFile={zipFile}
+                        handleZipUpload={handleZipUpload}
+                        handleAnalyze={handleAnalyze}
+                        handleApplyZipEndpointsToPlan={handleApplyZipEndpointsToPlan}
+                        analysisResult={analysisResult}
+                    />
+                );
+            case 'dashboard':
+                return <K6Dashboard currentReport={currentReport} stats={stats} />;
+            case 'qaAnalysis':
+                return <K6QAAnalysis currentReport={currentReport} analysisResult={analysisResult} />;
+            case 'insights':
+                return <K6Insights stats={stats} />;
+            case 'orchestrator':
+                return (
+                    <K6Orchestrator
+                        loading={loading}
+                        protocol={protocol} setProtocol={setProtocol}
+                        host={host} setHost={setHost} setBaseUrlOnPlanJson={setBaseUrlOnPlanJson}
+                        port={port} setPort={setPort}
+                        route={route} setRoute={setRoute}
+                        authToken={authToken} setAuthToken={setAuthToken}
+                        vusSingle={vusSingle} setVusSingle={setVusSingle}
+                        durationSingle={durationSingle} setDurationSingle={setDurationSingle}
+                        handleCancel={handleCancel} handleRunPlan={handleRunPlan}
+                        handleRunSingle={handleRunSingle} statusMessage={statusMessage || ''}
+                        planPreset={planPreset} handleLoadPreset={handleLoadPreset}
+                        planJson={planJson} setPlanJson={setPlanJson}
+                        planJsonError={planJsonError} setPlanJsonError={setPlanJsonError}
+                    />
+                );
+            case 'monitor':
+                return (
+                    <MonitorPanel
+                        sourceEndpoints={analysisResult?.type === 'analysis' ? analysisResult.endpoints : []}
+                        baseUrl={monitorBaseUrl}
+                        authToken={authToken}
+                        initialProjectName={zipFile?.name || currentReport?.projectName || ''}
+                    />
+                );
+            case 'history':
+                return <K6History historyData={historyData} />;
+            case 'sqlSeed':
+                return <SQLSeedGeneratorPanel />;
+            case 'dataMigrator':
+                return <DataMigratorPanel />;
+            default:
+                return null;
+        }
+    };
+
     const renderModuleCard = (
         moduleKey: ModuleGuideKey,
-        title: string,
-        description: string,
-        accent: string,
         content: React.ReactNode,
-    ) => (
-        <div style={styles.moduleCard(accent)}>
+    ) => {
+        const meta = moduleMeta[moduleKey];
+        const isMaximized = maximizedModuleKey === moduleKey;
+
+        return (
+        <div style={isMaximized ? styles.moduleCardMaximized(meta.accent) : styles.moduleCard(meta.accent)}>
             <div style={styles.moduleCardHeader}>
                 <div>
-                    <h3 style={styles.moduleCardTitle}>{title}</h3>
-                    <p style={styles.moduleCardDescription}>{description}</p>
+                    <h3 style={styles.moduleCardTitle}>{meta.title}</h3>
+                    <p style={styles.moduleCardDescription}>{meta.description}</p>
                 </div>
-                <button
-                    type="button"
-                    style={styles.moduleHelpButton(accent)}
-                    onClick={() => setActiveGuideKey(moduleKey)}
-                >
-                    Ayuda
-                </button>
+                <div style={styles.moduleCardActions}>
+                    <button
+                        type="button"
+                        style={styles.moduleIconButton(meta.accent)}
+                        onClick={() => setMaximizedModuleKey(isMaximized ? null : moduleKey)}
+                        title={isMaximized ? 'Restaurar vista' : 'Maximizar herramienta'}
+                    >
+                        {isMaximized ? <Minimize2 size={14} /> : <Maximize2 size={14} />}
+                    </button>
+                    <button
+                        type="button"
+                        style={styles.moduleHelpButton(meta.accent)}
+                        onClick={() => setActiveGuideKey(moduleKey)}
+                    >
+                        Ayuda
+                    </button>
+                </div>
             </div>
             {content}
         </div>
     );
+    };
+
+    const renderMaximizedModule = () => {
+        if (!maximizedModuleKey) return null;
+        return (
+            <div style={styles.maximizedWorkspace}>
+                <Suspense fallback={<SkeletonLoader height="75vh" />}>
+                    {renderModuleCard(maximizedModuleKey, renderModuleContent(maximizedModuleKey))}
+                </Suspense>
+            </div>
+        );
+    };
 
     return (
         <div style={styles.container}>
@@ -157,6 +288,7 @@ const K6MainModule: React.FC = memo(() => {
 
             <K6ToastContainer toasts={toast.toasts} removeToast={toast.removeToast} />
 
+            {maximizedModuleKey ? renderMaximizedModule() : (
             <div style={styles.dashboardGrid}>
                 <div style={styles.mainPanel}>
                     <section style={styles.toolGroup('rgba(0, 196, 180, 0.18)', 'rgba(0, 196, 180, 0.08)')}>
@@ -173,17 +305,7 @@ const K6MainModule: React.FC = memo(() => {
                         <Suspense fallback={<SkeletonLoader height={260} />}>
                             {renderModuleCard(
                                 'discovery',
-                                'Endpoint Discovery Hub',
-                                'Guia de carga ZIP, deteccion automatica y distribucion a los demas modulos.',
-                                tokens.colors.accentTeal,
-                                <EndpointDiscoveryPanel
-                                    loading={loading}
-                                    zipFile={zipFile}
-                                    handleZipUpload={handleZipUpload}
-                                    handleAnalyze={handleAnalyze}
-                                    handleApplyZipEndpointsToPlan={handleApplyZipEndpointsToPlan}
-                                    analysisResult={analysisResult}
-                                />,
+                                renderModuleContent('discovery'),
                             )}
                         </Suspense>
                     </section>
@@ -203,30 +325,21 @@ const K6MainModule: React.FC = memo(() => {
                             <Suspense fallback={<SkeletonLoader height={400} />}>
                                 {renderModuleCard(
                                     'dashboard',
-                                    'Dashboard',
-                                    'Resumen ejecutivo de salud, RPS, error rate y latencia del ultimo reporte.',
-                                    tokens.colors.accentBlue,
-                                    <K6Dashboard currentReport={currentReport} stats={stats} />,
+                                    renderModuleContent('dashboard'),
                                 )}
                             </Suspense>
 
                             <Suspense fallback={<SkeletonLoader height={240} />}>
                                 {renderModuleCard(
                                     'qaAnalysis',
-                                    'QA Analysis',
-                                    'Lectura de codigos HTTP y detalle por endpoint para localizar riesgos.',
-                                    tokens.colors.accentOrange,
-                                    <K6QAAnalysis currentReport={currentReport} analysisResult={analysisResult} />,
+                                    renderModuleContent('qaAnalysis'),
                                 )}
                             </Suspense>
 
                             <Suspense fallback={<SkeletonLoader height={100} />}>
                                 {renderModuleCard(
                                     'insights',
-                                    'Decision Insights',
-                                    'Interpretacion guiada del resultado para usuarios tecnicos y no tecnicos.',
-                                    tokens.colors.accentGreen,
-                                    <K6Insights stats={stats} />,
+                                    renderModuleContent('insights'),
                                 )}
                             </Suspense>
                         </div>
@@ -264,24 +377,7 @@ const K6MainModule: React.FC = memo(() => {
                         <Suspense fallback={<SkeletonLoader height={500} />}>
                             {renderModuleCard(
                                 'orchestrator',
-                                'Orchestrator',
-                                'Configura URL base, autenticacion, prueba simple y plan JSON para lanzar cargas.',
-                                tokens.colors.accentGreen,
-                                <K6Orchestrator
-                                    loading={loading}
-                                    protocol={protocol} setProtocol={setProtocol}
-                                    host={host} setHost={setHost} setBaseUrlOnPlanJson={setBaseUrlOnPlanJson}
-                                    port={port} setPort={setPort}
-                                    route={route} setRoute={setRoute}
-                                    authToken={authToken} setAuthToken={setAuthToken}
-                                    vusSingle={vusSingle} setVusSingle={setVusSingle}
-                                    durationSingle={durationSingle} setDurationSingle={setDurationSingle}
-                                    handleCancel={handleCancel} handleRunPlan={handleRunPlan}
-                                    handleRunSingle={handleRunSingle} statusMessage={statusMessage || ''}
-                                    planPreset={planPreset} handleLoadPreset={handleLoadPreset}
-                                    planJson={planJson} setPlanJson={setPlanJson}
-                                    planJsonError={planJsonError} setPlanJsonError={setPlanJsonError}
-                                />,
+                                renderModuleContent('orchestrator'),
                             )}
                         </Suspense>
                     </section>
@@ -301,51 +397,35 @@ const K6MainModule: React.FC = memo(() => {
                             <Suspense fallback={<SkeletonLoader height={360} />}>
                                 {renderModuleCard(
                                     'monitor',
-                                    'Monitor Proactivo',
-                                    'Evalua endpoints detectados o manuales y permite registrar resultados.',
-                                    tokens.colors.accentPurple,
-                                    <MonitorPanel
-                                        sourceEndpoints={analysisResult?.type === 'analysis' ? analysisResult.endpoints : []}
-                                        baseUrl={monitorBaseUrl}
-                                        authToken={authToken}
-                                        initialProjectName={zipFile?.name || currentReport?.projectName || ''}
-                                    />,
+                                    renderModuleContent('monitor'),
                                 )}
                             </Suspense>
 
                             <Suspense fallback={<SkeletonLoader height={200} />}>
                                 {renderModuleCard(
                                     'history',
-                                    'Historial',
-                                    'Consulta rapida de ejecuciones recientes para revisar contexto operativo.',
-                                    tokens.colors.accentTeal,
-                                    <K6History historyData={historyData} />,
+                                    renderModuleContent('history'),
                                 )}
                             </Suspense>
 
                             <Suspense fallback={<SkeletonLoader height={160} />}>
                                 {renderModuleCard(
                                     'sqlSeed',
-                                    'SQL Seed Generator',
-                                    'Prepara datos de prueba para poblar la base antes de correr carga.',
-                                    tokens.colors.accentOrange,
-                                    <SQLSeedGeneratorPanel />,
+                                    renderModuleContent('sqlSeed'),
                                 )}
                             </Suspense>
 
                             <Suspense fallback={<SkeletonLoader height={260} />}>
                                 {renderModuleCard(
                                     'dataMigrator',
-                                    'Traductor de BD',
-                                    'Motor universal para convertir CSV/XML/JSON/SQL Inserts hacia SQL, JSON, CSV o migracion Prisma.',
-                                    tokens.colors.accentBlue,
-                                    <DataMigratorPanel />,
+                                    renderModuleContent('dataMigrator'),
                                 )}
                             </Suspense>
                         </div>
                     </section>
                 </div>
             </div>
+            )}
         </div>
     );
 });

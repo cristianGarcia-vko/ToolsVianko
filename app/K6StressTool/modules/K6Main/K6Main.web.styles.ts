@@ -160,11 +160,30 @@ export const createK6Styles = (theme: ThemeTokens) => {
             gap: '12px',
         }) as CSSProperties,
 
+        moduleCardMaximized: (accent: string) => ({
+            background: 'rgba(7, 9, 16, 0.62)',
+            border: `1px solid ${accent}55`,
+            borderRadius: '24px',
+            padding: '18px',
+            display: 'flex',
+            flexDirection: 'column' as const,
+            gap: '14px',
+            minHeight: 'calc(100vh - 72px)',
+            boxShadow: `0 24px 80px ${accent}14`,
+        }) as CSSProperties,
+
         moduleCardHeader: {
             display: 'flex',
             alignItems: 'flex-start',
             justifyContent: 'space-between',
             gap: '12px',
+        } as CSSProperties,
+
+        moduleCardActions: {
+            display: 'flex',
+            alignItems: 'center',
+            gap: '8px',
+            flexShrink: 0,
         } as CSSProperties,
 
         moduleCardTitle: {
@@ -195,6 +214,27 @@ export const createK6Styles = (theme: ThemeTokens) => {
             letterSpacing: '1px',
             whiteSpace: 'nowrap' as const,
         }) as CSSProperties,
+
+        moduleIconButton: (accent: string) => ({
+            width: '32px',
+            height: '32px',
+            borderRadius: '999px',
+            border: `1px solid ${accent}40`,
+            background: `${accent}12`,
+            color: accent,
+            cursor: 'pointer',
+            display: 'inline-flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            flexShrink: 0,
+        }) as CSSProperties,
+
+        maximizedWorkspace: {
+            flex: 1,
+            minHeight: 0,
+            overflowY: 'auto' as const,
+            overflowX: 'hidden' as const,
+        } as CSSProperties,
 
         glassCard: {
             background: 'rgba(17, 19, 26, 0.6)',

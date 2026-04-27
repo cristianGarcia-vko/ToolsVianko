@@ -15,6 +15,39 @@ const uniq = (values) => Array.from(new Set(values.filter(Boolean)));
 
 const takePreviewRows = (rows, max = 20) => rows.slice(0, max);
 
+const isBlankValue = (value) => value === null || value === undefined || String(value).trim() === '';
+
+const looksLikeGeneratedColumnName = (column) => /^column_\d+$/i.test(String(column || '').trim());
+
+const sanitizeParsedDataset = (parsed) => {
+  const rows = Array.isArray(parsed?.rows) ? parsed.rows : [];
+  const columns = uniq(parsed?.columns || []);
+  const keptColumns = columns.filter((column) => {
+    const normalized = normalizeColumnName(column);
+    if (!normalized) return false;
+
+    const hasAnyValue = rows.some((row) => !isBlankValue(row?.[column]));
+    if (!hasAnyValue) return false;
+
+    return !looksLikeGeneratedColumnName(column);
+  });
+
+  const keptSet = new Set(keptColumns);
+  const cleanRows = rows.map((row) => {
+    const cleanRow = {};
+    keptSet.forEach((column) => {
+      cleanRow[column] = row?.[column] ?? null;
+    });
+    return cleanRow;
+  });
+
+  return {
+    ...parsed,
+    rows: cleanRows,
+    columns: keptColumns,
+  };
+};
+
 const detectPrimitiveType = (value) => {
   if (value === null || value === undefined || value === '') return 'TEXT';
   if (typeof value === 'boolean') return 'BOOLEAN';
@@ -109,6 +142,7 @@ module.exports = {
   normalizeColumnName,
   uniq,
   takePreviewRows,
+  sanitizeParsedDataset,
   detectPrimitiveType,
   inferColumnTypes,
   splitSqlValues,

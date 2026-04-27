@@ -3,10 +3,10 @@ const { JsonParser } = require('./parsers/jsonParser');
 const { CsvParser } = require('./parsers/csvParser');
 const { XmlParser } = require('./parsers/xmlParser');
 const { SqlInsertParser } = require('./parsers/sqlInsertParser');
-const { parsePrismaSchema, pickBestModelTemplate } = require('./prismaSchema');
+const { buildModelPredictions, parsePrismaSchema, pickBestModelTemplate } = require('./prismaSchema');
 const { buildNormalizedDataset, applyMapping, buildDefaultMapping } = require('./transformers');
 const { exportDataset } = require('./exporters');
-const { inferColumnTypes, takePreviewRows } = require('./utils');
+const { inferColumnTypes, sanitizeParsedDataset, takePreviewRows } = require('./utils');
 
 class ViankoDataMigrator {
   constructor() {
@@ -27,7 +27,7 @@ class ViankoDataMigrator {
     if (!parser) {
       throw new Error(`No existe parser para formato detectado: ${detection.format}`);
     }
-    const parsed = parser.parse({ fileName, buffer, format: detection.format });
+    const parsed = sanitizeParsedDataset(parser.parse({ fileName, buffer, format: detection.format }));
     return { detection, parsed };
   }
 
@@ -47,6 +47,10 @@ class ViankoDataMigrator {
       models: prismaSchema?.models || [],
       columns: parsed.columns,
     });
+    const prismaModels = buildModelPredictions({
+      models: prismaSchema?.models || [],
+      columns: parsed.columns,
+    });
     const inferredTypes = inferColumnTypes(parsed.rows, parsed.columns);
     const mappingConfig = buildDefaultMapping({
       columns: parsed.columns,
@@ -63,6 +67,7 @@ class ViankoDataMigrator {
       previewRows: takePreviewRows(parsed.rows, 25),
       tableNameHint: parsed.meta?.tableName || mappingConfig.tableName || 'imported_data',
       prismaTemplate: template,
+      prismaModels,
       mappingConfig,
     };
   }

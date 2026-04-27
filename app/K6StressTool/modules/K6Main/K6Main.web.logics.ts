@@ -7,6 +7,7 @@ import type { K6PlanConfig, K6PlanPresetId } from './types/k6PlanTypes';
 import { tokens } from '../../../SharedTool/style/tokens.shared.style';
 import { useExecutionStream } from './components/K6ExecutionConsole/K6ExecutionConsole.web.logics';
 import { useToast } from './components/K6Toast/K6Toast.web';
+import type { ModuleGuideKey } from './K6Main.guides';
 
 const K6_API_BASE_URL =
     process.env.EXPO_PUBLIC_K6_API_BASE_URL ||
@@ -30,6 +31,7 @@ export const useK6MainLogic = () => {
     const [planJson, setPlanJson] = useState('{}');
     const [planJsonError, setPlanJsonError] = useState<string | null>(null);
     const [planPreset, setPlanPreset] = useState<K6PlanPresetId>('smoke');
+    const [maximizedModuleKey, setMaximizedModuleKey] = useState<ModuleGuideKey | null>(null);
 
     const [isHistoryLoading, setIsHistoryLoading] = useState(false);
     const [showReport, setShowReport] = useState(false);
@@ -523,5 +525,7 @@ export const useK6MainLogic = () => {
         toast,
         handleWizardStart,
         handleWizardViewReport,
+        maximizedModuleKey,
+        setMaximizedModuleKey,
     };
 };
