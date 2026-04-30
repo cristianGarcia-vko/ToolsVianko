@@ -14,6 +14,8 @@ export interface PropertiesPanelProps {
     onMoveLayer: (direction: 'up' | 'down') => void;
     onRenameLayer: (id: string, name: string) => void;
     onDuplicateLayer: () => void;
+    onSelectLayer: (id: string) => void;
+    onDeselectLayer: () => void;
     tab: 'props' | 'layers';
     setTab: (t: 'props' | 'layers') => void;
 }

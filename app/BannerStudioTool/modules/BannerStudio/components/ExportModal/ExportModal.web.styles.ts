@@ -226,4 +226,112 @@ export const exportStyles = {
         background: tokens.colors.accentPurple + '20',
         display: 'flex', alignItems: 'center', justifyContent: 'center'
     } as CSSProperties,
+
+    separateView: {
+        display: 'flex',
+        flexDirection: 'column',
+        gap: '16px',
+        minHeight: '460px'
+    } as CSSProperties,
+
+    separateHeader: {
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between'
+    } as CSSProperties,
+
+    separateConfigRow: {
+        display: 'flex',
+        alignItems: 'center',
+        gap: '12px',
+        padding: '12px',
+        borderRadius: '8px',
+        border: '1px solid rgba(255,255,255,0.08)',
+        background: 'rgba(255,255,255,0.035)'
+    } as CSSProperties,
+
+    separateConfigContent: {
+        flex: 1,
+        display: 'flex',
+        flexDirection: 'column',
+        gap: '8px'
+    } as CSSProperties,
+
+    separateAssetList: {
+        display: 'flex',
+        flexDirection: 'column',
+        gap: '10px',
+        maxHeight: '280px',
+        overflowY: 'auto'
+    } as CSSProperties,
+
+    separateAssetRow: {
+        display: 'flex',
+        alignItems: 'center',
+        gap: '12px',
+        padding: '10px 12px',
+        borderRadius: '8px',
+        border: '1px solid rgba(255,255,255,0.07)',
+        background: 'rgba(255,255,255,0.025)'
+    } as CSSProperties,
+
+    separateAssetContent: {
+        flex: 1,
+        display: 'grid',
+        gridTemplateColumns: 'minmax(120px, 0.7fr) minmax(180px, 1fr)',
+        alignItems: 'center',
+        gap: '12px'
+    } as CSSProperties,
+
+    separateAssetTitle: {
+        fontSize: '10px',
+        fontWeight: 900,
+        color: 'rgba(255,255,255,0.65)',
+        overflow: 'hidden',
+        textOverflow: 'ellipsis',
+        whiteSpace: 'nowrap'
+    } as CSSProperties,
+
+    separateInput: {
+        width: '100%',
+        height: '34px',
+        border: '1px solid rgba(255,255,255,0.10)',
+        borderRadius: '8px',
+        background: '#10161f',
+        color: 'white',
+        outline: 'none',
+        padding: '0 10px',
+        fontSize: '11px',
+        fontWeight: 800,
+        boxSizing: 'border-box'
+    } as CSSProperties,
+
+    separateEmptyState: {
+        minHeight: '120px',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        gap: '12px',
+        borderRadius: '8px',
+        border: '1px dashed rgba(255,255,255,0.12)'
+    } as CSSProperties,
+
+    separateExportBtn: {
+        height: '42px',
+        border: 'none',
+        borderRadius: '8px',
+        color: '#06100b',
+        background: tokens.colors.accentGreen,
+        fontSize: '11px',
+        fontWeight: 900,
+        cursor: 'pointer'
+    } as CSSProperties,
+
+    errorText: {
+        maxWidth: '520px',
+        color: tokens.colors.accentError,
+        fontSize: '12px',
+        lineHeight: 1.5
+    } as CSSProperties,
 };

@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../../store/store';
 import { 
     updateProject as updateReduxProject, 
+    setProject as setReduxProject,
     setActiveBanner as setActiveReduxBanner, 
     setSelectedLayer as setSelectedReduxLayer,
     undo as reduxUndo, redo as reduxRedo
@@ -15,6 +16,32 @@ import {
     createBannerTemplate, createLayerTemplate,
     STORAGE_KEYS 
 } from './types/constants';
+
+const cloneLayerState = (layer: BannerLayer): BannerLayer => ({
+    ...layer,
+    styles: layer.styles ? { ...layer.styles } : layer.styles,
+    nativeStyles: layer.nativeStyles ? { ...layer.nativeStyles } : layer.nativeStyles,
+    imageStyles: layer.imageStyles ? { ...layer.imageStyles } : layer.imageStyles,
+    nativeImageStyles: layer.nativeImageStyles ? { ...layer.nativeImageStyles } : layer.nativeImageStyles,
+    animation: layer.animation ? { ...layer.animation } : layer.animation,
+    visibilityRoles: layer.visibilityRoles ? [...layer.visibilityRoles] : layer.visibilityRoles,
+    media: layer.media ? { ...layer.media } : layer.media,
+    components: layer.components ? layer.components.map(cloneLayerState) : layer.components,
+});
+
+const cloneBannerState = (banner: BannerDesign, updates: Partial<BannerDesign> = {}): BannerDesign => ({
+    ...banner,
+    ...updates,
+    background: {
+        ...banner.background,
+        ...(banner.background.gradient ? { gradient: { ...banner.background.gradient } } : {}),
+        ...(updates.background || {}),
+    },
+    layers: (banner.layers || []).map(cloneLayerState),
+    visibilityRoles: updates.visibilityRoles || (banner.visibilityRoles ? [...banner.visibilityRoles] : []),
+    styles: updates.styles || (banner.styles ? { ...banner.styles } : banner.styles),
+    nativeStyles: updates.nativeStyles || (banner.nativeStyles ? { ...banner.nativeStyles } : banner.nativeStyles),
+});
 
 /**
  * Base Agnostic Logic for BannerStudio.
@@ -32,7 +59,7 @@ export const useBannerStudioBaseLogic = () => {
     );
     
     const selectedLayerId = useSelector((state: RootState) => state.banner?.selectedLayerId);
-    const activeBannerId = useSelector((state: RootState) => state.banner?.activeBannerId);
+    const activeBannerId = useSelector((state: RootState) => state.banner?.project?.activeBannerId || state.banner?.activeBannerId);
     const canUndo = useSelector((state: RootState) => (state.banner?.undoStack?.length || 0) > 0);
     const canRedo = useSelector((state: RootState) => (state.banner?.redoStack?.length || 0) > 0);
 
@@ -61,6 +88,12 @@ export const useBannerStudioBaseLogic = () => {
         setProjectMeta(prev => ({ ...prev, dirty: true }));
     }, [dispatch]);
 
+    const loadProject = useCallback((nextProject: StudioProject) => {
+        dispatch(setReduxProject(nextProject));
+        dispatch(setSelectedReduxLayer(null));
+        setProjectMeta({ id: nextProject.id, name: nextProject.name, dirty: false });
+    }, [dispatch]);
+
     const updateBanner = useCallback((id: string, updates: Partial<BannerDesign>) => {
         const nextBanners = project.banners.map(b => b.id === id ? { ...b, ...updates } : b);
         dispatch(updateReduxProject({ banners: nextBanners }));
@@ -79,7 +112,7 @@ export const useBannerStudioBaseLogic = () => {
     const duplicateBanner = (id: string) => {
         const source = project.banners.find(b => b.id === id);
         if (!source) return;
-        const copy = { ...source, id: `bnr-${Date.now()}`, name: `${source.name} (Copia)` };
+        const copy = cloneBannerState(source, { id: `bnr-${Date.now()}`, name: `${source.name} (Copia)` });
         dispatch(updateReduxProject({ 
             banners: [...project.banners, copy],
             activeBannerId: copy.id
@@ -181,6 +214,14 @@ export const useBannerStudioBaseLogic = () => {
         dispatch(setSelectedReduxLayer(newLayer.id));
     };
 
+    const selectLayer = useCallback((id: string) => {
+        dispatch(setSelectedReduxLayer(id));
+    }, [dispatch]);
+
+    const clearSelectedLayer = useCallback(() => {
+        dispatch(setSelectedReduxLayer(null));
+    }, [dispatch]);
+
     const toggleSelectedLayer = (id: string, multi: boolean) => {
         dispatch(setSelectedReduxLayer(id));
     };
@@ -206,9 +247,10 @@ export const useBannerStudioBaseLogic = () => {
         projectMeta, isLoading, 
         isDrawingMode, setIsDrawingMode,
         isPreviewMode, setIsPreviewMode,
-        toggleSelectedLayer,
+        toggleSelectedLayer, selectLayer, clearSelectedLayer,
         // Actions
         updateProject, updateBanner, updateLayer, deleteLayer,
+        loadProject,
         addBanner, duplicateBanner, deleteBanner,
         addLayer, duplicateLayer, moveLayer, renameLayer, reorderLayer,
         handleApplyDrawing, handleSave, undo, redo,

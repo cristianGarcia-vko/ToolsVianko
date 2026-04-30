@@ -130,6 +130,7 @@ export type DashboardBannerContractPayload = {
 export type ExtractedAsset = {
   filename: string;
   base64: string;
+  mime?: string;
 };
 
 export type BuildContractResult = {
@@ -249,6 +250,11 @@ const normalizeRoles = (roles: unknown, warnings: string[], contextLabel: string
   return valid.length ? valid : undefined;
 };
 
+const sanitizeOptionalActionUrl = (value: unknown) => {
+  const trimmed = typeof value === 'string' ? value.trim() : '';
+  return trimmed || undefined;
+};
+
 const buildContractBackground = (
   bannerId: string,
   bg: BannerBackground,
@@ -264,7 +270,7 @@ const buildContractBackground = (
     if (data && opts.externalizeAssets) {
       const ext = mimeToExt(data.mime);
       const filename = `bg_${safeFileToken(bannerId) || 'banner'}.${ext}`;
-      opts.assets.push({ filename, base64: data.base64 });
+      opts.assets.push({ filename, base64: data.base64, mime: data.mime });
       const url = `/banner/assets/${filename}`;
       return {
         type: 'image',
@@ -345,7 +351,7 @@ const buildContractLayer = (
     visible: layer.visible,
     styles: sanitizeStyleMap(layer.styles),
     animation: sanitizeAnimation(layer.animation),
-    actionUrl: layer.actionUrl ? String(layer.actionUrl).trim() : undefined,
+    actionUrl: sanitizeOptionalActionUrl(layer.actionUrl),
     mask: (layer as any).mask ? String((layer as any).mask).trim() : undefined,
     media: (layer as any).media,
   };
@@ -389,7 +395,7 @@ const buildContractLayer = (
     if (data && opts.externalizeAssets) {
       const ext = mimeToExt(data.mime);
       const filename = `asset_${safeFileToken(layer.id || '') || safeFileToken(bannerId) || 'asset'}.${ext}`;
-      opts.assets.push({ filename, base64: data.base64 });
+      opts.assets.push({ filename, base64: data.base64, mime: data.mime });
       finalSrc = `/banner/assets/${filename}`;
     }
     const imageLayer: ContractLayer = {
@@ -418,7 +424,7 @@ const buildContractLayer = (
       if (data && opts.externalizeAssets) {
         const ext = mimeToExt(data.mime);
         const filename = `anim_${safeFileToken(layer.id || '') || safeFileToken(bannerId) || 'asset'}.${ext}`;
-        opts.assets.push({ filename, base64: data.base64 });
+        opts.assets.push({ filename, base64: data.base64, mime: data.mime });
         finalSrc = `/banner/assets/${filename}`;
       }
       const animatedImageLayer: ContractLayer = {
@@ -518,7 +524,7 @@ const buildContractBanner = (
     designWidth: width,
     designHeight: height,
     aspectRatio: height > 0 ? width / height : undefined,
-    actionUrl: banner.actionUrl ? String(banner.actionUrl).trim() : undefined,
+    actionUrl: sanitizeOptionalActionUrl(banner.actionUrl),
     background,
     styles,
     nativeStyles: { overflow: 'hidden' },

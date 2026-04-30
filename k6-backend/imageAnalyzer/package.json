@@ -1,0 +1,23 @@
+{
+  "name": "image-repo-analyzer",
+  "version": "1.0.0",
+  "description": "Herramienta CLI para analizar repositorios de imagenes locales usando Sharp y Tesseract.js",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "keywords": [
+    "cli",
+    "image",
+    "analyzer",
+    "ocr",
+    "tesseract",
+    "sharp"
+  ],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "sharp": "^0.33.3",
+    "tesseract.js": "^5.0.5"
+  }
+}

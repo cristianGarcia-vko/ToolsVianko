@@ -38,13 +38,13 @@ const parseMappingOrNull = (text: string): DataMigratorMappingConfig | null => {
 };
 
 const sourceNodeId = (fieldName: string) => `source:${fieldName}`;
-const targetTableNodeId = (tableName: string) => `target-table:${tableName}`;
-const targetNodeId = (tableName: string, fieldName: string) => `target:${tableName}.${fieldName}`;
+const targetTableNodeId = (tableName: string) => `target-table:${normalizeMatchKey(tableName)}`;
+const targetNodeId = (tableName: string, fieldName: string) => `target:${normalizeMatchKey(tableName)}.${normalizeMatchKey(fieldName)}`;
 const edgeIdFor = (sourceId: string, targetId: string) => `edge:${sourceId}->${targetId}`;
-const targetSelectionKey = (tableName: string, fieldName: string) => `${tableName}.${fieldName}`;
+const targetSelectionKey = (tableName: string, fieldName: string) => `${normalizeMatchKey(tableName)}.${normalizeMatchKey(fieldName)}`;
 
 const normalizeType = (type?: string) => String(type || '').toLowerCase();
-const normalizeMatchKey = (value?: string) => String(value || '').trim().toLowerCase();
+const normalizeMatchKey = (value?: string) => String(value || '').replace(/[^a-zA-Z0-9_]/g, '').trim().toLowerCase();
 const normalizePrismaSqlType = (prismaType?: string) => {
   const clean = String(prismaType || '').replace('?', '').replace('[]', '');
   if (clean === 'Int' || clean === 'BigInt') return 'INT';
@@ -90,7 +90,7 @@ const buildPrismaModelPredictionsFromSchema = (
 
       String(body || '').split(/\r?\n/).forEach((line) => {
         const clean = String(line || '').split('//')[0].trim();
-        if (!clean || clean.startsWith('@@ignore') || clean.startsWith('@')) return;
+        if (!clean || clean.startsWith('@@ignore')) return;
 
         const tableMap = clean.match(/^@@map\(\s*"([^"]+)"\s*\)/);
         if (tableMap?.[1]) {
@@ -98,21 +98,35 @@ const buildPrismaModelPredictionsFromSchema = (
           return;
         }
 
-        if (clean.startsWith('@@')) return;
+        if (clean.startsWith('@')) return;
         const [name, rawType] = clean.split(/\s+/);
         if (!name || !rawType || name.startsWith('@')) return;
 
+        const isId = /@id/.test(clean);
         const autoIncrement = /@default\(\s*autoincrement\(\s*\)\s*\)/.test(clean);
         const isRequired = !rawType.includes('?') && !rawType.includes('[]') && !autoIncrement;
         const prismaType = rawType.replace('?', '').replace('[]', '');
+        
+        let relation: DataMigratorPrismaField['relation'] = undefined;
+        const relationMatch = clean.match(/@relation\s*\(\s*fields\s*:\s*\[([^\]]+)\]\s*,\s*references\s*:\s*\[([^\]]+)\]\s*\)/);
+        if (relationMatch) {
+          relation = {
+            to: prismaType,
+            fields: relationMatch[1].split(',').map(f => f.trim().replace(/"/g, '')),
+            references: relationMatch[2].split(',').map(f => f.trim().replace(/"/g, '')),
+          };
+        }
+
         fields.push({
           name,
           prismaType,
           sqlType: normalizePrismaSqlType(rawType),
           required: isRequired,
           isRequired,
+          isId,
           autoIncrement,
-        });
+          relation,
+        } as any);
       });
 
       const matchedFields = fields
@@ -436,6 +450,7 @@ export const useDataMigratorPanelLogic = () => {
   const [outputFileName, setOutputFileName] = useState('migracion.sql');
   const [busy, setBusy] = useState<'idle' | 'analyzing' | 'converting'>('idle');
   const [error, setError] = useState<string | null>(null);
+  const [showERDiagram, setShowERDiagram] = useState(false);
 
   const canAnalyze = !!sourceFile && busy === 'idle';
   const canConvert = !!sourceFile && busy === 'idle';
@@ -775,6 +790,8 @@ export const useDataMigratorPanelLogic = () => {
     outputFileName,
     busy,
     error,
+    showERDiagram,
+    setShowERDiagram,
     canAnalyze,
     canConvert,
     previewColumns,

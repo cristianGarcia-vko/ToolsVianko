@@ -16,6 +16,8 @@ import '@xyflow/react/dist/style.css';
 import { dataMigratorStyles as styles } from './DataMigratorPanel.web.styles';
 import { useDataMigratorPanelLogic } from './DataMigratorPanel.logic';
 import type { DataMigratorGraphNode } from './DataMigratorPanel.types';
+import { PrismaERModal } from './components/PrismaERModal/PrismaERModal.web';
+import { tokens } from '../../../../../SharedTool/style/tokens.shared.style';
 
 type MappingNodeData = DataMigratorGraphNode & Record<string, unknown>;
 
@@ -109,9 +111,24 @@ export const DataMigratorPanel: React.FC = memo(() => {
           <button type="button" disabled={!logic.canAnalyze} style={styles.buttonPrimary} onClick={logic.analyze}>
             {logic.busy === 'analyzing' ? 'Analizando...' : 'Analizar estructura'}
           </button>
+          {logic.prismaModelOptions.length > 0 && (
+            <button 
+              type="button" 
+              style={{ ...styles.buttonSecondary, borderColor: tokens.colors.accentBlue + '44', color: tokens.colors.accentBlue }} 
+              onClick={() => logic.setShowERDiagram(true)}
+            >
+              Modelo Relación
+            </button>
+          )}
           {logic.analysis ? <span style={styles.statusOk}>Formato detectado: {logic.analysis.detection.format}</span> : null}
         </div>
       </div>
+
+      <PrismaERModal 
+        isOpen={logic.showERDiagram} 
+        onClose={() => logic.setShowERDiagram(false)} 
+        models={logic.prismaModelOptions} 
+      />
 
       {logic.analysis ? (
         <div style={styles.section}>

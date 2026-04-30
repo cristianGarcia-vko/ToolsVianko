@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { setSelectedLayer as setSelectedReduxLayer } from '../../../store/slices/bannerSlice';
 import { useBannerStudioBaseLogic } from './BannerStudio.logics';
+import { isProjectImportAbort, pickAndImportBannerProject } from './utils/importProject.web';
 
 /**
  * Web-specific Logic for BannerStudio.
@@ -16,6 +17,8 @@ export const useBannerStudioWebLogic = () => {
         deleteLayer, 
         duplicateLayer, 
         handleSave, 
+        loadProject,
+        clearSelectedLayer,
         undo, 
         redo 
     } = base;
@@ -38,6 +41,7 @@ export const useBannerStudioWebLogic = () => {
     const deleteLayerRef = useRef(deleteLayer);
     const updateLayerRef = useRef(updateLayer);
     const duplicateLayerRef = useRef(duplicateLayer);
+    const clearSelectedLayerRef = useRef(clearSelectedLayer);
     const activeBannerRef = useRef(activeBanner);
 
     useEffect(() => {
@@ -47,8 +51,27 @@ export const useBannerStudioWebLogic = () => {
         deleteLayerRef.current = deleteLayer;
         updateLayerRef.current = updateLayer;
         duplicateLayerRef.current = duplicateLayer;
+        clearSelectedLayerRef.current = clearSelectedLayer;
         activeBannerRef.current = activeBanner;
-    }, [undo, redo, handleSave, deleteLayer, updateLayer, duplicateLayer, activeBanner]);
+    }, [undo, redo, handleSave, deleteLayer, updateLayer, duplicateLayer, clearSelectedLayer, activeBanner]);
+
+    const handleImportProject = useCallback(async () => {
+        try {
+            const result = await pickAndImportBannerProject();
+            loadProject(result.project);
+            const assetStatus = result.externalRefs.length
+                ? `\nRecursos importados: ${result.hydratedAssets}/${result.externalRefs.length}`
+                : '';
+            const missingStatus = result.missingAssets.length
+                ? `\nPendientes: ${result.missingAssets.length} recurso(s) quedaron con su ruta original.`
+                : '';
+            window.alert(`Proyecto importado: ${result.project.name}${assetStatus}${missingStatus}`);
+        } catch (error) {
+            if (isProjectImportAbort(error)) return;
+            console.error('[BannerStudio] Import error:', error);
+            window.alert(error instanceof Error ? error.message : 'No se pudo importar el proyecto.');
+        }
+    }, [loadProject]);
 
     // Keyboard shortcuts
     useEffect(() => {
@@ -63,6 +86,7 @@ export const useBannerStudioWebLogic = () => {
             if (e.ctrlKey && e.key === 'y') { e.preventDefault(); redoRef.current(); }
             if (e.ctrlKey && (e.key === 's' || e.key === 'g')) { e.preventDefault(); handleSaveRef.current(); }
             if (e.ctrlKey && e.key === 'd') { e.preventDefault(); duplicateLayerRef.current(); }
+            if (e.key === 'Escape') { e.preventDefault(); clearSelectedLayerRef.current(); }
             
             if (currentSelectedLayerId) {
                 const layer = currentBanner.layers.find(l => l.id === currentSelectedLayerId);
@@ -112,6 +136,7 @@ export const useBannerStudioWebLogic = () => {
         showGrid, setShowGrid,
         isSpacePressed,
         resetView,
-        setSelectedLayerIds: (ids: string[]) => dispatch(setSelectedReduxLayer(ids[0]))
+        handleImportProject,
+        setSelectedLayerIds: (ids: string[]) => dispatch(setSelectedReduxLayer(ids[0] || null))
     };
 };

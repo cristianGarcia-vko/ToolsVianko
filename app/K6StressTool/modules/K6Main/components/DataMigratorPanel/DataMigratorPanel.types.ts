@@ -19,7 +19,13 @@ export type DataMigratorPrismaField = {
   sqlType: string;
   required?: boolean;
   isRequired?: boolean;
+  isId?: boolean;
   autoIncrement?: boolean;
+  relation?: {
+    to: string;
+    fields: string[];
+    references: string[];
+  };
 };
 
 export type DataMigratorPrismaModelPrediction = {

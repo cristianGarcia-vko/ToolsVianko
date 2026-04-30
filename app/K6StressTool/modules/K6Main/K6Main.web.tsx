@@ -14,6 +14,7 @@ const K6History = lazy(() => import('./components/K6History/K6History.web').then
 const SanityReportView = lazy(() => import('./components/SanityReportView/SanityReportView.web').then(m => ({ default: m.SanityReportView })));
 const SQLSeedGeneratorPanel = lazy(() => import('./components/SQLSeedGeneratorPanel/SQLSeedGeneratorPanel.web').then(m => ({ default: m.SQLSeedGeneratorPanel })));
 const DataMigratorPanel = lazy(() => import('./components/DataMigratorPanel/DataMigratorPanel.web').then(m => ({ default: m.DataMigratorPanel })));
+const ImageAnalyzerPanel = lazy(() => import('./components/ImageAnalyzerPanel/ImageAnalyzerPanel.web').then(m => ({ default: m.ImageAnalyzerPanel })));
 const MonitorPanel = lazy(() => import('./components/MonitorPanel/MonitorPanel.web').then(m => ({ default: m.MonitorPanel })));
 const EndpointDiscoveryPanel = lazy(() => import('./components/EndpointDiscoveryPanel/EndpointDiscoveryPanel.web').then(m => ({ default: m.EndpointDiscoveryPanel })));
 const ModuleGuideModal = lazy(() => import('./components/ModuleGuideModal/ModuleGuideModal.web').then(m => ({ default: m.ModuleGuideModal })));
@@ -127,6 +128,11 @@ const K6MainModule: React.FC = memo(() => {
             description: 'Motor universal para convertir CSV/XML/JSON/SQL Inserts hacia SQL, JSON, CSV o migracion Prisma.',
             accent: tokens.colors.accentBlue,
         },
+        imageAnalyzer: {
+            title: 'Analizador de Imágenes (OCR)',
+            description: 'Extrae texto y metadatos de imágenes procesando por lotes para no saturar la RAM.',
+            accent: tokens.colors.accentPurple,
+        },
     }) satisfies Record<ModuleGuideKey, { title: string; description: string; accent: string }>, []);
 
     const renderModuleContent = (moduleKey: ModuleGuideKey) => {
@@ -181,6 +187,8 @@ const K6MainModule: React.FC = memo(() => {
                 return <SQLSeedGeneratorPanel />;
             case 'dataMigrator':
                 return <DataMigratorPanel />;
+            case 'imageAnalyzer':
+                return <ImageAnalyzerPanel />;
             default:
                 return null;
         }
@@ -419,6 +427,12 @@ const K6MainModule: React.FC = memo(() => {
                                 {renderModuleCard(
                                     'dataMigrator',
                                     renderModuleContent('dataMigrator'),
+                                )}
+                            </Suspense>
+                            <Suspense fallback={<SkeletonLoader height={260} />}>
+                                {renderModuleCard(
+                                    'imageAnalyzer',
+                                    renderModuleContent('imageAnalyzer'),
                                 )}
                             </Suspense>
                         </div>

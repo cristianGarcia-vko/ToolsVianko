@@ -7,7 +7,7 @@ import {
     Type as Typography, Baseline, Wand2,
     FileImage, FilePlus, Scaling,
     Grid3X3, Layers2, Users, Link as LinkIcon, Settings2,
-    CopyPlus, Plus, Box, Orbit, Film
+    CopyPlus, Plus, Box, Orbit, Film, X
 } from 'lucide-react';
 import { tokens } from '../../../../../SharedTool/style/tokens.shared.style';
 import { ROLES } from '../../types/types';
@@ -111,7 +111,7 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = memo(({
     project, activeBanner, selectedLayer,
     onUpdateProject, onUpdateBanner, onUpdateLayer, onDeleteLayer,
     onAddBanner, onDuplicateBanner, onDeleteBanner,
-    onMoveLayer, tab, setTab
+    onMoveLayer, onSelectLayer, onDeselectLayer, tab, setTab
 }) => {
     const logic = usePropertiesPanelWebLogic({
         selectedLayer, activeBanner, onUpdateLayer, onUpdateBanner
@@ -205,12 +205,15 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = memo(({
                                             <IconAction onClick={() => updateLayerValue({ visible: !selectedLayer.visible })} active={selectedLayer.visible}>
                                                 {selectedLayer.visible ? <Eye size={14} /> : <EyeOff size={14} />}
                                             </IconAction>
-                                            <IconAction onClick={() => updateLayerValue({ locked: !selectedLayer.locked })} active={selectedLayer.locked}>
-                                                {selectedLayer.locked ? <Lock size={14} /> : <Unlock size={14} />}
-                                            </IconAction>
-                                            <IconAction onClick={() => onDeleteLayer(selectedLayer.id)} color={tokens.colors.accentError}>
-                                                <Trash2 size={14} />
-                                            </IconAction>
+                                             <IconAction onClick={() => updateLayerValue({ locked: !selectedLayer.locked })} active={selectedLayer.locked}>
+                                                 {selectedLayer.locked ? <Lock size={14} /> : <Unlock size={14} />}
+                                             </IconAction>
+                                             <IconAction onClick={onDeselectLayer} color={tokens.colors.textMuted}>
+                                                 <X size={14} />
+                                             </IconAction>
+                                             <IconAction onClick={() => onDeleteLayer(selectedLayer.id)} color={tokens.colors.accentError}>
+                                                 <Trash2 size={14} />
+                                             </IconAction>
                                         </div>
                                     </header>
 
@@ -926,11 +929,11 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = memo(({
                                 </div>
                                 <div style={layersListStack}>
                                     {activeBanner.layers.map((layer) => (
-                                        <div
-                                            key={layer.id}
-                                            onClick={() => onUpdateLayer(layer.id, {})}
-                                            style={getLayerRowStyle(selectedLayer?.id === layer.id)}
-                                        >
+                                         <div
+                                             key={layer.id}
+                                             onClick={() => selectedLayer?.id === layer.id ? onDeselectLayer() : onSelectLayer(layer.id)}
+                                             style={getLayerRowStyle(selectedLayer?.id === layer.id)}
+                                         >
                                             <div style={layerIconBox}>
                                                 {layer.type === 'text'
                                                     ? <Typography size={16} />

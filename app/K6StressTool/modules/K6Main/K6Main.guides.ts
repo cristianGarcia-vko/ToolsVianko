@@ -110,6 +110,17 @@ export const k6ModuleGuides = {
         ],
         note: 'El motor prioriza la deteccion por contenido cuando extension y firma no coinciden.',
     },
+    imageAnalyzer: {
+        badge: 'OCR',
+        title: 'Analizador de Repositorios de Imágenes',
+        summary: 'Escanea un directorio local procesando imágenes con Sharp y extrayendo texto vía Tesseract.js (OCR).',
+        sections: [
+            { title: 'Que necesitas proporcionar', items: ['Ruta absoluta del directorio local en el servidor (ej. C:\\imagenes o /var/images).'] },
+            { title: 'Formato esperado', items: ['Archivos soportados: JPG, JPEG, PNG, WEBP.', 'El directorio debe ser accesible para el motor backend.'] },
+            { title: 'Secuencia recomendada', items: ['1. Escribe la ruta del directorio.', '2. Inicia análisis (procesa por lotes).', '3. Revisa la salida JSON generada.'] },
+        ],
+        note: 'Requiere que el directorio esté físicamente en la máquina o red donde corre el backend.',
+    },
 } as const satisfies Record<string, ModuleGuide>;
 
 export type ModuleGuideKey = keyof typeof k6ModuleGuides;

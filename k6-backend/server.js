@@ -12,6 +12,7 @@ const { runMonitor, saveReport } = require('./monitor.controller.js');
 const { startStreamTest, getTest, cancelTest } = require('./k6StreamRunner.js');
 const { sqlGeneratorRouter } = require('./sqlGenerator.js');
 const { dataMigratorRouter } = require('./dataMigrator/router.js');
+const { imageAnalyzerRouter } = require('./imageAnalyzer/router.js');
 
 const loadLocalEnv = () => {
   const envPath = path.join(__dirname, '.env');
@@ -273,6 +274,7 @@ app.post('/api/monitor/run', runMonitor);
 app.post('/api/monitor/save', saveReport);
 app.use('/api/sqlgen', sqlGeneratorRouter);
 app.use('/api/data-migrator', dataMigratorRouter);
+app.use('/api/image-analyzer', imageAnalyzerRouter);
 
 // ─── STREAMING ENDPOINTS (Phase 1) ───────────────────────────────────────────
 

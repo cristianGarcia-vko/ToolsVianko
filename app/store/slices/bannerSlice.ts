@@ -29,6 +29,9 @@ const bannerSlice = createSlice({
         setProject: (state, action: PayloadAction<StudioProject>) => {
             state.project = action.payload;
             state.activeBannerId = action.payload.activeBannerId || action.payload.banners[0].id;
+            state.selectedLayerId = null;
+            state.undoStack = [];
+            state.redoStack = [];
         },
         updateProject: (state, action: PayloadAction<Partial<StudioProject>>) => {
             // Push to undo before change using current() for structural sharing
@@ -37,6 +40,10 @@ const bannerSlice = createSlice({
             state.redoStack = [];
 
             state.project = { ...state.project, ...action.payload };
+            if (typeof action.payload.activeBannerId === 'string') {
+                state.activeBannerId = action.payload.activeBannerId;
+                state.selectedLayerId = null;
+            }
             state.project.updatedAt = new Date().toISOString();
         },
         setActiveBanner: (state, action: PayloadAction<string>) => {

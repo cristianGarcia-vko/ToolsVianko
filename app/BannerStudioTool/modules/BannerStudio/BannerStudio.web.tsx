@@ -4,7 +4,7 @@ import {
     Plus, MousePointer2, Type, Image as ImageIcon, Star,
     Layout, Zap, Monitor, Save, Undo, Redo,
     Move, Paintbrush, MonitorPlay, Film,
-    Square
+    Square, FolderOpen
 } from 'lucide-react';
 import { tokens } from '../../../SharedTool/style/tokens.shared.style';
 import { studioStyles } from './BannerStudio.web.styles';
@@ -58,7 +58,8 @@ export const BannerStudio: React.FC = memo(() => {
         updateProject, updateBanner, updateLayer, deleteLayer,
         addBanner, duplicateBanner, deleteBanner,
         addLayer, duplicateLayer, moveLayer, renameLayer, reorderLayer,
-        handleApplyDrawing, handleSave, undo, redo,
+        handleApplyDrawing, handleSave, handleImportProject, undo, redo,
+        selectLayer, clearSelectedLayer,
         canUndo, canRedo
     } = logic;
 
@@ -149,7 +150,14 @@ export const BannerStudio: React.FC = memo(() => {
                         </button>
                     </div>
 
-                    <GlassButtonAtom onClick={() => setIsExportModalOpen(true)} color={tokens.colors.accentGreen} active style={{ height: '32px', fontSize: '10px' }}>
+                    <GlassButtonAtom
+                        onClick={handleImportProject}
+                        icon={<FolderOpen size={14} />}
+                        style={{ height: '32px', fontSize: '10px', background: '#10161f', border: '1px solid rgba(255,255,255,0.10)', boxShadow: 'none' }}
+                    >
+                        IMPORTAR
+                    </GlassButtonAtom>
+                    <GlassButtonAtom onClick={() => setIsExportModalOpen(true)} color={tokens.colors.accentGreen} active style={{ height: '32px', fontSize: '10px', boxShadow: 'none' }}>
                         EXPORTAR
                     </GlassButtonAtom>
                 </div>
@@ -165,7 +173,7 @@ export const BannerStudio: React.FC = memo(() => {
                         style={studioStyles.sidebar}
                     >
                         <div style={studioStyles.sidebarStack}>
-                            <GlassIconButtonAtom icon={<MousePointer2 size={18} />} active={!isSpacePressed && !isDrawingMode} onClick={() => setIsDrawingMode(false)} color={tokens.colors.accentGreen} tooltip="Seleccionar" />
+                            <GlassIconButtonAtom icon={<MousePointer2 size={18} />} active={!isSpacePressed && !isDrawingMode} onClick={() => { setIsDrawingMode(false); clearSelectedLayer(); }} color={tokens.colors.accentGreen} tooltip="Seleccionar / Deseleccionar" />
                             <GlassIconButtonAtom icon={<Move size={18} />} active={isSpacePressed} onClick={() => {}} tooltip="Panear (Espacio)" />
                         </div>
 
@@ -213,6 +221,9 @@ export const BannerStudio: React.FC = memo(() => {
                             touchAction: 'none',
                         }}
                         onPointerDown={(e) => {
+                            if (!isSpacePressed && e.button === 0 && e.target === e.currentTarget) {
+                                clearSelectedLayer();
+                            }
                             if (isSpacePressed || e.button === 1) {
                                 const target = e.currentTarget as HTMLElement;
                                 target.setPointerCapture(e.pointerId);
@@ -225,11 +236,21 @@ export const BannerStudio: React.FC = memo(() => {
                             }
                         }}
                         onPointerUp={(e) => {
-                            e.currentTarget.releasePointerCapture(e.pointerId);
+                            if (e.currentTarget.hasPointerCapture(e.pointerId)) {
+                                e.currentTarget.releasePointerCapture(e.pointerId);
+                            }
                             e.currentTarget.removeAttribute('data-panning');
                         }}
                     >
-                        <div style={{
+                        <div
+                            id="vianko-canvas-root"
+                            onPointerDown={(e) => {
+                                if (!isDrawingMode && !isSpacePressed && e.button === 0 && e.target === e.currentTarget) {
+                                    e.stopPropagation();
+                                    clearSelectedLayer();
+                                }
+                            }}
+                            style={{
                             ...studioStyles.canvasWrapper,
                             transform: `translate(${pan.x}px, ${pan.y}px) scale(${zoom})`,
                             width: activeBanner?.designWidth || 800,
@@ -314,7 +335,20 @@ export const BannerStudio: React.FC = memo(() => {
                     transition={{ type: 'spring', damping: 25, stiffness: 200 }}
                     style={studioStyles.propertiesWrapper}
                 >
-                    <GlassCardAtom intensity="strong" style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
+                    <GlassCardAtom
+                        intensity="strong"
+                        borderRadius="12px"
+                        style={{
+                            flex: 1,
+                            display: 'flex',
+                            flexDirection: 'column',
+                            background: '#0d1117',
+                            border: '1px solid rgba(255,255,255,0.08)',
+                            boxShadow: 'none',
+                            backdropFilter: 'none',
+                            WebkitBackdropFilter: 'none',
+                        }}
+                    >
                         <Suspense fallback={<BannerSkeleton />}>
                             <PropertiesPanel
                                 project={project}
@@ -330,6 +364,8 @@ export const BannerStudio: React.FC = memo(() => {
                                 onMoveLayer={moveLayer}
                                 onRenameLayer={renameLayer}
                                 onDuplicateLayer={duplicateLayer}
+                                onSelectLayer={selectLayer}
+                                onDeselectLayer={clearSelectedLayer}
                                 tab={activeTab}
                                 setTab={setActiveTab}
                             />

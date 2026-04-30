@@ -23,15 +23,20 @@ export const ExportModal: React.FC<ExportModalProps> = ({
     const logic = useExportModalLogic({ project, onClose, onExport: () => {} });
     const {
         view, setView,
-        exportStep,
+        exportStep, setExportStep,
         progress,
         activeBannerId, setActiveBannerId,
         handleStartZipExport,
         handleStartVprjExport,
         handleStartJsonExport,
+        handleStartSeparateExport,
         handleRoleExport,
         handleLocalSave,
         handleImageExport,
+        separateExport,
+        updateSeparateAssetName,
+        updateSeparateConfigFilename,
+        errorMessage,
     } = logic;
 
     if (!isOpen) return null;
@@ -63,6 +68,12 @@ export const ExportModal: React.FC<ExportModalProps> = ({
                                 label="ZIP BUNDLE"
                                 desc="Empaquetado total (V8+)"
                                 onClick={handleStartZipExport}
+                            />
+                            <ExportOption
+                                icon={<Download size={32} color="#38bdf8"/>}
+                                label="ARCHIVOS SEPARADOS"
+                                desc="Assets primero + JSON final"
+                                onClick={handleStartSeparateExport}
                             />
                             <ExportOption 
                                 icon={<Layers size={32} color="#22d3ee"/>}
@@ -107,6 +118,54 @@ export const ExportModal: React.FC<ExportModalProps> = ({
                                 desc="Captura de Movimiento"
                                 onClick={() => handleImageExport('gif')}
                             />
+                        </div>
+                    )}
+
+                    {exportStep === 'config' && view === 'separate' && separateExport && (
+                        <div style={styles.separateView}>
+                            <header style={styles.separateHeader}>
+                                <button onClick={() => setView('menu')} style={styles.backBtn}><ChevronLeft size={16}/> VOLVER AL MENU</button>
+                                <span style={styles.playerBannerTitle}>EXPORTACION SEPARADA</span>
+                            </header>
+
+                            <div style={styles.separateConfigRow}>
+                                <FileJson size={18} color={tokens.colors.accentPurple} />
+                                <div style={styles.separateConfigContent}>
+                                    <span style={styles.separateAssetTitle}>CONFIGURADOR</span>
+                                    <input
+                                        value={separateExport.configFilename}
+                                        onChange={(e) => updateSeparateConfigFilename(e.target.value)}
+                                        placeholder="dashboard-banner.json"
+                                        style={styles.separateInput}
+                                    />
+                                </div>
+                            </div>
+
+                            <div style={styles.separateAssetList} className="no-scrollbar">
+                                {separateExport.assets.length ? separateExport.assets.map((asset, index) => (
+                                    <div key={`${asset.defaultName}-${index}`} style={styles.separateAssetRow}>
+                                        <ImageIcon size={16} color={tokens.colors.accentGreen} />
+                                        <div style={styles.separateAssetContent}>
+                                            <span style={styles.separateAssetTitle}>{asset.defaultName}</span>
+                                            <input
+                                                value={asset.finalName}
+                                                onChange={(e) => updateSeparateAssetName(index, e.target.value)}
+                                                placeholder={asset.defaultName}
+                                                style={styles.separateInput}
+                                            />
+                                        </div>
+                                    </div>
+                                )) : (
+                                    <div style={styles.separateEmptyState}>
+                                        <FileJson size={24} color={tokens.colors.accentPurple} />
+                                        <span style={styles.optionLabel}>SIN RECURSOS VISUALES EMBEBIDOS</span>
+                                    </div>
+                                )}
+                            </div>
+
+                            <button onClick={handleStartSeparateExport} style={styles.separateExportBtn}>
+                                GUARDAR RECURSOS Y CONFIGURADOR
+                            </button>
                         </div>
                     )}
 
@@ -198,6 +257,14 @@ export const ExportModal: React.FC<ExportModalProps> = ({
                             </div>
                             <span style={styles.statusText}>OPERACIÓN COMPLETADA</span>
                             <button onClick={onClose} style={styles.finalBtn}>CERRAR</button>
+                        </div>
+                    )}
+
+                    {exportStep === 'error' && (
+                        <div style={styles.statusView}>
+                            <span style={styles.statusText}>NO SE PUDO COMPLETAR LA EXPORTACION</span>
+                            <span style={styles.errorText}>{errorMessage || 'Revisa la consola para mas detalle.'}</span>
+                            <button onClick={() => { setExportStep('config'); setView('menu'); }} style={styles.finalBtn}>VOLVER</button>
                         </div>
                     )}
                 </div>
